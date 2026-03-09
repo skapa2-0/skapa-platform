@@ -144,10 +144,65 @@ def validate_single_key():
             'error': 'Erreur interne du serveur'
         }), 500
 
+@bp.route('/report-usage', methods=['POST'])
+def report_usage():
+    """Receives token usage reports from the API gateway"""
+    try:
+        data = request.get_json()
+        if not data:
+            return jsonify({'error': 'Missing data'}), 400
+
+        api_key_value = data.get('api_key')
+        if not api_key_value:
+            return jsonify({'error': 'Missing api_key'}), 400
+
+        api_key = ApiKey.find_by_key(api_key_value)
+        if not api_key:
+            return jsonify({'error': 'Invalid API key'}), 404
+
+        user = api_key.user
+        prompt_tokens = data.get('prompt_tokens', 0)
+        completion_tokens = data.get('completion_tokens', 0)
+        total_tokens = prompt_tokens + completion_tokens
+        model = data.get('model', 'unknown')
+
+        user.total_tokens_consumed = (user.total_tokens_consumed or 0) + total_tokens
+        user.total_prompt_tokens = (user.total_prompt_tokens or 0) + prompt_tokens
+        user.total_completion_tokens = (user.total_completion_tokens or 0) + completion_tokens
+
+        from app.models import ApiUsageStats
+        ApiUsageStats.log_api_usage(
+            user_id=user.id,
+            api_key_id=api_key.id,
+            endpoint='/v1/chat/completions',
+            method='POST',
+            status_code=data.get('status_code', 200),
+            response_time=data.get('response_time_ms'),
+            tokens_used=total_tokens,
+            model_used=model,
+            ip_address=data.get('client_ip'),
+            request_size=data.get('request_size'),
+            response_size=data.get('response_size')
+        )
+
+        db.session.commit()
+
+        return jsonify({
+            'success': True,
+            'total_tokens_consumed': user.total_tokens_consumed,
+            'credits_remaining': user.credits
+        })
+
+    except Exception as e:
+        current_app.logger.error(f"Error in report-usage: {e}")
+        db.session.rollback()
+        return jsonify({'error': 'Internal error'}), 500
+
+
 @bp.route('/health', methods=['GET'])
 def health():
     """Endpoint de santé de l'API"""
     return jsonify({
         'status': 'healthy',
         'timestamp': datetime.utcnow().isoformat() + 'Z'
-    }) 
+    })

@@ -186,6 +186,52 @@ def quick_stats():
         'unread_notifications': unread_notifications
     })
 
+@bp.route('/usage')
+@login_required
+def usage():
+    """Token usage and billing page"""
+    from app.models import ApiUsageStats
+    from sqlalchemy import func
+
+    api_key = current_user.get_active_api_key()
+
+    recent_usage = ApiUsageStats.query.filter_by(
+        user_id=current_user.id
+    ).order_by(ApiUsageStats.created_at.desc()).limit(50).all()
+
+    daily_stats = db.session.query(
+        func.date(ApiUsageStats.created_at).label('day'),
+        func.sum(ApiUsageStats.tokens_used).label('tokens'),
+        func.count(ApiUsageStats.id).label('calls'),
+        func.avg(ApiUsageStats.response_time).label('avg_time')
+    ).filter_by(
+        user_id=current_user.id
+    ).group_by(func.date(ApiUsageStats.created_at)).order_by(
+        func.date(ApiUsageStats.created_at).desc()
+    ).limit(30).all()
+
+    model_breakdown = db.session.query(
+        ApiUsageStats.model_used,
+        func.sum(ApiUsageStats.tokens_used).label('tokens'),
+        func.count(ApiUsageStats.id).label('calls')
+    ).filter_by(
+        user_id=current_user.id
+    ).group_by(ApiUsageStats.model_used).all()
+
+    return render_template(
+        'dashboard/usage.html',
+        title='Usage & Billing',
+        api_key=api_key,
+        recent_usage=recent_usage,
+        daily_stats=daily_stats,
+        model_breakdown=model_breakdown,
+        total_tokens=current_user.total_tokens_consumed or 0,
+        total_prompt=current_user.total_prompt_tokens or 0,
+        total_completion=current_user.total_completion_tokens or 0,
+        credits=current_user.credits or 0
+    )
+
+
 @bp.route('/api-usage-chart')
 @login_required
 def api_usage_chart():

@@ -39,8 +39,10 @@ class User(UserMixin, db.Model):
     approved_by = db.Column(db.Integer, db.ForeignKey('users.id'))
     last_login_at = db.Column(db.DateTime)
     login_count = db.Column(db.Integer, default=0)
-    # suspended_at = db.Column(db.DateTime)
-    # suspended_by = db.Column(db.Integer, db.ForeignKey('users.id'))
+    credits = db.Column(db.Float, default=0.0)
+    total_tokens_consumed = db.Column(db.Integer, default=0)
+    total_prompt_tokens = db.Column(db.Integer, default=0)
+    total_completion_tokens = db.Column(db.Integer, default=0)
     
     # Relations
     api_keys = db.relationship('ApiKey', backref='user', lazy='dynamic', cascade='all, delete-orphan')

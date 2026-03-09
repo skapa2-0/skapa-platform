@@ -1,636 +1,636 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container-fluid py-4">
-    <!-- Header du dashboard avec actions rapides -->
-    <div class="row mb-4">
-        <div class="col-12">
-            <div class="d-flex justify-content-between align-items-center mb-4">
+<style>
+    .skapa-dashboard {
+        background: #0a0a0f;
+        min-height: 100vh;
+        padding: 2rem 0;
+        color: #e0e0e0;
+    }
+
+    .skapa-welcome h1 {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: #fff;
+    }
+
+    .skapa-welcome .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 14px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .status-active {
+        background: rgba(52, 211, 153, 0.15);
+        color: #34d399;
+        border: 1px solid rgba(52, 211, 153, 0.3);
+    }
+
+    .status-pending {
+        background: rgba(251, 191, 36, 0.15);
+        color: #fbbf24;
+        border: 1px solid rgba(251, 191, 36, 0.3);
+    }
+
+    .status-inactive {
+        background: rgba(239, 68, 68, 0.15);
+        color: #ef4444;
+        border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .stat-card {
+        background: #1a1a2e;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 12px;
+        padding: 1.5rem;
+        position: relative;
+        overflow: hidden;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    }
+
+    .stat-card::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 3px;
+        border-radius: 3px 0 0 3px;
+    }
+
+    .stat-card.purple::before { background: linear-gradient(180deg, #a855f7, #7c3aed); }
+    .stat-card.blue::before   { background: linear-gradient(180deg, #3b82f6, #2563eb); }
+    .stat-card.green::before  { background: linear-gradient(180deg, #34d399, #10b981); }
+    .stat-card.orange::before { background: linear-gradient(180deg, #fb923c, #f97316); }
+
+    .stat-card .stat-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+    }
+
+    .stat-card.purple .stat-icon { background: rgba(168, 85, 247, 0.15); color: #a855f7; }
+    .stat-card.blue .stat-icon   { background: rgba(59, 130, 246, 0.15); color: #3b82f6; }
+    .stat-card.green .stat-icon  { background: rgba(52, 211, 153, 0.15); color: #34d399; }
+    .stat-card.orange .stat-icon { background: rgba(251, 146, 60, 0.15); color: #fb923c; }
+
+    .stat-card .stat-label {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #888;
+        margin-bottom: 4px;
+    }
+
+    .stat-card .stat-value {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #fff;
+    }
+
+    .skapa-card {
+        background: #1a1a2e;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    .skapa-card-header {
+        padding: 1.25rem 1.5rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .skapa-card-header h2 {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #fff;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .skapa-card-body {
+        padding: 1.5rem;
+    }
+
+    .api-key-display {
+        background: #12121a;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 8px;
+        padding: 1rem 1.25rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+    }
+
+    .api-key-display .key-text {
+        font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+        font-size: 0.95rem;
+        color: #a855f7;
+        letter-spacing: 0.5px;
+    }
+
+    .api-key-meta {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+
+    .api-key-meta .meta-item {
+        text-align: center;
+        padding: 0.75rem;
+        background: #12121a;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .api-key-meta .meta-label {
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #666;
+        margin-bottom: 4px;
+    }
+
+    .api-key-meta .meta-value {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #e0e0e0;
+    }
+
+    .no-key-state {
+        text-align: center;
+        padding: 2.5rem 1rem;
+    }
+
+    .no-key-state .key-icon {
+        width: 64px;
+        height: 64px;
+        border-radius: 16px;
+        background: rgba(168, 85, 247, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem;
+        font-size: 1.5rem;
+        color: #a855f7;
+    }
+
+    .no-key-state p {
+        color: #888;
+        margin-bottom: 1.25rem;
+    }
+
+    .btn-skapa {
+        background: linear-gradient(135deg, #a855f7, #7c3aed);
+        color: #fff;
+        border: none;
+        padding: 0.6rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.85rem;
+        transition: all 0.2s ease;
+        cursor: pointer;
+    }
+
+    .btn-skapa:hover {
+        background: linear-gradient(135deg, #b86ff8, #8b5cf6);
+        color: #fff;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 16px rgba(168, 85, 247, 0.3);
+    }
+
+    .btn-skapa-outline {
+        background: transparent;
+        color: #a855f7;
+        border: 1px solid rgba(168, 85, 247, 0.4);
+        padding: 0.5rem 1.25rem;
+        border-radius: 8px;
+        font-weight: 500;
+        font-size: 0.85rem;
+        transition: all 0.2s ease;
+        cursor: pointer;
+    }
+
+    .btn-skapa-outline:hover {
+        background: rgba(168, 85, 247, 0.1);
+        color: #b86ff8;
+        border-color: rgba(168, 85, 247, 0.6);
+    }
+
+    .btn-skapa-danger {
+        background: transparent;
+        color: #ef4444;
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        padding: 0.5rem 1.25rem;
+        border-radius: 8px;
+        font-weight: 500;
+        font-size: 0.85rem;
+        transition: all 0.2s ease;
+        cursor: pointer;
+    }
+
+    .btn-skapa-danger:hover {
+        background: rgba(239, 68, 68, 0.1);
+        border-color: rgba(239, 68, 68, 0.5);
+    }
+
+    .btn-skapa-copy {
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: #e0e0e0;
+        padding: 0.4rem 0.85rem;
+        border-radius: 6px;
+        font-size: 0.8rem;
+        transition: all 0.2s ease;
+        cursor: pointer;
+        white-space: nowrap;
+    }
+
+    .btn-skapa-copy:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+    }
+
+    .btn-skapa-copy.copied {
+        background: rgba(52, 211, 153, 0.15);
+        border-color: rgba(52, 211, 153, 0.3);
+        color: #34d399;
+    }
+
+    .code-block-wrapper {
+        background: #0a0a0f;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .code-block-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.75rem 1.25rem;
+        background: rgba(255, 255, 255, 0.02);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .code-block-header .lang-tag {
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #666;
+        font-weight: 600;
+    }
+
+    .code-block-header .dot-group {
+        display: flex;
+        gap: 6px;
+    }
+
+    .code-block-header .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+    .code-block-body {
+        padding: 1.25rem;
+        overflow-x: auto;
+    }
+
+    .code-block-body pre {
+        margin: 0;
+        font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+        font-size: 0.82rem;
+        line-height: 1.7;
+        color: #c9d1d9;
+    }
+
+    .code-block-body .code-comment { color: #6e7681; }
+    .code-block-body .code-keyword { color: #ff7b72; }
+    .code-block-body .code-string  { color: #a5d6ff; }
+    .code-block-body .code-func    { color: #d2a8ff; }
+    .code-block-body .code-var     { color: #ffa657; }
+
+    .quick-links {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1rem;
+    }
+
+    .quick-link {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 1.25rem 1rem;
+        background: #12121a;
+        border: 1px solid rgba(255, 255, 255, 0.04);
+        border-radius: 10px;
+        text-decoration: none;
+        color: #e0e0e0;
+        transition: all 0.2s ease;
+    }
+
+    .quick-link:hover {
+        background: #1a1a2e;
+        border-color: rgba(168, 85, 247, 0.3);
+        color: #fff;
+        transform: translateY(-2px);
+    }
+
+    .quick-link .link-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+    }
+
+    .quick-link:nth-child(1) .link-icon { background: rgba(168, 85, 247, 0.12); color: #a855f7; }
+    .quick-link:nth-child(2) .link-icon { background: rgba(59, 130, 246, 0.12); color: #3b82f6; }
+    .quick-link:nth-child(3) .link-icon { background: rgba(52, 211, 153, 0.12); color: #34d399; }
+    .quick-link:nth-child(4) .link-icon { background: rgba(251, 146, 60, 0.12); color: #fb923c; }
+
+    .quick-link .link-label {
+        font-size: 0.82rem;
+        font-weight: 500;
+    }
+
+    .active-dot {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        margin-right: 2px;
+    }
+
+    .active-dot.on  { background: #34d399; box-shadow: 0 0 6px rgba(52, 211, 153, 0.5); }
+    .active-dot.off { background: #ef4444; box-shadow: 0 0 6px rgba(239, 68, 68, 0.4); }
+
+    @media (max-width: 767.98px) {
+        .api-key-meta { grid-template-columns: 1fr; }
+        .quick-links  { grid-template-columns: repeat(2, 1fr); }
+        .api-key-display { flex-direction: column; align-items: stretch; }
+    }
+</style>
+
+<div class="skapa-dashboard">
+    <div class="container">
+
+        {# ── Welcome Header ─────────────────────────────────── #}
+        <div class="skapa-welcome mb-4">
+            <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
                 <div>
-                    <h1 class="h2 mb-1">
-                        <i class="fas fa-tachometer-alt text-primary"></i> 
-                        Tableau de bord
-                    </h1>
-                    <p class="text-muted mb-0">
-                        Bienvenue {{ current_user.name }} ! 
-                        <span class="badge bg-{{ 'success' if current_user.is_approved() else 'warning' }}">
-                            {{ current_user.status }}
-                        </span>
+                    <h1>Welcome, {{ current_user.name }}</h1>
+                    <p class="mb-0" style="color:#888; font-size:0.9rem;">
+                        Manage your API keys and monitor usage
                     </p>
                 </div>
-                <div class="btn-toolbar">
-                    <div class="btn-group me-2">
-                        <a href="{{ url_for('analytics.index') }}" class="btn btn-outline-primary">
-                            <i class="fas fa-chart-line"></i> Analytics
-                        </a>
-                        <a href="{{ url_for('support.new_ticket') }}" class="btn btn-outline-success">
-                            <i class="fas fa-plus"></i> Support
-                        </a>
-                    </div>
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown">
-                            <i class="fas fa-tools"></i> Actions
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="{{ url_for('dashboard.settings') }}">
-                                <i class="fas fa-cog"></i> Paramètres
-                            </a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('analytics.export_data') }}">
-                                <i class="fas fa-download"></i> Exporter mes données
-                            </a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="{{ url_for('main.tutorials') }}">
-                                <i class="fas fa-book"></i> Documentation
-                            </a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Statistiques principales -->
-    <div class="row mb-4">
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-primary shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                Requêtes aujourd'hui
-                            </div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="requests-today">
-                                {{ stats.last_24h_requests }}
-                            </div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-calendar fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
-                </div>
+                <span class="status-badge {% if current_user.status == 'active' %}status-active{% elif current_user.status == 'pending' %}status-pending{% else %}status-inactive{% endif %}">
+                    <span class="active-dot {% if current_user.status == 'active' %}on{% else %}off{% endif %}"></span>
+                    {{ current_user.status }}
+                </span>
             </div>
         </div>
 
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-success shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                Total requêtes
-                            </div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                {{ "{:,}".format(stats.total_requests) }}
-                            </div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-arrow-up fa-2x text-gray-300"></i>
-                        </div>
+        {# ── Stats Cards ────────────────────────────────────── #}
+        <div class="row g-3 mb-4">
+            <div class="col-sm-6 col-lg-3">
+                <div class="stat-card purple">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <span class="stat-label">API Key</span>
+                        <div class="stat-icon"><i class="fas fa-key"></i></div>
                     </div>
+                    <div class="stat-value">
+                        {% if api_key and api_key.is_active %}
+                            <span style="color:#34d399">Active</span>
+                        {% else %}
+                            <span style="color:#ef4444">Inactive</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-lg-3">
+                <div class="stat-card blue">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <span class="stat-label">Total API Calls</span>
+                        <div class="stat-icon"><i class="fas fa-arrow-up-right-dots"></i></div>
+                    </div>
+                    <div class="stat-value">{{ '{:,}'.format(api_key.usage_count) if api_key else '0' }}</div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-lg-3">
+                <div class="stat-card green">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <span class="stat-label">Account Status</span>
+                        <div class="stat-icon"><i class="fas fa-shield-halved"></i></div>
+                    </div>
+                    <div class="stat-value" style="font-size:1.25rem">{{ current_user.status|capitalize }}</div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-lg-3">
+                <div class="stat-card orange">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <span class="stat-label">Member Since</span>
+                        <div class="stat-icon"><i class="fas fa-calendar"></i></div>
+                    </div>
+                    <div class="stat-value" style="font-size:1.25rem">{{ current_user.created_at.strftime('%b %Y') }}</div>
                 </div>
             </div>
         </div>
 
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-info shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
-                                Temps de réponse moyen
-                            </div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                {{ stats.avg_response_time }}ms
-                            </div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-clock fa-2x text-gray-300"></i>
-                        </div>
+        {# ── API Key Management ─────────────────────────────── #}
+        <div class="row g-4 mb-4">
+            <div class="col-lg-7">
+                <div class="skapa-card">
+                    <div class="skapa-card-header">
+                        <h2><i class="fas fa-key" style="color:#a855f7"></i> API Key</h2>
+                        {% if api_key %}
+                            <span class="status-badge status-active" style="font-size:0.7rem; padding:3px 10px;">
+                                <span class="active-dot on"></span> Live
+                            </span>
+                        {% endif %}
                     </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-warning shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                Tokens utilisés
-                            </div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                {{ "{:,}".format(stats.total_tokens) }}
-                            </div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-coins fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Graphiques et contenu principal -->
-    <div class="row">
-        <!-- Graphique d'utilisation -->
-        <div class="col-xl-8 col-lg-7">
-            <div class="card shadow mb-4">
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">
-                        <i class="fas fa-chart-area"></i> Utilisation de l'API (30 derniers jours)
-                    </h6>
-                    <div class="dropdown no-arrow">
-                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown">
-                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
-                            <div class="dropdown-header">Actions:</div>
-                            <a class="dropdown-item" href="{{ url_for('analytics.index') }}">Voir détails</a>
-                            <a class="dropdown-item" href="{{ url_for('analytics.export_data') }}">Exporter</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="chart-area">
-                        <canvas id="apiUsageChart" width="100%" height="320"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Informations de la clé API et notifications -->
-        <div class="col-xl-4 col-lg-5">
-            <!-- Clé API -->
-            <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">
-                        <i class="fas fa-key"></i> Ma clé API
-                    </h6>
-                </div>
-                <div class="card-body">
-                    {% if api_key %}
-                        <div class="mb-3">
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                <span class="badge bg-success">
-                                    <i class="fas fa-check"></i> Active
-                                </span>
-                                <small class="text-muted">
-                                    Créée {{ api_key.created_at.strftime('%d/%m/%Y') }}
-                                </small>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label small">Clé API :</label>
-                                <div class="input-group">
-                                    <input type="password" class="form-control font-monospace" 
-                                           value="{{ api_key.full_key }}" id="apiKeyField" readonly>
-                                    <button class="btn btn-outline-secondary" type="button" onclick="toggleApiKey()">
-                                        <i class="fas fa-eye" id="toggleIcon"></i>
-                                    </button>
-                                    <button class="btn btn-outline-primary" type="button" onclick="copyApiKey()">
-                                        <i class="fas fa-copy"></i>
+                    <div class="skapa-card-body">
+                        {% if api_key %}
+                            <div class="api-key-display mb-3">
+                                <span class="key-text" id="apiKeyMasked">{{ api_key.key_prefix }}••••••••••••••••</span>
+                                <div class="d-flex gap-2">
+                                    <button class="btn-skapa-copy" onclick="copyFullKey()" id="copyKeyBtn">
+                                        <i class="fas fa-copy"></i> Copy full key
                                     </button>
                                 </div>
                             </div>
-                            {% if api_key.last_used_at %}
-                                <p class="small text-muted mb-2">
-                                    <i class="fas fa-clock"></i> 
-                                    Dernière utilisation: {{ api_key.last_used_at|time_ago }}
-                                </p>
-                            {% endif %}
-                        </div>
-                        <div class="d-grid gap-2">
-                            <button class="btn btn-warning btn-sm" onclick="regenerateApiKey()">
-                                <i class="fas fa-sync"></i> Régénérer
-                            </button>
-                            <button class="btn btn-danger btn-sm" onclick="revokeApiKey()">
-                                <i class="fas fa-trash"></i> Révoquer
-                            </button>
-                        </div>
-                    {% else %}
-                        <div class="text-center py-3">
-                            <i class="fas fa-key fa-3x text-muted mb-3"></i>
-                            <p class="text-muted mb-3">Aucune clé API active</p>
-                            <button class="btn btn-primary" onclick="generateApiKey()">
-                                <i class="fas fa-plus"></i> Générer une clé
-                            </button>
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
 
-            <!-- Notifications récentes -->
-            <div class="card shadow mb-4">
-                <div class="card-header py-3 d-flex justify-content-between align-items-center">
-                    <h6 class="m-0 font-weight-bold text-primary">
-                        <i class="fas fa-bell"></i> Notifications récentes
-                    </h6>
-                    <a href="{{ url_for('notifications.index') }}" class="btn btn-sm btn-outline-primary">
-                        Voir tout
-                    </a>
-                </div>
-                <div class="card-body p-0">
-                    {% if recent_notifications %}
-                        <div class="list-group list-group-flush">
-                            {% for notification in recent_notifications %}
-                                <div class="list-group-item px-3 py-2">
-                                    <div class="d-flex justify-content-between align-items-start">
-                                        <div class="flex-grow-1">
-                                            <div class="fw-bold small">{{ notification.title }}</div>
-                                            <div class="text-muted small">{{ notification.message[:50] }}...</div>
-                                            <div class="text-muted smaller">{{ notification.created_at|time_ago }}</div>
-                                        </div>
-                                        <span class="badge bg-{{ notification.type }} ms-2">{{ notification.type }}</span>
+                            <div class="api-key-meta">
+                                <div class="meta-item">
+                                    <div class="meta-label">Created</div>
+                                    <div class="meta-value">{{ api_key.created_at.strftime('%d %b %Y') }}</div>
+                                </div>
+                                <div class="meta-item">
+                                    <div class="meta-label">Last Used</div>
+                                    <div class="meta-value">
+                                        {% if api_key.last_used_at %}
+                                            {{ api_key.last_used_at.strftime('%d %b %Y') }}
+                                        {% else %}
+                                            Never
+                                        {% endif %}
                                     </div>
                                 </div>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        <div class="text-center py-4 text-muted">
-                            <i class="fas fa-bell-slash fa-2x mb-2"></i>
-                            <p class="mb-0">Aucune notification récente</p>
-                        </div>
-                    {% endif %}
+                                <div class="meta-item">
+                                    <div class="meta-label">Usage Count</div>
+                                    <div class="meta-value">{{ '{:,}'.format(api_key.usage_count) }}</div>
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-end gap-2 mt-4">
+                                <form method="POST" action="{{ url_for('dashboard.generate_api_key') }}"
+                                      onsubmit="return confirm('Regenerate your API key? The current key will be permanently revoked.');">
+                                    <button type="submit" class="btn-skapa-danger">
+                                        <i class="fas fa-rotate"></i> Regenerate key
+                                    </button>
+                                </form>
+                            </div>
+                        {% else %}
+                            <div class="no-key-state">
+                                <div class="key-icon">
+                                    <i class="fas fa-key"></i>
+                                </div>
+                                <p>You haven't generated an API key yet.<br>Create one to start using the Skapa API.</p>
+                                <form method="POST" action="{{ url_for('dashboard.generate_api_key') }}">
+                                    <button type="submit" class="btn-skapa">
+                                        <i class="fas fa-plus me-1"></i> Generate your first API key
+                                    </button>
+                                </form>
+                            </div>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
 
-    <!-- Activité récente -->
-    <div class="row">
-        <div class="col-12">
-            <div class="card shadow">
-                <div class="card-header py-3 d-flex justify-content-between align-items-center">
-                    <h6 class="m-0 font-weight-bold text-primary">
-                        <i class="fas fa-history"></i> Activité récente
-                    </h6>
-                    <a href="{{ url_for('analytics.activity') }}" class="btn btn-sm btn-outline-primary">
-                        Voir l'historique complet
-                    </a>
-                </div>
-                <div class="card-body">
-                    <div class="timeline" id="activityTimeline">
-                        <div class="text-center py-3">
-                            <i class="fas fa-spinner fa-spin"></i> Chargement de l'activité...
+            {# ── Quick Start ────────────────────────────────── #}
+            <div class="col-lg-5">
+                <div class="skapa-card" style="height:100%; display:flex; flex-direction:column;">
+                    <div class="skapa-card-header">
+                        <h2><i class="fas fa-code" style="color:#3b82f6"></i> Quick Start</h2>
+                        <button class="btn-skapa-copy" onclick="copyCodeBlock()" id="copyCodeBtn">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                    </div>
+                    <div class="skapa-card-body" style="flex:1; display:flex;">
+                        <div class="code-block-wrapper" style="flex:1; display:flex; flex-direction:column;">
+                            <div class="code-block-header">
+                                <span class="lang-tag">Python</span>
+                                <div class="dot-group">
+                                    <span class="dot"></span>
+                                    <span class="dot"></span>
+                                    <span class="dot"></span>
+                                </div>
+                            </div>
+                            <div class="code-block-body" style="flex:1;">
+<pre id="codeSnippet"><span class="code-keyword">import</span> openai
+
+client = openai.<span class="code-func">OpenAI</span>(
+    base_url=<span class="code-string">"https://api.skapa.design/v1"</span>,
+    api_key=<span class="code-string">"YOUR_API_KEY"</span>
+)
+
+response = client.chat.completions.<span class="code-func">create</span>(
+    model=<span class="code-string">"deepseek-v3.2"</span>,
+    messages=[{<span class="code-string">"role"</span>: <span class="code-string">"user"</span>, <span class="code-string">"content"</span>: <span class="code-string">"Hello!"</span>}]
+)</pre>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        {# ── Quick Links ────────────────────────────────────── #}
+        <div class="skapa-card">
+            <div class="skapa-card-header">
+                <h2><i class="fas fa-compass" style="color:#fb923c"></i> Quick Links</h2>
+            </div>
+            <div class="skapa-card-body">
+                <div class="quick-links">
+                    <a href="{{ url_for('dashboard.profile') }}" class="quick-link">
+                        <div class="link-icon"><i class="fas fa-user"></i></div>
+                        <span class="link-label">Profile</span>
+                    </a>
+                    <a href="{{ url_for('dashboard.settings') }}" class="quick-link">
+                        <div class="link-icon"><i class="fas fa-gear"></i></div>
+                        <span class="link-label">Settings</span>
+                    </a>
+                    <a href="{{ url_for('dashboard.usage') }}" class="quick-link">
+                        <div class="link-icon"><i class="fas fa-book"></i></div>
+                        <span class="link-label">API Docs</span>
+                    </a>
+                    <a href="{{ url_for('support.index') }}" class="quick-link">
+                        <div class="link-icon"><i class="fas fa-life-ring"></i></div>
+                        <span class="link-label">Support</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
     </div>
 </div>
-
-<style>
-.border-left-primary {
-    border-left: 0.25rem solid #4e73df !important;
-}
-.border-left-success {
-    border-left: 0.25rem solid #1cc88a !important;
-}
-.border-left-info {
-    border-left: 0.25rem solid #36b9cc !important;
-}
-.border-left-warning {
-    border-left: 0.25rem solid #f6c23e !important;
-}
-.timeline {
-    position: relative;
-    padding-left: 30px;
-}
-.timeline-item {
-    position: relative;
-    padding-bottom: 15px;
-}
-.timeline-item::before {
-    content: '';
-    position: absolute;
-    left: -30px;
-    top: 5px;
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: #007bff;
-}
-.timeline-item::after {
-    content: '';
-    position: absolute;
-    left: -26px;
-    top: 15px;
-    width: 2px;
-    height: calc(100% + 5px);
-    background: #e3e6f0;
-}
-.timeline-item:last-child::after {
-    display: none;
-}
-</style>
 {% endblock %}
 
 {% block scripts %}
 <script>
-// Configuration du graphique d'utilisation API
-const chartData = {{ stats.chart_data|tojson }};
-
-const ctx = document.getElementById('apiUsageChart').getContext('2d');
-const apiUsageChart = new Chart(ctx, {
-    type: 'line',
-    data: {
-        labels: chartData.dates,
-        datasets: [{
-            label: 'Requêtes',
-            data: chartData.requests,
-            borderColor: '#4e73df',
-            backgroundColor: 'rgba(78, 115, 223, 0.1)',
-            borderWidth: 2,
-            fill: true,
-            tension: 0.3
-        }, {
-            label: 'Temps de réponse (ms)',
-            data: chartData.response_times,
-            borderColor: '#1cc88a',
-            backgroundColor: 'rgba(28, 200, 138, 0.1)',
-            borderWidth: 2,
-            fill: false,
-            yAxisID: 'y1',
-            tension: 0.3
-        }]
-    },
-    options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        scales: {
-            y: {
-                beginAtZero: true,
-                title: {
-                    display: true,
-                    text: 'Nombre de requêtes'
-                }
-            },
-            y1: {
-                type: 'linear',
-                display: true,
-                position: 'right',
-                title: {
-                    display: true,
-                    text: 'Temps de réponse (ms)'
-                },
-                grid: {
-                    drawOnChartArea: false,
-                }
-            }
-        },
-        plugins: {
-            legend: {
-                display: true,
-                position: 'top'
-            },
-            tooltip: {
-                mode: 'index',
-                intersect: false
-            }
-        },
-        interaction: {
-            mode: 'nearest',
-            axis: 'x',
-            intersect: false
-        }
-    }
-});
-
-// Gestion de la clé API
-function toggleApiKey() {
-    const field = document.getElementById('apiKeyField');
-    const icon = document.getElementById('toggleIcon');
-    
-    if (field.type === 'password') {
-        field.type = 'text';
-        icon.className = 'fas fa-eye-slash';
-    } else {
-        field.type = 'password';
-        icon.className = 'fas fa-eye';
-    }
-}
-
-function copyApiKey() {
-    const field = document.getElementById('apiKeyField');
-    field.select();
-    document.execCommand('copy');
-    showToast('Clé API copiée !', 'success');
-}
-
-function generateApiKey() {
-    if (confirm('Générer une nouvelle clé API ?')) {
-        fetch('{{ url_for("dashboard.generate_api_key") }}', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            hideLoading();
-            if (data.success) {
-                showToast('Nouvelle clé API générée !', 'success');
-                setTimeout(() => location.reload(), 1000);
-            } else {
-                showToast('Erreur: ' + data.error, 'danger');
-            }
-        });
-    }
-}
-
-function regenerateApiKey() {
-    if (confirm('Régénérer votre clé API ? L\'ancienne sera définitivement invalidée.')) {
-        generateApiKey();
-    }
-}
-
-function revokeApiKey() {
-    if (confirm('Êtes-vous sûr de vouloir révoquer votre clé API ? Cette action est irréversible.')) {
-        showLoading();
-        
-        fetch('/dashboard/revoke-api-key', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            hideLoading();
-            if (data.success) {
-                showToast('Clé API révoquée', 'warning');
-                setTimeout(() => location.reload(), 1000);
-            } else {
-                showToast('Erreur: ' + data.error, 'danger');
-            }
-        });
-    }
-}
-
-// Chargement de l'activité récente
-function loadRecentActivity() {
-    fetch('{{ url_for("analytics.activity") }}?limit=5&format=json')
-        .then(response => response.json())
-        .then(data => {
-            const timeline = document.getElementById('activityTimeline');
-            timeline.innerHTML = '';
-            
-            if (data.logs && data.logs.length > 0) {
-                data.logs.forEach(log => {
-                    const item = document.createElement('div');
-                    item.className = 'timeline-item';
-                    item.innerHTML = `
-                        <div class="d-flex justify-content-between align-items-start">
-                            <div>
-                                <div class="fw-bold">${log.description}</div>
-                                <div class="text-muted small">${log.action}</div>
-                            </div>
-                            <div class="text-muted small">${log.created_at}</div>
-                        </div>
-                    `;
-                    timeline.appendChild(item);
-                });
-            } else {
-                timeline.innerHTML = '<div class="text-center text-muted py-3">Aucune activité récente</div>';
-            }
-        })
-        .catch(error => {
-            console.error('Erreur lors du chargement de l\'activité:', error);
-            document.getElementById('activityTimeline').innerHTML = 
-                '<div class="text-center text-muted py-3">Erreur lors du chargement</div>';
-        });
-}
-
-// Mise à jour des statistiques en temps réel
-function updateQuickStats() {
-    fetch('{{ url_for("dashboard.quick_stats") }}')
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                document.getElementById('requests-today').textContent = data.requests_today;
-            }
-        })
-        .catch(error => console.error('Erreur mise à jour stats:', error));
-}
-
-// Initialisation
-document.addEventListener('DOMContentLoaded', function() {
-    loadRecentActivity();
-    
-    // Mise à jour automatique des stats basée sur les préférences utilisateur
-    {% if preferences and preferences.dashboard_refresh_rate %}
-        setInterval(updateQuickStats, {{ preferences.dashboard_refresh_rate * 1000 }});
+function copyFullKey() {
+    {% if api_key %}
+    const fullKey = '{{ api_key.reconstruct_key() }}';
+    navigator.clipboard.writeText(fullKey).then(function() {
+        const btn = document.getElementById('copyKeyBtn');
+        btn.classList.add('copied');
+        btn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+        setTimeout(function() {
+            btn.classList.remove('copied');
+            btn.innerHTML = '<i class="fas fa-copy"></i> Copy full key';
+        }, 2000);
+    });
     {% endif %}
-});
+}
+
+function copyCodeBlock() {
+    const code = document.getElementById('codeSnippet').textContent;
+    navigator.clipboard.writeText(code).then(function() {
+        const btn = document.getElementById('copyCodeBtn');
+        btn.classList.add('copied');
+        btn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+        setTimeout(function() {
+            btn.classList.remove('copied');
+            btn.innerHTML = '<i class="fas fa-copy"></i> Copy';
+        }, 2000);
+    });
+}
 </script>
-
-<style>
-.timeline {
-    position: relative;
-    padding-left: 30px;
-}
-
-.timeline-item {
-    position: relative;
-    margin-bottom: 20px;
-}
-
-.timeline-marker {
-    position: absolute;
-    left: -35px;
-    top: 5px;
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-}
-
-.timeline-item:not(:last-child):before {
-    content: '';
-    position: absolute;
-    left: -29px;
-    top: 17px;
-    width: 2px;
-    height: calc(100% + 8px);
-    background-color: #dee2e6;
-}
-
-.timeline-title {
-    font-size: 0.9rem;
-    font-weight: 600;
-    margin-bottom: 0.25rem;
-}
-
-.timeline-text {
-    font-size: 0.8rem;
-    margin-bottom: 0;
-}
-
-/* Styles pour l'affichage des clés API */
-#revealedKeyContainer {
-    animation: slideDown 0.3s ease-in-out;
-}
-
-@keyframes slideDown {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-#fullApiKeyDisplay {
-    word-break: break-all;
-    font-family: 'Courier New', monospace;
-    font-size: 0.9rem;
-    background: linear-gradient(45deg, #f8f9fa, #e9ecef);
-    border: 2px solid #ffc107;
-    border-radius: 8px;
-    padding: 12px;
-    position: relative;
-}
-
-[data-theme="dark"] #fullApiKeyDisplay {
-    background: linear-gradient(45deg, #404040, #505050);
-    border-color: #ffc107;
-    color: #ffffff;
-}
-
-#fullApiKeyDisplay::before {
-    content: '🔑';
-    position: absolute;
-    top: -8px;
-    left: 10px;
-    background: #ffc107;
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-size: 12px;
-}
-
-.btn-group .btn:hover {
-    transform: translateY(-1px);
-    transition: transform 0.2s ease;
-}
-
-/* Animation pour les boutons de copie */
-.btn:active {
-    transform: translateY(0) scale(0.98);
-}
-
-/* Indicateur de sécurité */
-.security-indicator {
-    display: inline-block;
-    animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-    0% { opacity: 1; }
-    50% { opacity: 0.7; }
-    100% { opacity: 1; }
-}
-</style>
-{% endblock %} 
+{% endblock %}
