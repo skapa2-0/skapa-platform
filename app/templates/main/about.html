@@ -1,159 +1,246 @@
 {% extends "base.html" %}
 
 {% block content %}
-<style>
-.page-about { background: #0a0a0f; color: rgba(255,255,255,0.7); font-family: 'Inter', sans-serif; }
-.page-about .sk-card { background: #1a1a2e; border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; }
-.page-about h1, .page-about h2, .page-about h3, .page-about h4, .page-about h5, .page-about h6 { color: #fff; }
-.page-about .text-body { color: rgba(255,255,255,0.7); }
-.page-about .text-muted { color: rgba(255,255,255,0.45); }
-.page-about a { color: #a78bfa; text-decoration: none; }
-.page-about a:hover { color: #c4b5fd; }
-.page-about .sk-accent { background: linear-gradient(135deg, #7c3aed, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-.page-about .icon-box { width: 40px; height: 40px; border-radius: 10px; display: inline-flex; align-items: center; justify-content: center; background: rgba(124,58,237,0.15); color: #a78bfa; }
-.page-about .profile-avatar { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; }
-.page-about .sk-card:hover { border-color: rgba(255,255,255,0.12); }
-</style>
-
-<div class="container py-5 page-about">
+<div class="container py-5">
     <div class="row">
         <div class="col-lg-8 mx-auto">
             <div class="text-center mb-5">
-                <h1 class="display-5 mb-3 fw-bold">About Skapa</h1>
-                <p class="lead text-muted" style="color: rgba(255,255,255,0.7);">
-                    Skapa is a unified AI gateway providing access to multiple LLM models through an OpenAI-compatible API
+                <h1 class="display-4 mb-4">À propos</h1>
+                <p class="lead text-muted">
+                    Découvrez l'histoire derrière cette plateforme d'IA locale et son créateur
                 </p>
             </div>
 
-            <!-- Creator profile -->
-            <div class="sk-card p-4 p-md-5 mb-5">
-                <div class="row align-items-center">
-                    <div class="col-md-4 text-center mb-4 mb-md-0">
-                        <img src="https://media.licdn.com/dms/image/v2/D4E03AQFnq1PTeEMwmA/profile-displayphoto-shrink_200_200/B4EZSjc1JsHMAc-/0/1737909031911?e=1756339200&v=beta&t=Mga_I2QzdV66dXLQJCB15tgQphc4hIjPmF2EyPSCRPc" alt="Kevin Hamon" class="profile-avatar mb-3">
-                        <h4 class="text-white mb-1">Kevin Hamon</h4>
-                        <p class="text-muted small mb-0">AI & Platform Engineer</p>
-                        <div class="mt-4">
-                            <a href="mailto:contact@skapa.design" class="btn btn-sm me-2 mb-2" style="background: rgba(124,58,237,0.2); color: #a78bfa; border: 1px solid rgba(124,58,237,0.4);">
-                                <i class="fas fa-envelope"></i> Email
-                            </a>
-                            <a href="https://www.linkedin.com/in/kevin-hamon31/" target="_blank" class="btn btn-sm mb-2" style="background: rgba(124,58,237,0.2); color: #a78bfa; border: 1px solid rgba(124,58,237,0.4);">
-                                <i class="fab fa-linkedin"></i> LinkedIn
-                            </a>
+            <!-- Profil du créateur -->
+            <div class="card border-0 shadow-lg mb-5">
+                <div class="card-body p-5">
+                    <div class="row align-items-center">
+                        <div class="col-md-4 text-center mb-4 mb-md-0">
+                            <div class="profile-avatar mx-auto mb-3">
+                                <img src="https://media.licdn.com/dms/image/v2/D4E03AQFnq1PTeEMwmA/profile-displayphoto-shrink_200_200/B4EZSjc1JsHMAc-/0/1737909031911?e=1756339200&v=beta&t=Mga_I2QzdV66dXLQJCB15tgQphc4hIjPmF2EyPSCRPc" alt="Kevin Hamon" class="rounded-circle mb-3" style="width: 150px; height: 150px; object-fit: cover;">
+                            </div>
+                            <h4>Kevin Hamon</h4>
+                            <p class="text-muted">Ingénieur IA & Fondateur</p>
+                            
+                            <!-- Contact -->
+                            <div class="contact-links mt-4">
+                                <a href="mailto:contact@skapa.design" class="btn btn-outline-primary btn-sm me-2 mb-2">
+                                    <i class="fas fa-envelope"></i> Email
+                                </a>
+                                <a href="https://www.linkedin.com/in/kevin-hamon31/" target="_blank" class="btn btn-outline-primary btn-sm mb-2">
+                                    <i class="fab fa-linkedin"></i> LinkedIn
+                                </a>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-md-8">
-                        <h5 class="mb-3"><i class="fas fa-rocket icon-box me-2"></i>Passion for AI and scalability</h5>
-                        <p class="text-body mb-4">
-                            Skapa was created to provide developers with a simple, unified API to access AI models with transparent per-token billing. 
-                            As the creator, I focus on deployment of scalable AI architectures and bringing the best LLM models under one roof.
-                        </p>
-                        <h6 class="mb-3"><i class="fas fa-lightbulb icon-box me-2"></i>Why Skapa?</h6>
-                        <p class="text-body mb-4">
-                            Skapa unifies multiple providers and models behind a single OpenAI-compatible endpoint. 
-                            No vendor lock-in, no complex integrations — just one API key and transparent pricing.
-                        </p>
-                        <h6 class="mb-3"><i class="fas fa-bullseye icon-box me-2"></i>Technical vision</h6>
-                        <p class="text-body mb-3">
-                            Skapa demonstrates how to deploy and route to multiple LLM backends while maintaining 
-                            compatibility, performance and security in production.
-                        </p>
-                        <h6 class="mb-3"><i class="fas fa-tools icon-box me-2"></i>Tech stack</h6>
-                        <div class="row">
-                            <div class="col-6">
-                                <ul class="list-unstyled text-body small">
-                                    <li><i class="fab fa-python text-primary me-2" style="color: #a78bfa;"></i>Python & Flask</li>
-                                    <li><i class="fas fa-database me-2" style="color: #a78bfa;"></i>SQLite</li>
-                                    <li><i class="fas fa-plug me-2" style="color: #a78bfa;"></i>OpenAI-compatible API</li>
-                                    <li><i class="fas fa-route me-2" style="color: #a78bfa;"></i>Multi-model routing (Ollama Cloud)</li>
-                                </ul>
+                        
+                        <div class="col-md-8">
+                            <h5 class="mb-3">🚀 Passion pour l'IA et la scalabilité</h5>
+                            <p class="text-muted mb-4">
+                                Je suis un jeune ingénieur passionné par l'intelligence artificielle et la scalabilité. 
+                                Mon expertise se concentre sur le déploiement d'architectures IA à grande échelle, 
+                                un domaine qui me fascine par sa complexité technique et son potentiel d'innovation.
+                            </p>
+                            
+                            <h6 class="mb-3">💡 Pourquoi cette plateforme ?</h6>
+                            <p class="text-muted mb-4">
+                                J'ai créé cette plateforme pour démontrer mon savoir-faire et ma capacité à maîtriser 
+                                l'ensemble de la chaîne d'utilisation de l'intelligence artificielle : depuis l'entraînement 
+                                des modèles jusqu'au déploiement en production, en passant par l'optimisation des performances 
+                                et la gestion de l'infrastructure.
+                            </p>
+                            
+                            <h6 class="mb-3">🎯 Vision technique</h6>
+                            <p class="text-muted mb-3">
+                                Cette API représente une démonstration concrète de mes compétences en architecture IA, 
+                                montrant comment déployer efficacement des modèles de langage en production tout en 
+                                maintenant compatibilité, performance et sécurité.
+                            </p>
+                            
+                            <h6 class="mb-3">🛠️ Stack technique maîtrisé</h6>
+                            <div class="row">
+                                <div class="col-6">
+                                    <ul class="list-unstyled text-muted small">
+                                        <li><i class="fab fa-python text-primary me-2"></i>Python & Flask</li>
+                                        <li><i class="fas fa-database text-success me-2"></i>PostgreSQL & SQLAlchemy</li>
+                                        <li><i class="fas fa-cloud text-info me-2"></i>Docker & Kubernetes</li>
+                                        <li><i class="fas fa-server text-warning me-2"></i>Caching & API Gateway</li>
+                                    </ul>
+                                </div>
+                                <div class="col-6">
+                                    <ul class="list-unstyled text-muted small">
+                                        <li><i class="fab fa-js text-warning me-2"></i>JavaScript & React</li>
+                                        <li><i class="fas fa-brain text-danger me-2"></i>LLMs & Transformers</li>
+                                        <li><i class="fas fa-chart-line text-success me-2"></i>MLOps & Monitoring</li>
+                                        <li><i class="fas fa-shield-alt text-primary me-2"></i>Sécurité & DevOps</li>
+                                    </ul>
+                                </div>
                             </div>
-                            <div class="col-6">
-                                <ul class="list-unstyled text-body small">
-                                    <li><i class="fas fa-server me-2" style="color: #a78bfa;"></i>Cloud infrastructure</li>
-                                    <li><i class="fas fa-brain me-2" style="color: #a78bfa;"></i>LLM integration</li>
-                                    <li><i class="fas fa-coins me-2" style="color: #a78bfa;"></i>Per-token billing</li>
-                                    <li><i class="fas fa-shield-alt me-2" style="color: #a78bfa;"></i>Secure authentication</li>
-                                </ul>
-                            </div>
+                            
+                            <h6 class="mb-3 mt-3">🌟 Réalisations récentes</h6>
+                            <ul class="text-muted small">
+                                <li>🚀 Déploiement d'architectures IA scalables pour des milliers d'utilisateurs</li>
+                                <li>⚡ Optimisation de modèles LLM avec réduction de 40% du temps de réponse</li>
+                                <li>🔒 Implémentation de systèmes d'audit et de sécurité avancés</li>
+                                <li>📊 Développement de dashboards analytics en temps réel</li>
+                            </ul>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Platform features -->
+            <!-- La plateforme -->
             <div class="row mb-5">
-                <div class="col-12 mb-4">
-                    <h2 class="mb-0"><i class="fas fa-cube icon-box me-2"></i>The Skapa platform</h2>
+                <div class="col-12">
+                    <h2 class="mb-4">🤖 Notre plateforme d'IA</h2>
                 </div>
+                
                 <div class="col-md-6 mb-4">
-                    <div class="sk-card h-100 p-4">
-                        <div class="d-flex align-items-center mb-3">
-                            <div class="icon-box me-3"><i class="fas fa-brain"></i></div>
-                            <h5 class="mb-0 text-white">Multiple models</h5>
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="feature-icon-sm bg-primary text-white rounded me-3">
+                                    <i class="fas fa-brain"></i>
+                                </div>
+                                <h5 class="mb-0">Modèle personnalisé</h5>
+                            </div>
+                            <p class="text-muted">
+                                Notre API est propulsée par <strong>KR-7B-Instruct-v1.17.Q5_0</strong>, 
+                                un modèle LLM que j'ai personnellement réentraîné pour optimiser les performances 
+                                et la qualité des réponses.
+                            </p>
                         </div>
-                        <p class="text-body small mb-0">
-                            Access DeepSeek, Qwen, Devstral, Gemma, GLM, MiniMax and more through a single unified endpoint. 
-                            Switch models with a single parameter change.
-                        </p>
                     </div>
                 </div>
+                
                 <div class="col-md-6 mb-4">
-                    <div class="sk-card h-100 p-4">
-                        <div class="d-flex align-items-center mb-3">
-                            <div class="icon-box me-3"><i class="fas fa-plug"></i></div>
-                            <h5 class="mb-0 text-white">OpenAI compatibility</h5>
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="feature-icon-sm bg-success text-white rounded me-3">
+                                    <i class="fas fa-server"></i>
+                                </div>
+                                <h5 class="mb-0">Infrastructure locale</h5>
+                            </div>
+                            <p class="text-muted">
+                                Toute l'intelligence artificielle fonctionne sur nos serveurs locaux, 
+                                garantissant la confidentialité des données et un contrôle total 
+                                sur l'infrastructure.
+                            </p>
                         </div>
-                        <p class="text-body small mb-0">
-                            100% OpenAI-compatible API. Drop-in replacement for your existing integrations — 
-                            no code changes required.
-                        </p>
                     </div>
                 </div>
+                
                 <div class="col-md-6 mb-4">
-                    <div class="sk-card h-100 p-4">
-                        <div class="d-flex align-items-center mb-3">
-                            <div class="icon-box me-3"><i class="fas fa-coins"></i></div>
-                            <h5 class="mb-0 text-white">Transparent pricing</h5>
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="feature-icon-sm bg-info text-white rounded me-3">
+                                    <i class="fas fa-plug"></i>
+                                </div>
+                                <h5 class="mb-0">Compatibilité OpenAI</h5>
+                            </div>
+                            <p class="text-muted">
+                                API 100% compatible avec OpenAI, permettant une intégration 
+                                transparente dans vos applications existantes sans modification 
+                                de code.
+                            </p>
                         </div>
-                        <p class="text-body small mb-0">
-                            Pay only for what you use. Per-token billing with no subscriptions, no minimums, 
-                            no hidden fees.
-                        </p>
                     </div>
                 </div>
+                
                 <div class="col-md-6 mb-4">
-                    <div class="sk-card h-100 p-4">
-                        <div class="d-flex align-items-center mb-3">
-                            <div class="icon-box me-3"><i class="fas fa-bolt"></i></div>
-                            <h5 class="mb-0 text-white">Fast routing</h5>
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="feature-icon-sm bg-warning text-white rounded me-3">
+                                    <i class="fas fa-comments"></i>
+                                </div>
+                                <h5 class="mb-0">Chatbot interactif</h5>
+                            </div>
+                            <p class="text-muted">
+                                Testez notre IA en action sur 
+                                <a href="https://api.skapa.design/" target="_blank" class="text-decoration-none">
+                                    api.skapa.design
+                                </a> - même technologie que notre API !
+                            </p>
                         </div>
-                        <p class="text-body small mb-0">
-                            Multi-provider routing with minimal latency. Choose the best model for each task 
-                            from <a href="https://skapa.design" target="_blank">skapa.design</a>.
-                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stack technique -->
+            <div class="card border-0 shadow-sm mb-5">
+                <div class="card-body p-4">
+                    <h3 class="mb-4">⚙️ Stack technique</h3>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6 class="text-primary">Backend & IA</h6>
+                            <ul class="list-unstyled text-muted">
+                                <li><i class="fas fa-check text-success me-2"></i>Python & Flask</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Modèle LLM personnalisé</li>
+                                <li><i class="fas fa-check text-success me-2"></i>API REST compatible OpenAI</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Base de données PostgreSQL</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="text-primary">Infrastructure & Sécurité</h6>
+                            <ul class="list-unstyled text-muted">
+                                <li><i class="fas fa-check text-success me-2"></i>Serveurs dédiés</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Authentification par clés API</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Interface d'administration</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Monitoring et logs</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <!-- Mission -->
-            <div class="sk-card p-5 text-center">
-                <h3 class="mb-4"><i class="fas fa-bullseye icon-box me-2"></i>Our mission</h3>
-                <p class="lead text-body mb-4" style="font-size: 1.1rem; color: rgba(255,255,255,0.8);">
-                    Provide developers with a simple, unified API to access AI models with transparent per-token billing.
+            <div class="text-center">
+                <h3 class="mb-4">🎯 Notre mission</h3>
+                <p class="lead text-muted mb-4">
+                    Démocratiser l'accès à l'intelligence artificielle en proposant une alternative 
+                    locale, sécurisée et performante aux solutions cloud traditionnelles.
                 </p>
-                <p class="text-muted mb-0">
-                    Skapa removes the complexity of integrating multiple AI providers. 
-                    One API, one dashboard, predictable costs.
-                </p>
-            </div>
-
-            <!-- Contact -->
-            <div class="text-center mt-5">
                 <p class="text-muted">
-                    Questions? Reach us at <a href="mailto:contact@skapa.design">contact@skapa.design</a>
+                    Cette plateforme illustre comment il est possible de déployer et maintenir 
+                    des services d'IA de qualité professionnelle tout en gardant le contrôle 
+                    total sur les données et l'infrastructure.
                 </p>
             </div>
         </div>
     </div>
 </div>
-{% endblock %}
+
+<style>
+.profile-avatar {
+    width: 120px;
+    height: 120px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.feature-icon-sm {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.contact-links .btn {
+    min-width: 100px;
+}
+
+.card {
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+}
+</style>
+{% endblock %} 

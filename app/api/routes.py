@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 import time
 from app import db
 
-# Dictionnaire pour le rate limiting simple (en production, utiliser Redis)
+# Dictionnaire pour le rate limiting simple (en mémoire)
 rate_limit_storage = {}
 
 def check_rate_limit(api_key_id, limit_per_hour=100):

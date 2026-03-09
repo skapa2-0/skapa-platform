@@ -20,9 +20,9 @@ def rebuild_db():
 
         # Création de l'utilisateur admin par défaut
         print("3. Ajout de l'utilisateur administrateur...")
-        if not User.query.filter_by(email='kevin.hamon@intra-tech.fr').first():
+        if not User.query.filter_by(email='admin@skapa.design').first():
             admin_user = User(
-                email='kevin.hamon@intra-tech.fr',
+                email='admin@skapa.design',
                 name='Kevin Hamon',
                 justification='Compte administrateur initial',
                 role='admin',
@@ -31,7 +31,7 @@ def rebuild_db():
             admin_user.set_password('gc73vau5oeqTbtGn')
             db.session.add(admin_user)
             db.session.commit()
-            print("   => Utilisateur 'kevin.hamon@intra-tech.fr' (mdp: 'gc73vau5oeqTbtGn') créé.")
+            print("   => Utilisateur 'admin@skapa.design' (mdp: 'gc73vau5oeqTbtGn') créé.")
         else:
             print("   => L'utilisateur admin existe déjà, aucune action requise.")
 

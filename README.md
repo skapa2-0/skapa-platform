@@ -89,7 +89,7 @@ Une plateforme d'intelligence artificielle locale compatible OpenAI avec interfa
 ```bash
 # Cloner le projet
 git clone <repository-url>
-cd prompt.intra-tech.fr
+cd platform.skapa.design
 
 # Installer les dépendances
 pip install -r requirements.txt
@@ -305,10 +305,10 @@ export MAIL_PASSWORD=your-password
 
 ## 📧 Contact et Support
 
-- **Email** : kevin.hamon@intra-tech.fr
+- **Email** : kevin.hamon@skapa.design
 - **Support** : Utilisez le système de tickets intégré
 - **Documentation** : Consultez les tutoriels dans l'application
-- **Chat IA** : [chat.intra-tech.fr](https://chat.intra-tech.fr/)
+- **Chat IA** : [chat.skapa.design](https://chat.skapa.design/)
 
 ---
 

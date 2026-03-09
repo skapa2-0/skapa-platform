@@ -96,9 +96,9 @@ def create_sample_data():
     # Utilisateurs de test avec des adresses mail crédibles de société
     users_data = [
         {
-            'email': 'alice.dupont@intra-tech.fr',
+            'email': 'alice.dupont@skapa.design',
             'name': 'Alice Dupont',
-            'justification': 'Responsable produit chez Intra-Tech',
+            'justification': 'Responsable produit chez Skapa',
             'status': 'approved'
         },
         {

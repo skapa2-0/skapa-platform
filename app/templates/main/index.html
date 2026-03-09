@@ -1,594 +1,289 @@
 {% extends "base.html" %}
 
 {% block content %}
-<style>
-    .skapa-hero {
-        background: linear-gradient(135deg, #0a0a0f 0%, #12121a 50%, #1a1a2e 100%);
-        min-height: 85vh;
-        display: flex;
-        align-items: center;
-        position: relative;
-        overflow: hidden;
-    }
-    .skapa-hero::before {
-        content: '';
-        position: absolute;
-        top: -50%;
-        left: -50%;
-        width: 200%;
-        height: 200%;
-        background: radial-gradient(ellipse at 30% 50%, rgba(124, 58, 237, 0.08) 0%, transparent 60%),
-                    radial-gradient(ellipse at 70% 50%, rgba(59, 130, 246, 0.06) 0%, transparent 60%);
-        pointer-events: none;
-    }
-    .skapa-hero .hero-content {
-        position: relative;
-        z-index: 1;
-    }
-    .skapa-hero h1 {
-        font-size: 3.5rem;
-        font-weight: 800;
-        letter-spacing: -0.03em;
-        line-height: 1.1;
-        background: linear-gradient(135deg, #ffffff 0%, #c4b5fd 50%, #93c5fd 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-    }
-    .skapa-hero .lead {
-        color: rgba(255, 255, 255, 0.6);
-        font-size: 1.2rem;
-        max-width: 600px;
-        line-height: 1.7;
-    }
-
-    .btn-skapa-primary {
-        background: linear-gradient(135deg, #7c3aed, #3b82f6);
-        color: #fff;
-        border: none;
-        padding: 0.75rem 2rem;
-        border-radius: 8px;
-        font-weight: 600;
-        font-size: 1rem;
-        transition: all 0.2s ease;
-    }
-    .btn-skapa-primary:hover {
-        background: linear-gradient(135deg, #6d28d9, #2563eb);
-        color: #fff;
-        transform: translateY(-1px);
-        box-shadow: 0 8px 25px rgba(124, 58, 237, 0.3);
-    }
-    .btn-skapa-outline {
-        background: transparent;
-        color: rgba(255, 255, 255, 0.8);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        padding: 0.75rem 2rem;
-        border-radius: 8px;
-        font-weight: 600;
-        font-size: 1rem;
-        transition: all 0.2s ease;
-    }
-    .btn-skapa-outline:hover {
-        color: #fff;
-        border-color: rgba(255, 255, 255, 0.4);
-        background: rgba(255, 255, 255, 0.05);
-    }
-
-    .stats-bar {
-        background: rgba(255, 255, 255, 0.03);
-        border: 1px solid rgba(255, 255, 255, 0.06);
-        border-radius: 12px;
-        padding: 1rem 0;
-    }
-    .stat-item {
-        text-align: center;
-        padding: 0.5rem 1rem;
-        border-right: 1px solid rgba(255, 255, 255, 0.06);
-    }
-    .stat-item:last-child {
-        border-right: none;
-    }
-    .stat-value {
-        font-weight: 700;
-        font-size: 1.1rem;
-        color: #fff;
-    }
-    .stat-label {
-        font-size: 0.8rem;
-        color: rgba(255, 255, 255, 0.4);
-        margin-top: 2px;
-    }
-
-    .skapa-section {
-        background: #0a0a0f;
-        padding: 5rem 0;
-    }
-    .skapa-section-alt {
-        background: #12121a;
-        padding: 5rem 0;
-    }
-    .skapa-section h2,
-    .skapa-section-alt h2 {
-        color: #fff;
-        font-weight: 700;
-        font-size: 2.2rem;
-        letter-spacing: -0.02em;
-    }
-    .skapa-section .section-subtitle,
-    .skapa-section-alt .section-subtitle {
-        color: rgba(255, 255, 255, 0.5);
-        font-size: 1.1rem;
-        max-width: 600px;
-        margin: 0 auto;
-    }
-
-    .model-card {
-        background: #1a1a2e;
-        border: 1px solid rgba(255, 255, 255, 0.06);
-        border-radius: 12px;
-        padding: 1.5rem;
-        transition: all 0.25s ease;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-    }
-    .model-card:hover {
-        border-color: rgba(124, 58, 237, 0.3);
-        transform: translateY(-3px);
-        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
-    }
-    .model-card .model-provider {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        margin-bottom: 0.75rem;
-    }
-    .model-card .model-provider .provider-icon {
-        width: 32px;
-        height: 32px;
-        border-radius: 8px;
-        background: rgba(255, 255, 255, 0.06);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: rgba(255, 255, 255, 0.5);
-        font-size: 0.85rem;
-    }
-    .model-card .model-provider span {
-        font-size: 0.8rem;
-        color: rgba(255, 255, 255, 0.4);
-        font-weight: 500;
-    }
-    .model-card .model-name {
-        color: #fff;
-        font-weight: 700;
-        font-size: 1.05rem;
-        margin-bottom: 0.4rem;
-        font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
-    }
-    .model-card .model-desc {
-        color: rgba(255, 255, 255, 0.45);
-        font-size: 0.85rem;
-        flex-grow: 1;
-    }
-    .model-card .model-badge {
-        display: inline-block;
-        background: rgba(124, 58, 237, 0.15);
-        color: #a78bfa;
-        font-size: 0.7rem;
-        font-weight: 600;
-        padding: 0.25rem 0.6rem;
-        border-radius: 20px;
-        margin-top: 0.75rem;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-    }
-
-    .step-card {
-        text-align: center;
-        padding: 2rem 1.5rem;
-    }
-    .step-number {
-        width: 48px;
-        height: 48px;
-        border-radius: 50%;
-        background: linear-gradient(135deg, #7c3aed, #3b82f6);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #fff;
-        font-weight: 700;
-        font-size: 1.2rem;
-        margin: 0 auto 1.25rem;
-    }
-    .step-card h5 {
-        color: #fff;
-        font-weight: 700;
-        margin-bottom: 0.75rem;
-    }
-    .step-card p {
-        color: rgba(255, 255, 255, 0.45);
-        font-size: 0.9rem;
-        line-height: 1.6;
-    }
-
-    .code-block {
-        background: #0d0d14;
-        border: 1px solid rgba(255, 255, 255, 0.06);
-        border-radius: 12px;
-        overflow: hidden;
-    }
-    .code-block-header {
-        background: rgba(255, 255, 255, 0.03);
-        padding: 0.6rem 1rem;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-    .code-block-header .dot {
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-    }
-    .code-block-header .dot-red { background: #ff5f57; }
-    .code-block-header .dot-yellow { background: #febc2e; }
-    .code-block-header .dot-green { background: #28c840; }
-    .code-block-header span {
-        color: rgba(255, 255, 255, 0.3);
-        font-size: 0.8rem;
-        margin-left: auto;
-    }
-    .code-block pre {
-        padding: 1.25rem;
-        margin: 0;
-        overflow-x: auto;
-        font-size: 0.85rem;
-        line-height: 1.7;
-        background: transparent;
-    }
-    .code-block code {
-        color: #e2e8f0;
-        font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
-    }
-    .code-block .token-cmd { color: #a78bfa; }
-    .code-block .token-url { color: #93c5fd; }
-    .code-block .token-flag { color: #6ee7b7; }
-    .code-block .token-string { color: #fbbf24; }
-    .code-block .token-key { color: #f9a8d4; }
-
-    .feature-card {
-        background: #1a1a2e;
-        border: 1px solid rgba(255, 255, 255, 0.06);
-        border-radius: 12px;
-        padding: 2rem;
-        height: 100%;
-        transition: all 0.25s ease;
-    }
-    .feature-card:hover {
-        border-color: rgba(124, 58, 237, 0.2);
-        transform: translateY(-2px);
-    }
-    .feature-card .feature-icon {
-        width: 48px;
-        height: 48px;
-        border-radius: 10px;
-        background: linear-gradient(135deg, rgba(124, 58, 237, 0.2), rgba(59, 130, 246, 0.2));
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-bottom: 1.25rem;
-    }
-    .feature-card .feature-icon i {
-        font-size: 1.2rem;
-        background: linear-gradient(135deg, #a78bfa, #60a5fa);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-    }
-    .feature-card h5 {
-        color: #fff;
-        font-weight: 700;
-        margin-bottom: 0.5rem;
-        font-size: 1.05rem;
-    }
-    .feature-card p {
-        color: rgba(255, 255, 255, 0.45);
-        font-size: 0.9rem;
-        line-height: 1.6;
-        margin-bottom: 0;
-    }
-
-    .skapa-cta {
-        background: linear-gradient(135deg, #12121a 0%, #1a1a2e 100%);
-        border-top: 1px solid rgba(255, 255, 255, 0.04);
-        padding: 5rem 0;
-    }
-    .skapa-cta h2 {
-        color: #fff;
-        font-weight: 700;
-        font-size: 2rem;
-    }
-    .skapa-cta p {
-        color: rgba(255, 255, 255, 0.5);
-    }
-
-    @media (max-width: 768px) {
-        .skapa-hero h1 {
-            font-size: 2.2rem;
-        }
-        .skapa-hero .lead {
-            font-size: 1rem;
-        }
-        .stat-item {
-            border-right: none;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-            padding: 0.6rem 1rem;
-        }
-        .stat-item:last-child {
-            border-bottom: none;
-        }
-    }
-</style>
-
 <!-- Hero Section -->
-<section class="skapa-hero">
-    <div class="container hero-content">
-        <div class="row justify-content-center">
-            <div class="col-lg-10 text-center">
-                <h1 class="mb-4">The Unified Interface For LLMs</h1>
-                <p class="lead mx-auto mb-5">
-                    Access all major AI models through a single, OpenAI-compatible API.
-                    Better prices, transparent billing, no subscriptions.
+<div class="hero-section bg-gradient-primary text-white py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-4">API d'Intelligence Artificielle Locale</h1>
+                <p class="lead mb-4">
+                    Une API compatible OpenAI qui fonctionne entièrement sur nos serveurs locaux. 
+                    Intégrez facilement notre IA dans vos applications existantes sans changer une ligne de code !
                 </p>
-                <div class="d-flex justify-content-center gap-3 flex-wrap mb-5">
+                <div class="d-flex gap-3">
                     {% if current_user.is_authenticated %}
-                        <a href="{{ url_for('dashboard.index') }}" class="btn-skapa-primary text-decoration-none">
-                            <i class="fas fa-key me-2"></i>Dashboard
+                        <a href="{{ url_for('dashboard.index') }}" class="btn btn-light btn-lg">
+                            <i class="fas fa-tachometer-alt"></i> Mon tableau de bord
                         </a>
                     {% else %}
-                        <a href="{{ url_for('auth.register') }}" class="btn-skapa-primary text-decoration-none">
-                            <i class="fas fa-key me-2"></i>Get API Key
+                        <a href="{{ url_for('auth.register') }}" class="btn btn-light btn-lg">
+                            <i class="fas fa-rocket"></i> Commencer gratuitement
+                        </a>
+                        <a href="{{ url_for('auth.login') }}" class="btn btn-outline-light btn-lg">
+                            <i class="fas fa-sign-in-alt"></i> Se connecter
                         </a>
                     {% endif %}
-                    <a href="#models" class="btn-skapa-outline text-decoration-none">
-                        <i class="fas fa-cube me-2"></i>Explore Models
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="text-center">
+                    <i class="fas fa-robot fa-10x opacity-75"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Description détaillée -->
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-8 mx-auto text-center">
+            <h2 class="mb-4">🚀 La même API qu'OpenAI, mais en local !</h2>
+            <p class="lead text-muted mb-5">
+                Notre API est 100% compatible avec l'API d'OpenAI. Vous pouvez l'utiliser dans n'importe quelle 
+                application ou workflow qui utilise déjà OpenAI, simplement en changeant l'URL de base !
+            </p>
+        </div>
+    </div>
+
+    <!-- Avantages -->
+    <div class="row mb-5">
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="feature-icon bg-primary text-white rounded-circle mx-auto mb-3">
+                        <i class="fas fa-server fa-2x"></i>
+                    </div>
+                    <h5>100% Local</h5>
+                    <p class="text-muted">
+                        Intelligence artificielle qui tourne entièrement sur nos serveurs. 
+                        Vos données restent privées et sécurisées.
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="feature-icon bg-success text-white rounded-circle mx-auto mb-3">
+                        <i class="fas fa-plug fa-2x"></i>
+                    </div>
+                    <h5>Compatible OpenAI</h5>
+                    <p class="text-muted">
+                        API identique à OpenAI. Remplacez simplement l'URL dans vos applications existantes 
+                        et c'est parti !
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="feature-icon bg-info text-white rounded-circle mx-auto mb-3">
+                        <i class="fas fa-brain fa-2x"></i>
+                    </div>
+                    <h5>Modèle Personnalisé</h5>
+                    <p class="text-muted">
+                        Propulsé par <strong>KR-7B-Instruct-v1.17.Q5_0</strong>, notre modèle LLM 
+                        spécialement réentraîné pour des performances optimales.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Démonstration -->
+    <div class="row mb-5">
+        <div class="col-lg-10 mx-auto">
+            <div class="card border-0 shadow">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-terminal"></i> Exemple d'utilisation
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <p class="mb-3">
+                        <strong>Avant</strong> (avec OpenAI) :
+                    </p>
+                    <pre class="bg-light p-3 rounded"><code>curl https://api.openai.com/v1/chat/completions \
+  -H "Authorization: Bearer YOUR_OPENAI_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "gpt-3.5-turbo",
+    "messages": [{"role": "user", "content": "Bonjour !"}]
+  }'</code></pre>
+                    
+                    <p class="mb-3 mt-4">
+                        <strong>Maintenant</strong> (avec notre API) :
+                    </p>
+                    <pre class="bg-light p-3 rounded"><code>curl https://api.skapa.design/api/v1/chat/completions \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "kr-7b-instruct",
+    "messages": [{"role": "user", "content": "Bonjour !"}]
+  }'</code></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chatbot en action -->
+    <div class="row mb-5">
+        <div class="col-lg-8 mx-auto text-center">
+            <div class="card border-0 shadow-lg">
+                <div class="card-body p-5">
+                    <h3 class="mb-4">🤖 Testez notre IA en action</h3>
+                    <p class="text-muted mb-4">
+                        Découvrez la puissance de notre modèle KR-7B-Instruct-v1.17.Q5_0 
+                        sur notre plateforme de chat interactive.
+                    </p>
+                    <a href="https://api.skapa.design/" target="_blank" class="btn btn-primary btn-lg">
+                        <i class="fas fa-comments"></i> Essayer le chatbot
+                        <i class="fas fa-external-link-alt ms-2"></i>
                     </a>
-                </div>
-                <div class="stats-bar mx-auto" style="max-width: 700px;">
-                    <div class="row g-0">
-                        <div class="col-6 col-md-3 stat-item">
-                            <div class="stat-value">7+</div>
-                            <div class="stat-label">Models</div>
-                        </div>
-                        <div class="col-6 col-md-3 stat-item">
-                            <div class="stat-value"><i class="fas fa-coins fa-sm"></i></div>
-                            <div class="stat-label">Pay per token</div>
-                        </div>
-                        <div class="col-6 col-md-3 stat-item">
-                            <div class="stat-value"><i class="fas fa-plug fa-sm"></i></div>
-                            <div class="stat-label">OpenAI Compatible</div>
-                        </div>
-                        <div class="col-6 col-md-3 stat-item">
-                            <div class="stat-value">99.9%</div>
-                            <div class="stat-label">Uptime</div>
-                        </div>
-                    </div>
+                    <p class="small text-muted mt-3">
+                        Même technologie, même modèle IA que notre API !
+                    </p>
                 </div>
             </div>
         </div>
     </div>
-</section>
 
-<!-- Available Models Section -->
-<section class="skapa-section" id="models">
-    <div class="container">
-        <div class="text-center mb-5">
-            <h2 class="mb-3">Available Models</h2>
-            <p class="section-subtitle">
-                Route to the best AI models from leading providers, all through one API.
-            </p>
+    <!-- Cas d'usage -->
+    <div class="row">
+        <div class="col-12">
+            <h3 class="text-center mb-5">🎯 Cas d'usage parfaits</h3>
         </div>
-        <div class="row g-4">
-            <div class="col-md-6 col-lg-4 col-xl-3">
-                <div class="model-card">
-                    <div class="model-provider">
-                        <div class="provider-icon"><i class="fas fa-brain"></i></div>
-                        <span>DeepSeek</span>
+        
+        <div class="col-md-6 mb-4">
+            <div class="d-flex">
+                <div class="flex-shrink-0">
+                    <div class="feature-icon-sm bg-primary text-white rounded">
+                        <i class="fas fa-code"></i>
                     </div>
-                    <div class="model-name">deepseek-v3.2</div>
-                    <div class="model-desc">Advanced reasoning</div>
-                    <div class="model-badge">Pay per token</div>
                 </div>
-            </div>
-            <div class="col-md-6 col-lg-4 col-xl-3">
-                <div class="model-card">
-                    <div class="model-provider">
-                        <div class="provider-icon"><i class="fas fa-code"></i></div>
-                        <span>Qwen</span>
-                    </div>
-                    <div class="model-name">qwen3-coder-next</div>
-                    <div class="model-desc">Coding agent</div>
-                    <div class="model-badge">Pay per token</div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-4 col-xl-3">
-                <div class="model-card">
-                    <div class="model-provider">
-                        <div class="provider-icon"><i class="fas fa-wind"></i></div>
-                        <span>Mistral</span>
-                    </div>
-                    <div class="model-name">devstral-2:123b</div>
-                    <div class="model-desc">Coding 123B</div>
-                    <div class="model-badge">Pay per token</div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-4 col-xl-3">
-                <div class="model-card">
-                    <div class="model-provider">
-                        <div class="provider-icon"><i class="fab fa-google"></i></div>
-                        <span>Google</span>
-                    </div>
-                    <div class="model-name">gemma3:27b</div>
-                    <div class="model-desc">Google Gemma 3</div>
-                    <div class="model-badge">Pay per token</div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-4 col-xl-3">
-                <div class="model-card">
-                    <div class="model-provider">
-                        <div class="provider-icon"><i class="fas fa-lightbulb"></i></div>
-                        <span>GLM</span>
-                    </div>
-                    <div class="model-name">glm-5</div>
-                    <div class="model-desc">Reasoning 744B</div>
-                    <div class="model-badge">Pay per token</div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-4 col-xl-3">
-                <div class="model-card">
-                    <div class="model-provider">
-                        <div class="provider-icon"><i class="fas fa-bolt"></i></div>
-                        <span>MiniMax</span>
-                    </div>
-                    <div class="model-name">minimax-m2.5</div>
-                    <div class="model-desc">Coding & productivity</div>
-                    <div class="model-badge">Pay per token</div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-4 col-xl-3">
-                <div class="model-card">
-                    <div class="model-provider">
-                        <div class="provider-icon"><i class="fas fa-wind"></i></div>
-                        <span>Mistral</span>
-                    </div>
-                    <div class="model-name">devstral-small-2:24b</div>
-                    <div class="model-desc">Coding 24B</div>
-                    <div class="model-badge">Pay per token</div>
+                <div class="flex-grow-1 ms-3">
+                    <h6>Applications existantes</h6>
+                    <p class="text-muted mb-0">
+                        Remplacez OpenAI dans vos apps Python, Node.js, PHP, etc. 
+                        sans modification de code.
+                    </p>
                 </div>
             </div>
         </div>
-    </div>
-</section>
-
-<!-- How it works -->
-<section class="skapa-section-alt" id="how-it-works">
-    <div class="container">
-        <div class="text-center mb-5">
-            <h2 class="mb-3">How it works</h2>
-            <p class="section-subtitle">
-                Get started in minutes with our simple, developer-friendly workflow.
-            </p>
-        </div>
-        <div class="row g-4 mb-5">
-            <div class="col-md-4">
-                <div class="step-card">
-                    <div class="step-number">1</div>
-                    <h5>Create an account</h5>
-                    <p>Sign up to get started. Create API keys from your dashboard.</p>
+        
+        <div class="col-md-6 mb-4">
+            <div class="d-flex">
+                <div class="flex-shrink-0">
+                    <div class="feature-icon-sm bg-success text-white rounded">
+                        <i class="fas fa-cogs"></i>
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-4">
-                <div class="step-card">
-                    <div class="step-number">2</div>
-                    <h5>Add credits</h5>
-                    <p>Pay per token consumed. No subscriptions, no commitments.</p>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="step-card">
-                    <div class="step-number">3</div>
-                    <h5>Start building</h5>
-                    <p>Use our OpenAI-compatible API in your applications.</p>
+                <div class="flex-grow-1 ms-3">
+                    <h6>Workflows automatisés</h6>
+                    <p class="text-muted mb-0">
+                        Intégrez dans Zapier, Make.com, ou vos scripts d'automatisation 
+                        existants.
+                    </p>
                 </div>
             </div>
         </div>
-        <div class="row justify-content-center">
-            <div class="col-lg-10">
-                <div class="code-block">
-                    <div class="code-block-header">
-                        <div class="dot dot-red"></div>
-                        <div class="dot dot-yellow"></div>
-                        <div class="dot dot-green"></div>
-                        <span>Terminal</span>
-                    </div>
-                    <pre><code><span class="token-cmd">curl</span> <span class="token-url">https://api.skapa.design/v1/chat/completions</span> \
-  <span class="token-flag">-H</span> <span class="token-string">"Authorization: Bearer YOUR_API_KEY"</span> \
-  <span class="token-flag">-H</span> <span class="token-string">"Content-Type: application/json"</span> \
-  <span class="token-flag">-d</span> <span class="token-string">'{
-    <span class="token-key">"model"</span>: "deepseek-v3.2",
-    <span class="token-key">"messages"</span>: [
-      {<span class="token-key">"role"</span>: "user", <span class="token-key">"content"</span>: "Hello!"}
-    ]
-  }'</span></code></pre>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Features Section -->
-<section class="skapa-section" id="features">
-    <div class="container">
-        <div class="text-center mb-5">
-            <h2 class="mb-3">Why Skapa</h2>
-            <p class="section-subtitle">
-                Built for developers who want simplicity, performance, and fair pricing.
-            </p>
-        </div>
-        <div class="row g-4">
-            <div class="col-md-6">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-layer-group"></i>
-                    </div>
-                    <h5>One API, All Models</h5>
-                    <p>Access multiple AI providers through a single endpoint. No need to manage separate integrations for each model.</p>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-plug"></i>
-                    </div>
-                    <h5>OpenAI Compatible</h5>
-                    <p>Drop-in replacement for the OpenAI SDK. Switch your base URL and you are ready to go, zero code changes needed.</p>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-receipt"></i>
-                    </div>
-                    <h5>Transparent Pricing</h5>
-                    <p>Pay only for what you use, per-token billing. No hidden fees, no monthly subscriptions, no surprises on your invoice.</p>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="feature-card">
-                    <div class="feature-icon">
+        
+        <div class="col-md-6 mb-4">
+            <div class="d-flex">
+                <div class="flex-shrink-0">
+                    <div class="feature-icon-sm bg-info text-white rounded">
                         <i class="fas fa-shield-alt"></i>
                     </div>
-                    <h5>Enterprise Ready</h5>
-                    <p>API key management, usage analytics, and team support. Everything you need to scale your AI-powered applications.</p>
+                </div>
+                <div class="flex-grow-1 ms-3">
+                    <h6>Données sensibles</h6>
+                    <p class="text-muted mb-0">
+                        Parfait pour les entreprises qui veulent garder leurs données 
+                        en interne.
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6 mb-4">
+            <div class="d-flex">
+                <div class="flex-shrink-0">
+                    <div class="feature-icon-sm bg-warning text-white rounded">
+                        <i class="fas fa-euro-sign"></i>
+                    </div>
+                </div>
+                <div class="flex-grow-1 ms-3">
+                    <h6>Contrôle des coûts</h6>
+                    <p class="text-muted mb-0">
+                        Tarification transparente et prévisible, sans surprises 
+                        sur votre facture.
+                    </p>
                 </div>
             </div>
         </div>
     </div>
-</section>
+</div>
 
 <!-- CTA Section -->
 {% if not current_user.is_authenticated %}
-<section class="skapa-cta">
+<div class="bg-light py-5">
     <div class="container text-center">
-        <h2 class="mb-3">Ready to build?</h2>
-        <p class="mb-4" style="font-size: 1.1rem;">
-            Create your account and start using the best AI models in minutes.
+        <h3 class="mb-4">Prêt à commencer ?</h3>
+        <p class="lead text-muted mb-4">
+            Obtenez votre clé API en quelques minutes et commencez à utiliser 
+            notre IA locale dès aujourd'hui.
         </p>
-        <a href="{{ url_for('auth.register') }}" class="btn-skapa-primary text-decoration-none d-inline-block">
-            <i class="fas fa-rocket me-2"></i>Get started for free
+        <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-lg">
+            <i class="fas fa-rocket"></i> Créer mon compte gratuitement
         </a>
     </div>
-</section>
+</div>
 {% endif %}
-{% endblock %}
+
+<style>
+.hero-section {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+}
+
+.feature-icon {
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.feature-icon-sm {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card {
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+pre {
+    font-size: 0.9rem;
+    overflow-x: auto;
+}
+
+.bg-gradient-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+</style>
+{% endblock %} 

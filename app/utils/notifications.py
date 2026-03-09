@@ -1,5 +1,5 @@
 from flask import current_app, request
-from app import db, socketio
+from app import db
 from app.models import Notification, AuditLog
 from datetime import datetime, timedelta
 import json
@@ -18,18 +18,6 @@ class NotificationService:
             action_url=action_url,
             action_text=action_text
         )
-        
-        # Émettre la notification en temps réel via WebSocket
-        if emit_realtime:
-            socketio.emit('new_notification', {
-                'id': notification.id,
-                'title': notification.title,
-                'message': notification.message,
-                'type': notification.type,
-                'created_at': notification.created_at.isoformat(),
-                'action_url': notification.action_url,
-                'action_text': notification.action_text
-            }, room=f'user_{user_id}')
         
         return notification
     
