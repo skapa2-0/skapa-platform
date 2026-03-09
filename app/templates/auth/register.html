@@ -198,10 +198,10 @@
                 </div>
 
                 <div class="auth-field">
-                    <label class="auth-label" for="confirm_password">Confirm password</label>
-                    {{ form.confirm_password(class="auth-input" + (" is-invalid" if form.confirm_password.errors else ""), placeholder="••••••••", id="confirm_password") }}
-                    {% if form.confirm_password.errors %}
-                        {% for error in form.confirm_password.errors %}
+                    <label class="auth-label" for="password2">Confirm password</label>
+                    {{ form.password2(class="auth-input" + (" is-invalid" if form.password2.errors else ""), placeholder="••••••••", id="password2") }}
+                    {% if form.password2.errors %}
+                        {% for error in form.password2.errors %}
                             <div class="auth-error">{{ error }}</div>
                         {% endfor %}
                     {% endif %}
