@@ -1,0 +1,343 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h3 mb-0">
+                    <i class="fas fa-chart-bar text-primary"></i> Utilisation de votre API
+                </h1>
+                <div class="btn-group">
+                    <a href="{{ url_for('dashboard.index') }}" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left"></i> Retour
+                    </a>
+                    <button class="btn btn-outline-primary" onclick="refreshData()">
+                        <i class="fas fa-sync-alt"></i> Actualiser
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if not api_key %}
+    <div class="row">
+        <div class="col-12">
+            <div class="alert alert-warning">
+                <h5><i class="fas fa-exclamation-triangle"></i> Aucune clé API active</h5>
+                <p>Vous devez d'abord générer une clé API pour voir vos statistiques d'utilisation.</p>
+                <a href="{{ url_for('dashboard.index') }}" class="btn btn-primary">
+                    <i class="fas fa-key"></i> Générer une clé API
+                </a>
+            </div>
+        </div>
+    </div>
+    {% else %}
+
+    <!-- Résumé des statistiques -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card text-white bg-primary">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="card-title mb-0" id="totalRequests">{{ api_key.usage_count or 0 }}</h4>
+                            <p class="card-text">Requêtes totales</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-chart-line fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="card text-white bg-success">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="card-title mb-0" id="successRate">-</h4>
+                            <p class="card-text">Taux de succès</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-check-circle fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="card text-white bg-info">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="card-title mb-0" id="avgResponseTime">-</h4>
+                            <p class="card-text">Temps moyen (ms)</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-stopwatch fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="card text-white bg-warning">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="card-title mb-0" id="dataTransferred">-</h4>
+                            <p class="card-text">Données transférées</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-database fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Graphique d'utilisation -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="fas fa-chart-area"></i> Évolution de l'utilisation (30 derniers jours)
+                    </h5>
+                    <select class="form-select form-select-sm" style="width: auto;" id="timeRange">
+                        <option value="7">7 derniers jours</option>
+                        <option value="30" selected>30 derniers jours</option>
+                        <option value="90">90 derniers jours</option>
+                    </select>
+                </div>
+                <div class="card-body">
+                    <div id="usageChart" style="height: 400px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tableau des statistiques détaillées -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="fas fa-table"></i> Statistiques détaillées
+                    </h5>
+                    <button class="btn btn-outline-primary btn-sm" onclick="exportStats()">
+                        <i class="fas fa-download"></i> Exporter CSV
+                    </button>
+                </div>
+                <div class="card-body">
+                    {% if usage_stats %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Requêtes</th>
+                                    <th>Erreurs</th>
+                                    <th>Taux de succès</th>
+                                    <th>Temps moyen (ms)</th>
+                                    <th>Données (KB)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for stat in usage_stats %}
+                                <tr>
+                                    <td>{{ stat.date.strftime('%d/%m/%Y') }}</td>
+                                    <td>
+                                        <span class="badge bg-primary">{{ stat.requests_count }}</span>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-danger">{{ stat.errors_count }}</span>
+                                    </td>
+                                    <td>
+                                        {% set success_rate = ((stat.requests_count - stat.errors_count) / stat.requests_count * 100) if stat.requests_count > 0 else 100 %}
+                                        <span class="badge {% if success_rate >= 95 %}bg-success{% elif success_rate >= 90 %}bg-warning{% else %}bg-danger{% endif %}">
+                                            {{ "%.1f"|format(success_rate) }}%
+                                        </span>
+                                    </td>
+                                    <td>{{ "%.1f"|format(stat.response_time_avg) }}</td>
+                                    <td>{{ "%.1f"|format(stat.data_transferred / 1024) }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="text-center text-muted py-5">
+                        <i class="fas fa-chart-bar fa-3x mb-3"></i>
+                        <h5>Aucune statistique disponible</h5>
+                        <p>Commencez à utiliser votre API pour voir apparaître les statistiques ici.</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Informations sur la clé API -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-key"></i> Informations sur votre clé API
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <strong>Préfixe :</strong>
+                            <div class="api-key-display mt-2">{{ api_key.key_prefix }}...</div>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Créée le :</strong>
+                            <div class="mt-2">{{ api_key.created_at.strftime('%d/%m/%Y à %H:%M') }}</div>
+                        </div>
+                    </div>
+                    
+                    {% if api_key.last_used_at %}
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <strong>Dernière utilisation :</strong>
+                            <div class="mt-2">{{ api_key.last_used_at.strftime('%d/%m/%Y à %H:%M') }}</div>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Statut :</strong>
+                            <div class="mt-2">
+                                <span class="badge bg-success">
+                                    <i class="fas fa-check-circle"></i> Active
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    {% if api_key %}
+    loadUsageChart();
+    calculateStats();
+    
+    document.getElementById('timeRange').addEventListener('change', function() {
+        loadUsageChart(this.value);
+    });
+    {% endif %}
+});
+
+function refreshData() {
+    {% if api_key %}
+    loadUsageChart();
+    calculateStats();
+    showToast('Données', 'Statistiques actualisées', 'success');
+    {% else %}
+    location.reload();
+    {% endif %}
+}
+
+{% if api_key %}
+function loadUsageChart(days = 30) {
+    // Données fictives pour l'exemple - en production, cela viendrait d'une API
+    const data = {{ usage_stats | tojson if usage_stats else '[]' }};
+    
+    if (data.length === 0) {
+        document.getElementById('usageChart').innerHTML = 
+            '<div class="text-center text-muted py-5">Aucune donnée à afficher</div>';
+        return;
+    }
+    
+    const dates = data.map(stat => stat.date);
+    const requests = data.map(stat => stat.requests_count);
+    const errors = data.map(stat => stat.errors_count);
+    
+    const trace1 = {
+        x: dates,
+        y: requests,
+        type: 'scatter',
+        mode: 'lines+markers',
+        name: 'Requêtes',
+        line: { color: '#007bff' }
+    };
+    
+    const trace2 = {
+        x: dates,
+        y: errors,
+        type: 'scatter',
+        mode: 'lines+markers',
+        name: 'Erreurs',
+        line: { color: '#dc3545' },
+        yaxis: 'y2'
+    };
+    
+    const layout = {
+        title: 'Utilisation de votre API',
+        xaxis: { title: 'Date' },
+        yaxis: { title: 'Nombre de requêtes' },
+        yaxis2: {
+            title: 'Nombre d\'erreurs',
+            overlaying: 'y',
+            side: 'right'
+        },
+        hovermode: 'x unified'
+    };
+    
+    Plotly.newPlot('usageChart', [trace1, trace2], layout, {
+        responsive: true,
+        displayModeBar: false
+    });
+}
+
+function calculateStats() {
+    const data = {{ usage_stats | tojson if usage_stats else '[]' }};
+    
+    if (data.length === 0) return;
+    
+    let totalRequests = 0;
+    let totalErrors = 0;
+    let totalResponseTime = 0;
+    let totalData = 0;
+    let validDays = 0;
+    
+    data.forEach(stat => {
+        if (stat.requests_count > 0) {
+            totalRequests += stat.requests_count;
+            totalErrors += stat.errors_count;
+            totalResponseTime += stat.response_time_avg;
+            totalData += stat.data_transferred;
+            validDays++;
+        }
+    });
+    
+    const successRate = totalRequests > 0 ? ((totalRequests - totalErrors) / totalRequests * 100) : 100;
+    const avgResponseTime = validDays > 0 ? (totalResponseTime / validDays) : 0;
+    const dataInMB = totalData / (1024 * 1024);
+    
+    document.getElementById('successRate').textContent = successRate.toFixed(1) + '%';
+    document.getElementById('avgResponseTime').textContent = avgResponseTime.toFixed(1);
+    document.getElementById('dataTransferred').textContent = 
+        dataInMB > 1 ? dataInMB.toFixed(1) + ' MB' : (totalData / 1024).toFixed(1) + ' KB';
+}
+
+function exportStats() {
+    // En production, cela ferait appel à un endpoint d'export
+    showToast('Export', 'Fonctionnalité d\'export en cours de développement', 'info');
+}
+{% endif %}
+</script>
+{% endblock %} 

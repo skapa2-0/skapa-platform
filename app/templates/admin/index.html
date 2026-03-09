@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <div class="col-12">
+            <h1><i class="fas fa-cog"></i> Administration</h1>
+            <p class="text-muted">Gestion de la plateforme API</p>
+        </div>
+    </div>
+
+    <!-- Statistiques -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card card-stats bg-primary text-white">
+                <div class="card-body text-center">
+                    <i class="fas fa-users fa-2x mb-2"></i>
+                    <h3>{{ stats.total_users }}</h3>
+                    <p class="mb-0">Utilisateurs total</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="card card-stats bg-warning text-white">
+                <div class="card-body text-center">
+                    <i class="fas fa-clock fa-2x mb-2"></i>
+                    <h3>{{ stats.pending_users }}</h3>
+                    <p class="mb-0">En attente</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="card card-stats bg-success text-white">
+                <div class="card-body text-center">
+                    <i class="fas fa-check fa-2x mb-2"></i>
+                    <h3>{{ stats.approved_users }}</h3>
+                    <p class="mb-0">Approuvés</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="card card-stats bg-info text-white">
+                <div class="card-body text-center">
+                    <i class="fas fa-key fa-2x mb-2"></i>
+                    <h3>{{ stats.active_api_keys }}</h3>
+                    <p class="mb-0">Clés API actives</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Actions rapides -->
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-users"></i> Gestion des utilisateurs</h5>
+                </div>
+                <div class="card-body">
+                    <p>Gérez les demandes d'accès et les comptes utilisateurs.</p>
+                    <a href="{{ url_for('admin.users') }}" class="btn btn-primary">
+                        <i class="fas fa-users"></i> Voir tous les utilisateurs
+                    </a>
+                    {% if stats.pending_users > 0 %}
+                    <a href="{{ url_for('admin.users', status='pending_admin_approval') }}" class="btn btn-warning">
+                        <i class="fas fa-clock"></i> {{ stats.pending_users }} en attente
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-key"></i> Gestion des clés API</h5>
+                </div>
+                <div class="card-body">
+                    <p>Surveillez l'utilisation des clés API et gérez les accès.</p>
+                    <a href="{{ url_for('admin.api_keys') }}" class="btn btn-primary">
+                        <i class="fas fa-key"></i> Voir toutes les clés API
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

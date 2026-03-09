@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="mb-0"><i class="fas fa-user"></i> Mon profil</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Nom complet :</strong></p>
+                            <p class="text-muted">{{ current_user.name }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Adresse email :</strong></p>
+                            <p class="text-muted">{{ current_user.email }}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Statut du compte :</strong></p>
+                            <span class="badge bg-success">{{ current_user.status.replace('_', ' ').title() }}</span>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Rôle :</strong></p>
+                            <span class="badge bg-primary">{{ current_user.role.title() }}</span>
+                        </div>
+                    </div>
+                    
+                    <hr>
+                    
+                    <div class="row">
+                        <div class="col-12">
+                            <p><strong>Justification d'accès :</strong></p>
+                            <p class="text-muted">{{ current_user.justification }}</p>
+                        </div>
+                    </div>
+                    
+                    <hr>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Inscrit le :</strong></p>
+                            <p class="text-muted">{{ current_user.created_at.strftime('%d/%m/%Y à %H:%M') }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Approuvé le :</strong></p>
+                            <p class="text-muted">
+                                {% if current_user.approved_at %}
+                                    {{ current_user.approved_at.strftime('%d/%m/%Y à %H:%M') }}
+                                {% else %}
+                                    Non approuvé
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="{{ url_for('dashboard.index') }}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Retour au tableau de bord
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

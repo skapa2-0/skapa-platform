@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="mb-0">
+                        <i class="fas fa-plus-circle text-primary"></i> Nouveau ticket de support
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        <div class="mb-3">
+                            <label for="subject" class="form-label">Sujet <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="subject" name="subject" required 
+                                   placeholder="Décrivez brièvement votre problème">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="priority" class="form-label">Priorité <span class="text-danger">*</span></label>
+                            <select class="form-select" id="priority" name="priority" required>
+                                <option value="">Sélectionnez une priorité</option>
+                                <option value="low">Basse - Amélioration ou question générale</option>
+                                <option value="medium" selected>Moyenne - Problème qui impacte le travail</option>
+                                <option value="high">Haute - Problème majeur</option>
+                                <option value="critical">Critique - Service indisponible</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="category" class="form-label">Catégorie</label>
+                            <select class="form-select" id="category" name="category">
+                                <option value="technical">Problème technique</option>
+                                <option value="account">Compte utilisateur</option>
+                                <option value="billing">Facturation</option>
+                                <option value="feature">Demande de fonctionnalité</option>
+                                <option value="other">Autre</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description détaillée <span class="text-danger">*</span></label>
+                            <textarea class="form-control" id="description" name="description" rows="6" required
+                                      placeholder="Décrivez votre problème en détail. Incluez les étapes pour reproduire le problème, les messages d'erreur, etc."></textarea>
+                            <div class="form-text">
+                                Plus vous fournissez de détails, plus nous pourrons vous aider rapidement.
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-paper-plane"></i> Créer le ticket
+                                </button>
+                                <a href="{{ url_for('support.index') }}" class="btn btn-outline-secondary ms-2">
+                                    <i class="fas fa-times"></i> Annuler
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Aide contextuelle -->
+            <div class="card mt-4">
+                <div class="card-body">
+                    <h6 class="card-title">
+                        <i class="fas fa-lightbulb text-warning"></i> Conseils pour un ticket efficace
+                    </h6>
+                    <ul class="mb-0">
+                        <li>Soyez spécifique dans le sujet</li>
+                        <li>Décrivez les étapes pour reproduire le problème</li>
+                        <li>Incluez les messages d'erreur complets</li>
+                        <li>Mentionnez votre environnement (navigateur, OS, etc.)</li>
+                        <li>Attachez des captures d'écran si nécessaire</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

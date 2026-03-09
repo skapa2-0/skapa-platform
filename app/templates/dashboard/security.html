@@ -1,0 +1,299 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h3 mb-0">
+                    <i class="fas fa-shield-alt text-primary"></i> Sécurité & Audit
+                </h1>
+                <div class="btn-group">
+                    <a href="{{ url_for('dashboard.index') }}" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left"></i> Retour
+                    </a>
+                    <button class="btn btn-outline-primary" onclick="refreshData()">
+                        <i class="fas fa-sync-alt"></i> Actualiser
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alertes de sécurité -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="fas fa-exclamation-triangle text-warning"></i> Alertes de sécurité récentes
+                    </h5>
+                    <span class="badge bg-info">7 derniers jours</span>
+                </div>
+                <div class="card-body">
+                    {% if security_alerts %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Date/Heure</th>
+                                    <th>Type d'alerte</th>
+                                    <th>Adresse IP</th>
+                                    <th>Détails</th>
+                                    <th>Gravité</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for alert in security_alerts %}
+                                <tr>
+                                    <td>{{ alert.timestamp.strftime('%d/%m/%Y %H:%M') }}</td>
+                                    <td>
+                                        {% if alert.action == 'failed_login_attempt' %}
+                                            <i class="fas fa-sign-in-alt text-danger"></i> Tentative de connexion échouée
+                                        {% elif alert.action == 'suspicious_activity' %}
+                                            <i class="fas fa-user-secret text-warning"></i> Activité suspecte
+                                        {% elif alert.action == 'rate_limit_exceeded' %}
+                                            <i class="fas fa-tachometer-alt text-info"></i> Limite de taux dépassée
+                                        {% else %}
+                                            <i class="fas fa-exclamation-circle text-secondary"></i> {{ alert.action }}
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <code>{{ alert.ip_address or 'N/A' }}</code>
+                                    </td>
+                                    <td>
+                                        {% set details = alert.get_details() %}
+                                        {% if details %}
+                                            {{ details.get('reason', details.get('email', 'Détails non disponibles')) }}
+                                        {% else %}
+                                            Aucun détail disponible
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if alert.action == 'failed_login_attempt' %}
+                                            <span class="badge bg-danger">Élevée</span>
+                                        {% elif alert.action == 'suspicious_activity' %}
+                                            <span class="badge bg-warning">Moyenne</span>
+                                        {% else %}
+                                            <span class="badge bg-info">Faible</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="text-center text-muted py-5">
+                        <i class="fas fa-shield-check fa-3x mb-3 text-success"></i>
+                        <h5>Aucune alerte de sécurité</h5>
+                        <p>Excellent ! Aucune activité suspecte détectée ces 7 derniers jours.</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recommandations de sécurité -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-lightbulb text-warning"></i> Recommandations
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="list-group list-group-flush">
+                        <div class="list-group-item d-flex align-items-center">
+                            <i class="fas fa-check-circle text-success me-3"></i>
+                            <div>
+                                <strong>Clé API sécurisée</strong>
+                                <br><small class="text-muted">Votre clé est chiffrée et stockée de manière sécurisée</small>
+                            </div>
+                        </div>
+                        <div class="list-group-item d-flex align-items-center">
+                            <i class="fas fa-clock text-info me-3"></i>
+                            <div>
+                                <strong>Surveillance continue</strong>
+                                <br><small class="text-muted">Toutes vos actions sont auditées</small>
+                            </div>
+                        </div>
+                        <div class="list-group-item d-flex align-items-center">
+                            <i class="fas fa-shield-alt text-primary me-3"></i>
+                            <div>
+                                <strong>Protection contre les abus</strong>
+                                <br><small class="text-muted">Limitation du taux de requêtes active</small>
+                            </div>
+                        </div>
+                        <div class="list-group-item d-flex align-items-center">
+                            <i class="fas fa-bell text-warning me-3"></i>
+                            <div>
+                                <strong>Notifications en temps réel</strong>
+                                <br><small class="text-muted">Alertes automatiques en cas d'activité suspecte</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-cogs text-primary"></i> Actions de sécurité
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-outline-warning" onclick="regenerateApiKey()">
+                            <i class="fas fa-sync-alt"></i> Régénérer la clé API
+                        </button>
+                        <button class="btn btn-outline-info" onclick="downloadAuditLog()">
+                            <i class="fas fa-download"></i> Télécharger l'historique d'audit
+                        </button>
+                        <button class="btn btn-outline-secondary" onclick="viewPreferences()">
+                            <i class="fas fa-user-cog"></i> Gérer les préférences
+                        </button>
+                        {% if current_user.is_admin() %}
+                        <a href="{{ url_for('admin.index') }}" class="btn btn-outline-danger">
+                            <i class="fas fa-crown"></i> Panel d'administration
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Informations sur la session -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-info-circle text-info"></i> Informations de session
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <table class="table table-sm">
+                                <tr>
+                                    <td><strong>Adresse IP :</strong></td>
+                                    <td><code id="currentIP">{{ request.remote_addr or 'Non disponible' }}</code></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Navigateur :</strong></td>
+                                    <td><small id="userAgent">{{ request.headers.get('User-Agent', 'Non disponible')[:50] }}...</small></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Dernière connexion :</strong></td>
+                                    <td>
+                                        {% if current_user.last_login_at %}
+                                            {{ current_user.last_login_at.strftime('%d/%m/%Y à %H:%M') }}
+                                        {% else %}
+                                            Non disponible
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Connexions totales :</strong></td>
+                                    <td>{{ current_user.login_count or 0 }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="alert alert-info">
+                                <h6><i class="fas fa-info-circle"></i> Conseils de sécurité</h6>
+                                <ul class="mb-0 small">
+                                    <li>Ne partagez jamais votre clé API</li>
+                                    <li>Régénérez votre clé si vous suspectez une compromission</li>
+                                    <li>Surveillez régulièrement votre utilisation</li>
+                                    <li>Contactez l'administration en cas d'activité suspecte</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de confirmation pour régénération de clé -->
+<div class="modal fade" id="regenerateModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-exclamation-triangle text-warning"></i> Régénérer la clé API
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-warning">
+                    <strong>Attention !</strong> Cette action va révoquer votre clé API actuelle et en générer une nouvelle.
+                </div>
+                <p>Êtes-vous sûr de vouloir continuer ? Vous devrez mettre à jour tous vos systèmes avec la nouvelle clé.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <button type="button" class="btn btn-warning" onclick="confirmRegenerate()">
+                    <i class="fas fa-sync-alt"></i> Régénérer
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function refreshData() {
+    location.reload();
+}
+
+function regenerateApiKey() {
+    const modal = new bootstrap.Modal(document.getElementById('regenerateModal'));
+    modal.show();
+}
+
+function confirmRegenerate() {
+    // Fermer le modal
+    const modal = bootstrap.Modal.getInstance(document.getElementById('regenerateModal'));
+    modal.hide();
+    
+    // Rediriger vers le dashboard pour la régénération
+    window.location.href = "{{ url_for('dashboard.index') }}";
+}
+
+function downloadAuditLog() {
+    {% if current_user.is_admin() %}
+    window.open("{{ url_for('analytics.export_audit_logs') }}?user_id={{ current_user.id }}&format=csv", '_blank');
+    {% else %}
+    showToast('Info', 'La fonctionnalité d\'export sera bientôt disponible', 'info');
+    {% endif %}
+}
+
+function viewPreferences() {
+    // En production, cela ouvrirait un modal de préférences
+    showToast('Préférences', 'Interface de préférences en cours de développement', 'info');
+}
+
+// Mise à jour de l'IP et user agent en temps réel
+document.addEventListener('DOMContentLoaded', function() {
+    // Simuler la récupération d'informations système
+    updateSystemInfo();
+});
+
+function updateSystemInfo() {
+    // En production, cela ferait des appels API pour récupérer des infos temps réel
+    const now = new Date();
+    document.querySelector('.card-header .badge').textContent = 
+        'Dernière vérification: ' + now.toLocaleTimeString('fr-FR');
+}
+</script>
+{% endblock %} 

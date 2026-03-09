@@ -1,0 +1,237 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1><i class="fas fa-life-ring text-primary"></i> Support</h1>
+                <a href="{{ url_for('support.new_ticket') }}" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Nouveau ticket
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistiques rapides -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <div class="h5 mb-0">{{ stats.open }}</div>
+                            <div class="small">Ouverts</div>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-folder-open fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <div class="h5 mb-0">{{ stats.in_progress }}</div>
+                            <div class="small">En cours</div>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-cog fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <div class="h5 mb-0">{{ stats.resolved }}</div>
+                            <div class="small">Résolus</div>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-check-circle fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-secondary text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <div class="h5 mb-0">{{ stats.closed }}</div>
+                            <div class="small">Fermés</div>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-archive fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filtres -->
+    <div class="row mb-3">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <form method="GET" class="row g-3">
+                        <div class="col-md-4">
+                            <label for="status" class="form-label">Statut</label>
+                            <select class="form-select" id="status" name="status">
+                                <option value="all" {% if status_filter == 'all' %}selected{% endif %}>Tous</option>
+                                <option value="open" {% if status_filter == 'open' %}selected{% endif %}>Ouverts</option>
+                                <option value="in_progress" {% if status_filter == 'in_progress' %}selected{% endif %}>En cours</option>
+                                <option value="resolved" {% if status_filter == 'resolved' %}selected{% endif %}>Résolus</option>
+                                <option value="closed" {% if status_filter == 'closed' %}selected{% endif %}>Fermés</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="priority" class="form-label">Priorité</label>
+                            <select class="form-select" id="priority" name="priority">
+                                <option value="all">Toutes</option>
+                                <option value="low">Basse</option>
+                                <option value="medium">Moyenne</option>
+                                <option value="high">Haute</option>
+                                <option value="critical">Critique</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">&nbsp;</label>
+                            <div>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-filter"></i> Filtrer
+                                </button>
+                                <a href="{{ url_for('support.index') }}" class="btn btn-outline-secondary">
+                                    <i class="fas fa-times"></i> Réinitialiser
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Liste des tickets -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-ticket-alt"></i> Mes tickets de support
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if tickets %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Sujet</th>
+                                        <th>Priorité</th>
+                                        <th>Statut</th>
+                                        <th>Créé le</th>
+                                        <th>Mis à jour</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for ticket in tickets %}
+                                    <tr>
+                                        <td>
+                                            <strong>#{{ ticket.id }}</strong>
+                                        </td>
+                                        <td>
+                                            <a href="{{ url_for('support.ticket_detail', ticket_id=ticket.id) }}" 
+                                               class="text-decoration-none">
+                                                {{ ticket.subject }}
+                                            </a>
+                                                                        {% if ticket.message %}
+                                <br>
+                                <small class="text-muted">
+                                    {{ ticket.message[:100] }}{% if ticket.message|length > 100 %}...{% endif %}
+                                </small>
+                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <span class="badge {{ ticket.get_priority_badge_class() }}">
+                                                {{ ticket.priority.replace('_', ' ').title() }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="badge {{ ticket.get_status_badge_class() }}">
+                                                {{ ticket.status.replace('_', ' ').title() }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <small>{{ ticket.created_at.strftime('%d/%m/%Y %H:%M') }}</small>
+                                        </td>
+                                        <td>
+                                            <small>{{ ticket.updated_at.strftime('%d/%m/%Y %H:%M') }}</small>
+                                        </td>
+                                        <td>
+                                            <a href="{{ url_for('support.ticket_detail', ticket_id=ticket.id) }}" 
+                                               class="btn btn-sm btn-outline-primary">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="fas fa-ticket-alt fa-3x text-muted mb-3"></i>
+                            <h5 class="text-muted">Aucun ticket trouvé</h5>
+                            <p class="text-muted">Vous n'avez pas encore créé de ticket de support.</p>
+                            <a href="{{ url_for('support.new_ticket') }}" class="btn btn-primary">
+                                <i class="fas fa-plus"></i> Créer votre premier ticket
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Liens utiles -->
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="fas fa-book text-info"></i> Base de connaissances
+                    </h5>
+                    <p class="card-text">Consultez notre base de connaissances pour trouver des réponses rapides.</p>
+                    <a href="{{ url_for('support.knowledge_base') }}" class="btn btn-info">
+                        <i class="fas fa-search"></i> Parcourir
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="fas fa-question-circle text-warning"></i> Questions fréquentes
+                    </h5>
+                    <p class="card-text">Trouvez rapidement les réponses aux questions les plus courantes.</p>
+                    <a href="{{ url_for('support.faq') }}" class="btn btn-warning">
+                        <i class="fas fa-list"></i> Voir la FAQ
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

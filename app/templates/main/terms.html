@@ -1,0 +1,342 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-10 mx-auto">
+            <div class="text-center mb-5">
+                <h1 class="display-5 mb-3">📋 Conditions d'utilisation</h1>
+                <p class="lead text-muted">
+                    Conditions générales d'utilisation de l'API IA Locale
+                </p>
+                <div class="badge bg-secondary fs-6">
+                    Dernière mise à jour : 19 juillet 2024
+                </div>
+            </div>
+
+            <!-- Table des matières -->
+            <div class="card border-0 shadow-sm mb-5">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fas fa-list"></i> Table des matières</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <ul class="list-unstyled">
+                                <li><a href="#acceptance" class="text-decoration-none">1. Acceptation des conditions</a></li>
+                                <li><a href="#definitions" class="text-decoration-none">2. Définitions</a></li>
+                                <li><a href="#service" class="text-decoration-none">3. Description du service</a></li>
+                                <li><a href="#access" class="text-decoration-none">4. Accès et inscription</a></li>
+                                <li><a href="#usage" class="text-decoration-none">5. Utilisation autorisée</a></li>
+                                <li><a href="#restrictions" class="text-decoration-none">6. Restrictions d'usage</a></li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <ul class="list-unstyled">
+                                <li><a href="#api-keys" class="text-decoration-none">7. Gestion des clés API</a></li>
+                                <li><a href="#privacy" class="text-decoration-none">8. Confidentialité</a></li>
+                                <li><a href="#security" class="text-decoration-none">9. Sécurité</a></li>
+                                <li><a href="#limits" class="text-decoration-none">10. Limites et quotas</a></li>
+                                <li><a href="#liability" class="text-decoration-none">11. Responsabilité</a></li>
+                                <li><a href="#updates" class="text-decoration-none">12. Modifications</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 1 -->
+            <section id="acceptance" class="mb-5">
+                <h2 class="border-bottom pb-2 mb-4">1. Acceptation des conditions</h2>
+                <div class="alert alert-info">
+                    <i class="fas fa-handshake"></i>
+                    <strong>Important :</strong> En accédant à cette plateforme et en utilisant notre API, vous acceptez d'être lié par ces conditions d'utilisation.
+                </div>
+                <p>
+                    L'utilisation de l'API IA Locale implique votre acceptation pleine et entière de ces conditions. 
+                    Si vous n'acceptez pas ces termes, veuillez ne pas utiliser nos services.
+                </p>
+            </section>
+
+            <!-- Section 2 -->
+            <section id="definitions" class="mb-5">
+                <h2 class="border-bottom pb-2 mb-4">2. Définitions</h2>
+                <dl class="row">
+                    <dt class="col-sm-3">API</dt>
+                    <dd class="col-sm-9">Interface de programmation d'application permettant l'accès à nos services d'intelligence artificielle</dd>
+                    
+                    <dt class="col-sm-3">Clé API</dt>
+                    <dd class="col-sm-9">Identifiant unique permettant l'authentification et l'accès aux services API</dd>
+                    
+                    <dt class="col-sm-3">Utilisateur</dt>
+                    <dd class="col-sm-9">Toute personne ou entité utilisant nos services API</dd>
+                    
+                    <dt class="col-sm-3">Plateforme</dt>
+                    <dd class="col-sm-9">L'ensemble des services, interfaces et infrastructures d'API IA Locale</dd>
+                </dl>
+            </section>
+
+            <!-- Section 3 -->
+            <section id="service" class="mb-5">
+                <h2 class="border-bottom pb-2 mb-4">3. Description du service</h2>
+                <p>
+                    API IA Locale fournit un service d'intelligence artificielle hébergé localement, 
+                    compatible avec les standards OpenAI. Notre service inclut :
+                </p>
+                <div class="row">
+                    <div class="col-md-6">
+                        <ul>
+                            <li>🤖 Modèles de langage avancés</li>
+                            <li>🔗 API REST compatible OpenAI</li>
+                            <li>📊 Dashboard de gestion</li>
+                            <li>📈 Analytics et statistiques</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <ul>
+                            <li>🔐 Authentification sécurisée</li>
+                            <li>⚡ Performance optimisée</li>
+                            <li>🛡️ Hébergement local</li>
+                            <li>📚 Documentation complète</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 4 -->
+            <section id="access" class="mb-5">
+                <h2 class="border-bottom pb-2 mb-4">4. Accès et inscription</h2>
+                <div class="alert alert-warning">
+                    <i class="fas fa-user-plus"></i>
+                    <strong>Version démo :</strong> Cette version est actuellement en démonstration. 
+                    L'accès peut être limité et nécessiter une approbation manuelle.
+                </div>
+                <p>Pour accéder à nos services, vous devez :</p>
+                <ol>
+                    <li>Créer un compte avec des informations exactes</li>
+                    <li>Attendre l'approbation de votre compte</li>
+                    <li>Générer et sécuriser votre clé API</li>
+                    <li>Respecter les limites d'utilisation</li>
+                </ol>
+            </section>
+
+            <!-- Section 5 -->
+            <section id="usage" class="mb-5">
+                <h2 class="border-bottom pb-2 mb-4">5. Utilisation autorisée</h2>
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5 class="text-success">✅ Autorisé</h5>
+                        <ul>
+                            <li>Tests et évaluation technique</li>
+                            <li>Développement d'applications</li>
+                            <li>Recherche et innovation</li>
+                            <li>Prototypage</li>
+                            <li>Formation et apprentissage</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h5 class="text-danger">❌ Interdit</h5>
+                        <ul>
+                            <li>Utilisation commerciale sans licence</li>
+                            <li>Revente ou redistribution</li>
+                            <li>Contournement des limites</li>
+                            <li>Partage de clés API</li>
+                            <li>Activités illégales ou malveillantes</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 6 -->
+            <section id="restrictions" class="mb-5">
+                <h2 class="border-bottom pb-2 mb-4">6. Restrictions d'usage</h2>
+                <p>Vous vous engagez à ne pas :</p>
+                <div class="alert alert-danger">
+                    <ul class="mb-0">
+                        <li>🚫 Utiliser le service pour des contenus illégaux, discriminatoires ou nuisibles</li>
+                        <li>🚫 Tenter de compromettre la sécurité de la plateforme</li>
+                        <li>🚫 Effectuer de la rétro-ingénierie des modèles</li>
+                        <li>🚫 Surcharger intentionnellement l'infrastructure</li>
+                        <li>🚫 Créer des comptes multiples pour contourner les limites</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Section 7 -->
+            <section id="api-keys" class="mb-5">
+                <h2 class="border-bottom pb-2 mb-4">7. Gestion des clés API</h2>
+                <div class="alert alert-warning">
+                    <i class="fas fa-key"></i>
+                    <strong>Sécurité critique :</strong> Vous êtes entièrement responsable de la sécurité de vos clés API.
+                </div>
+                <h5>Obligations :</h5>
+                <ul>
+                    <li>🔐 Garder vos clés API confidentielles</li>
+                    <li>🔄 Renouveler vos clés régulièrement</li>
+                    <li>🚨 Signaler immédiatement toute compromission</li>
+                    <li>💾 Stocker les clés de manière sécurisée</li>
+                </ul>
+            </section>
+
+            <!-- Section 8 -->
+            <section id="privacy" class="mb-5">
+                <h2 class="border-bottom pb-2 mb-4">8. Confidentialité</h2>
+                <div class="alert alert-info">
+                    <i class="fas fa-shield-alt"></i>
+                    <strong>Hébergement local :</strong> Toutes vos données restent sur nos serveurs locaux et ne sont jamais transmises à des tiers.
+                </div>
+                <p>Nous nous engageons à :</p>
+                <ul>
+                    <li>🏠 Garder vos données sur notre infrastructure locale</li>
+                    <li>🔒 Chiffrer toutes les communications sensibles</li>
+                    <li>📊 Collecter uniquement les données nécessaires au service</li>
+                    <li>🗑️ Supprimer vos données sur demande</li>
+                </ul>
+            </section>
+
+            <!-- Section 9 -->
+            <section id="security" class="mb-5">
+                <h2 class="border-bottom pb-2 mb-4">9. Sécurité</h2>
+                <p>Nous mettons en place des mesures de sécurité avancées :</p>
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>🛡️ Protection technique</h6>
+                        <ul>
+                            <li>Chiffrement des données</li>
+                            <li>Authentification sécurisée</li>
+                            <li>Monitoring en temps réel</li>
+                            <li>Pare-feu et protections DDoS</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>📋 Audit et conformité</h6>
+                        <ul>
+                            <li>Logs d'audit complets</li>
+                            <li>Traçabilité des accès</li>
+                            <li>Alertes de sécurité</li>
+                            <li>Respect des standards</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 10 -->
+            <section id="limits" class="mb-5">
+                <h2 class="border-bottom pb-2 mb-4">10. Limites et quotas</h2>
+                <div class="alert alert-info">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <strong>Version démo :</strong> Les limites actuelles sont définies pour la période de démonstration.
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Limite</th>
+                                <th>Version Démo</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Requêtes/heure</td>
+                                <td>100</td>
+                                <td>Nombre maximum de requêtes par heure</td>
+                            </tr>
+                            <tr>
+                                <td>Taille des requêtes</td>
+                                <td>4096 tokens</td>
+                                <td>Limite de tokens par requête</td>
+                            </tr>
+                            <tr>
+                                <td>Concurrent</td>
+                                <td>5</td>
+                                <td>Requêtes simultanées maximum</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Section 11 -->
+            <section id="liability" class="mb-5">
+                <h2 class="border-bottom pb-2 mb-4">11. Responsabilité</h2>
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <strong>Service en démonstration :</strong> Ce service est fourni "tel quel" sans garantie de disponibilité continue.
+                </div>
+                <p>Limitations de responsabilité :</p>
+                <ul>
+                    <li>⚠️ Aucune garantie de disponibilité 24/7</li>
+                    <li>⚠️ Possible interruption pour maintenance</li>
+                    <li>⚠️ Limitation de responsabilité aux dommages directs</li>
+                    <li>⚠️ Exclusion de responsabilité pour les dommages indirects</li>
+                </ul>
+            </section>
+
+            <!-- Section 12 -->
+            <section id="updates" class="mb-5">
+                <h2 class="border-bottom pb-2 mb-4">12. Modifications</h2>
+                <p>
+                    Nous nous réservons le droit de modifier ces conditions d'utilisation à tout moment. 
+                    Les modifications seront communiquées via :
+                </p>
+                <ul>
+                    <li>📧 Notification par email</li>
+                    <li>🔔 Notification sur la plateforme</li>
+                    <li>📋 Mise à jour de cette page</li>
+                </ul>
+            </section>
+
+            <!-- Contact -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="fas fa-envelope"></i> Contact</h5>
+                </div>
+                <div class="card-body">
+                    <p class="mb-3">
+                        Pour toute question concernant ces conditions d'utilisation, contactez-nous :
+                    </p>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Email :</strong> <a href="mailto:legal@intra-tech.fr">legal@intra-tech.fr</a></p>
+                            <p><strong>Support :</strong> <a href="mailto:support@intra-tech.fr">support@intra-tech.fr</a></p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Créateur :</strong> Kevin Hamon</p>
+                            <p><strong>LinkedIn :</strong> <a href="https://www.linkedin.com/in/kevin-hamon31/" target="_blank">kevin-hamon31</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-5">
+                <p class="text-muted">
+                    <small>
+                        © 2024 API IA Locale - Tous droits réservés<br>
+                        Dernière mise à jour : 19 juillet 2024
+                    </small>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.table th {
+    background-color: #f8f9fa;
+}
+
+[data-theme="dark"] .table th {
+    background-color: #404040;
+    color: #ffffff;
+}
+
+section {
+    scroll-margin-top: 100px;
+}
+
+.alert ul {
+    margin-bottom: 0;
+}
+</style>
+{% endblock %} 

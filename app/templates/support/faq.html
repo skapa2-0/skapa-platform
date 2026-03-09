@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1><i class="fas fa-question-circle text-warning"></i> Questions fréquentes</h1>
+                <a href="{{ url_for('support.index') }}" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left"></i> Retour au support
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-8">
+            <div class="accordion" id="faqAccordion">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="heading1">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse1">
+                            Comment obtenir une clé API ?
+                        </button>
+                    </h2>
+                    <div id="collapse1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Pour obtenir une clé API, rendez-vous dans votre tableau de bord et cliquez sur "Générer une nouvelle clé API". 
+                            Votre compte doit être approuvé par un administrateur avant de pouvoir utiliser les services.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="heading2">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2">
+                            Comment utiliser l'API ?
+                        </button>
+                    </h2>
+                    <div id="collapse2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Consultez notre documentation complète à l'adresse <a href="/api-docs/" target="_blank">/api-docs/</a> 
+                            pour découvrir tous les endpoints disponibles et leurs paramètres.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="heading3">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse3">
+                            Que faire si ma clé API ne fonctionne pas ?
+                        </button>
+                    </h2>
+                    <div id="collapse3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Vérifiez que :
+                            <ul>
+                                <li>Votre clé API est active</li>
+                                <li>Vous incluez l'en-tête Authorization correctly</li>
+                                <li>Votre compte est approuvé</li>
+                                <li>Vous n'avez pas dépassé les limites de taux</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="heading4">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse4">
+                            Comment contacter le support ?
+                        </button>
+                    </h2>
+                    <div id="collapse4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Vous pouvez créer un ticket de support directement depuis cette interface. 
+                            Pour des problèmes urgents, contactez-nous à support@intra-tech.fr.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Besoin d'aide ?</h5>
+                    <p class="card-text">Si vous ne trouvez pas la réponse à votre question, n'hésitez pas à créer un ticket.</p>
+                    <a href="{{ url_for('support.new_ticket') }}" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Nouveau ticket
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

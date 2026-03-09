@@ -1,0 +1,191 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1><i class="fas fa-key"></i> Gestion des clés API</h1>
+                <a href="{{ url_for('admin.index') }}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Retour
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistiques -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card card-stats bg-primary text-white">
+                <div class="card-body text-center">
+                    <i class="fas fa-key fa-2x mb-2"></i>
+                    <h3>{{ stats.total_keys }}</h3>
+                    <p class="mb-0">Total des clés</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="card card-stats bg-success text-white">
+                <div class="card-body text-center">
+                    <i class="fas fa-check fa-2x mb-2"></i>
+                    <h3>{{ stats.active_keys }}</h3>
+                    <p class="mb-0">Clés actives</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="card card-stats bg-warning text-white">
+                <div class="card-body text-center">
+                    <i class="fas fa-times fa-2x mb-2"></i>
+                    <h3>{{ stats.revoked_keys }}</h3>
+                    <p class="mb-0">Clés révoquées</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="card card-stats bg-info text-white">
+                <div class="card-body text-center">
+                    <i class="fas fa-chart-line fa-2x mb-2"></i>
+                    <h3>{{ stats.requests_today }}</h3>
+                    <p class="mb-0">Requêtes aujourd'hui</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Liste des clés API -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Toutes les clés API</h5>
+                </div>
+                <div class="card-body">
+                    {% if api_keys.items %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Utilisateur</th>
+                                    <th>Clé</th>
+                                    <th>Statut</th>
+                                    <th>Créée le</th>
+                                    <th>Dernière utilisation</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for key in api_keys.items %}
+                                <tr>
+                                    <td>
+                                        <a href="{{ url_for('admin.user_detail', user_id=key.user.id) }}">
+                                            {{ key.user.name }}
+                                        </a>
+                                        <br>
+                                        <small class="text-muted">{{ key.user.email }}</small>
+                                    </td>
+                                    <td>
+                                        <code>{{ key.key_prefix }}••••••••••••••••</code>
+                                    </td>
+                                    <td>
+                                        {% if key.is_active %}
+                                            <span class="badge bg-success">Active</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">Révoquée</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ key.created_at.strftime('%d/%m/%Y') }}</td>
+                                    <td>
+                                        {% if key.last_used_at %}
+                                            {{ key.last_used_at.strftime('%d/%m/%Y à %H:%M') }}
+                                        {% else %}
+                                            <span class="text-muted">Jamais utilisée</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if key.is_active %}
+                                        <button class="btn btn-sm btn-danger" onclick="revokeKey({{ key.id }})">
+                                            <i class="fas fa-times"></i> Révoquer
+                                        </button>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pagination -->
+                    {% if api_keys.pages > 1 %}
+                    <nav aria-label="Pagination">
+                        <ul class="pagination justify-content-center">
+                            {% if api_keys.has_prev %}
+                            <li class="page-item">
+                                <a class="page-link" href="{{ url_for('admin.api_keys', page=api_keys.prev_num) }}">Précédent</a>
+                            </li>
+                            {% endif %}
+                            
+                            {% for page_num in api_keys.iter_pages() %}
+                                {% if page_num %}
+                                    {% if page_num != api_keys.page %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="{{ url_for('admin.api_keys', page=page_num) }}">{{ page_num }}</a>
+                                    </li>
+                                    {% else %}
+                                    <li class="page-item active">
+                                        <span class="page-link">{{ page_num }}</span>
+                                    </li>
+                                    {% endif %}
+                                {% else %}
+                                <li class="page-item disabled">
+                                    <span class="page-link">…</span>
+                                </li>
+                                {% endif %}
+                            {% endfor %}
+                            
+                            {% if api_keys.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="{{ url_for('admin.api_keys', page=api_keys.next_num) }}">Suivant</a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                    {% endif %}
+                    {% else %}
+                    <div class="text-center py-4">
+                        <i class="fas fa-key fa-3x text-muted mb-3"></i>
+                        <p class="text-muted">Aucune clé API trouvée.</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function revokeKey(keyId) {
+    if (confirm('Êtes-vous sûr de vouloir révoquer cette clé API ?')) {
+        fetch(`/admin/revoke-api-key/${keyId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert('Erreur : ' + data.error);
+            }
+        });
+    }
+}
+</script>
+{% endblock %} 

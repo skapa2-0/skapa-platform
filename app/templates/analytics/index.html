@@ -1,0 +1,425 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h3 mb-0">
+                    <i class="fas fa-chart-line text-primary"></i> Analytics & Métriques
+                </h1>
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-outline-primary" id="refreshData">
+                        <i class="fas fa-sync-alt"></i> Actualiser
+                    </button>
+                    <div class="btn-group" role="group">
+                        <button id="exportDropdown" type="button" class="btn btn-outline-secondary dropdown-toggle" 
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-download"></i> Exporter
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#" onclick="exportData('users', 'csv')">
+                                <i class="fas fa-users"></i> Utilisateurs (CSV)
+                            </a></li>
+                            <li><a class="dropdown-item" href="#" onclick="exportData('api-keys', 'csv')">
+                                <i class="fas fa-key"></i> Clés API (CSV)
+                            </a></li>
+                            <li><a class="dropdown-item" href="#" onclick="exportData('usage-stats', 'csv')">
+                                <i class="fas fa-chart-bar"></i> Statistiques (CSV)
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#" onclick="exportData('system-report', 'json')">
+                                <i class="fas fa-file-alt"></i> Rapport système (JSON)
+                            </a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Métriques en temps réel -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card text-white bg-primary mb-3 card-stats">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="card-title mb-0" id="totalUsers">-</h4>
+                            <p class="card-text">Utilisateurs totaux</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-users fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-success mb-3 card-stats">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="card-title mb-0" id="activeUsers">-</h4>
+                            <p class="card-text">Utilisateurs actifs</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-user-check fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-info mb-3 card-stats">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="card-title mb-0" id="todayRequests">-</h4>
+                            <p class="card-text">Requêtes aujourd'hui</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-chart-line fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-warning mb-3 card-stats">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="card-title mb-0" id="avgResponseTime">-</h4>
+                            <p class="card-text">Temps de réponse moyen (ms)</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-stopwatch fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Graphiques -->
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="fas fa-chart-area"></i> Utilisation de l'API
+                    </h5>
+                    <select class="form-select form-select-sm" style="width: auto;" id="usageTimeRange">
+                        <option value="7">7 derniers jours</option>
+                        <option value="30" selected>30 derniers jours</option>
+                        <option value="90">90 derniers jours</option>
+                    </select>
+                </div>
+                <div class="card-body">
+                    <div id="usageChart" style="height: 400px;"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-trophy"></i> Top Utilisateurs
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div id="topUsersList">
+                        <div class="text-center">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Chargement...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Nouveaux utilisateurs et analyse des erreurs -->
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-user-plus"></i> Activité des utilisateurs
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div id="userActivityChart" style="height: 300px;"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-exclamation-triangle"></i> Analyse des erreurs
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div id="errorAnalysis">
+                        <div class="text-center">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Chargement...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Métriques temps réel -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="fas fa-pulse"></i> Métriques en temps réel
+                    </h5>
+                    <small class="text-muted">Mise à jour automatique toutes les 30 secondes</small>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-clock fa-2x text-info"></i>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <h6 class="mb-0">Activité récente (1h)</h6>
+                                    <span class="text-muted" id="recentActivity">-</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-users fa-2x text-success"></i>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <h6 class="mb-0">Utilisateurs actifs (24h)</h6>
+                                    <span class="text-muted" id="activeUsers24h">-</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-server fa-2x text-primary"></i>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <h6 class="mb-0">Statut système</h6>
+                                    <span class="badge bg-success" id="systemStatus">En ligne</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+let chartRefreshInterval;
+
+document.addEventListener('DOMContentLoaded', function() {
+    loadDashboardStats();
+    loadUsageChart();
+    loadUserActivityChart();
+    loadTopUsers();
+    loadErrorAnalysis();
+    loadRealTimeMetrics();
+    
+    // Auto-refresh metrics every 30 seconds
+    chartRefreshInterval = setInterval(loadRealTimeMetrics, 30000);
+    
+    // Event listeners
+    document.getElementById('refreshData').addEventListener('click', refreshAllData);
+    document.getElementById('usageTimeRange').addEventListener('change', function() {
+        loadUsageChart(this.value);
+    });
+});
+
+function refreshAllData() {
+    showLoading();
+    loadDashboardStats();
+    loadUsageChart();
+    loadUserActivityChart();
+    loadTopUsers();
+    loadErrorAnalysis();
+    loadRealTimeMetrics();
+    
+    showToast('Analytics', 'Données actualisées', 'success');
+    hideLoading();
+}
+
+function loadDashboardStats() {
+    fetch('/analytics/api/dashboard-stats')
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('totalUsers').textContent = data.total_users;
+            document.getElementById('activeUsers').textContent = data.active_users;
+            document.getElementById('todayRequests').textContent = data.today_requests;
+            document.getElementById('avgResponseTime').textContent = data.avg_response_time;
+        })
+        .catch(error => {
+            console.error('Erreur lors du chargement des stats:', error);
+            showToast('Erreur', 'Impossible de charger les statistiques', 'error');
+        });
+}
+
+function loadUsageChart(days = 30) {
+    fetch(`/analytics/api/usage-chart?days=${days}`)
+        .then(response => response.json())
+        .then(data => {
+            const chartData = JSON.parse(data.chart_data);
+            Plotly.newPlot('usageChart', chartData.data, chartData.layout, {
+                responsive: true,
+                displayModeBar: false
+            });
+        })
+        .catch(error => {
+            console.error('Erreur lors du chargement du graphique d\'utilisation:', error);
+            document.getElementById('usageChart').innerHTML = 
+                '<div class="text-center text-muted py-5">Erreur de chargement du graphique</div>';
+        });
+}
+
+function loadUserActivityChart() {
+    fetch('/analytics/api/user-activity')
+        .then(response => response.json())
+        .then(data => {
+            const chartData = JSON.parse(data.chart_data);
+            Plotly.newPlot('userActivityChart', chartData.data, chartData.layout, {
+                responsive: true,
+                displayModeBar: false
+            });
+        })
+        .catch(error => {
+            console.error('Erreur lors du chargement de l\'activité utilisateur:', error);
+            document.getElementById('userActivityChart').innerHTML = 
+                '<div class="text-center text-muted py-5">Erreur de chargement du graphique</div>';
+        });
+}
+
+function loadTopUsers() {
+    fetch('/analytics/api/top-users?limit=10')
+        .then(response => response.json())
+        .then(data => {
+            const container = document.getElementById('topUsersList');
+            if (data.users.length === 0) {
+                container.innerHTML = '<div class="text-center text-muted">Aucune donnée disponible</div>';
+                return;
+            }
+            
+            let html = '<div class="list-group list-group-flush">';
+            data.users.forEach((user, index) => {
+                const medalClass = index === 0 ? 'text-warning' : index === 1 ? 'text-secondary' : index === 2 ? 'text-info' : 'text-muted';
+                const medal = index < 3 ? 'fas fa-medal' : 'fas fa-user';
+                
+                html += `
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center">
+                            <i class="${medal} ${medalClass} me-2"></i>
+                            <div>
+                                <div class="fw-bold">${user.name}</div>
+                                <small class="text-muted">${user.email}</small>
+                            </div>
+                        </div>
+                        <span class="badge bg-primary rounded-pill">${user.total_requests}</span>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            container.innerHTML = html;
+        })
+        .catch(error => {
+            console.error('Erreur lors du chargement du top utilisateurs:', error);
+            document.getElementById('topUsersList').innerHTML = 
+                '<div class="text-center text-muted">Erreur de chargement</div>';
+        });
+}
+
+function loadErrorAnalysis() {
+    fetch('/analytics/api/error-analysis')
+        .then(response => response.json())
+        .then(data => {
+            const container = document.getElementById('errorAnalysis');
+            
+            if (data.error_data.length === 0) {
+                container.innerHTML = '<div class="text-center text-muted">Aucune donnée d\'erreur disponible</div>';
+                return;
+            }
+            
+            let html = '<div class="table-responsive"><table class="table table-sm">';
+            html += '<thead><tr><th>Date</th><th>Taux d\'erreur</th><th>Erreurs</th><th>Requêtes</th></tr></thead><tbody>';
+            
+            data.error_data.forEach(item => {
+                const errorRateClass = item.error_rate > 5 ? 'text-danger' : item.error_rate > 2 ? 'text-warning' : 'text-success';
+                html += `
+                    <tr>
+                        <td>${item.date}</td>
+                        <td class="${errorRateClass}">${item.error_rate}%</td>
+                        <td>${item.errors}</td>
+                        <td>${item.requests}</td>
+                    </tr>
+                `;
+            });
+            
+            html += '</tbody></table></div>';
+            container.innerHTML = html;
+        })
+        .catch(error => {
+            console.error('Erreur lors du chargement de l\'analyse des erreurs:', error);
+            document.getElementById('errorAnalysis').innerHTML = 
+                '<div class="text-center text-muted">Erreur de chargement</div>';
+        });
+}
+
+function loadRealTimeMetrics() {
+    fetch('/analytics/api/real-time-metrics')
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('recentActivity').textContent = data.recent_activity + ' actions';
+            document.getElementById('activeUsers24h').textContent = data.active_users_24h + ' utilisateurs';
+            
+            // Update timestamp
+            const now = new Date();
+            document.querySelector('.card-header small').textContent = 
+                `Dernière mise à jour: ${now.toLocaleTimeString('fr-FR')}`;
+        })
+        .catch(error => {
+            console.error('Erreur lors du chargement des métriques temps réel:', error);
+        });
+}
+
+function exportData(type, format) {
+    const url = `/analytics/export/${type}?format=${format}`;
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = true;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    showToast('Export', `Export ${type} en cours...`, 'info');
+}
+
+// Cleanup when leaving page
+window.addEventListener('beforeunload', function() {
+    if (chartRefreshInterval) {
+        clearInterval(chartRefreshInterval);
+    }
+});
+</script>
+{% endblock %} 

@@ -1,0 +1,354 @@
+{% extends "base.html" %}
+
+{% block head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1><i class="fas fa-chart-bar text-primary"></i> Analytics - Administration</h1>
+                <div>
+                    <button class="btn btn-outline-primary" onclick="exportData()">
+                        <i class="fas fa-download"></i> Exporter
+                    </button>
+                    <a href="{{ url_for('analytics.index') }}" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left"></i> Vue utilisateur
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistiques globales -->
+    <div class="row mb-4">
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Total Utilisateurs
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                {{ admin_stats.total_users }}
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-users fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Utilisateurs Actifs
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                {{ admin_stats.active_users }}
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-user-check fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                Requêtes totales
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                {{ admin_stats.total_requests }}
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-exchange-alt fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Clés API Actives
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                {{ admin_stats.active_api_keys }}
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-key fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Graphiques -->
+    <div class="row">
+        <!-- Graphique des requêtes par jour -->
+        <div class="col-xl-8 col-lg-7">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Requêtes par jour (30 derniers jours)</h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart-area">
+                        <canvas id="requestsChart" width="400" height="200"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Répartition par statut -->
+        <div class="col-xl-4 col-lg-5">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Codes de statut</h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart-pie pt-4 pb-2">
+                        <canvas id="statusChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tableaux de données -->
+    <div class="row">
+        <!-- Top utilisateurs -->
+        <div class="col-xl-6 col-lg-6">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Top Utilisateurs par Requêtes</h6>
+                </div>
+                <div class="card-body">
+                    {% if admin_stats.top_users %}
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Utilisateur</th>
+                                    <th>Requêtes</th>
+                                    <th>Tokens</th>
+                                    <th>Dernière activité</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for user in admin_stats.top_users %}
+                                <tr>
+                                    <td>
+                                        <strong>{{ user.name }}</strong><br>
+                                        <small class="text-muted">{{ user.email }}</small>
+                                    </td>
+                                    <td>{{ user.request_count }}</td>
+                                    <td>{{ user.token_count }}</td>
+                                    <td>
+                                        {% if user.last_activity %}
+                                            {{ user.last_activity.strftime('%d/%m/%Y') }}
+                                        {% else %}
+                                            <span class="text-muted">Jamais</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <p class="text-muted text-center">Aucune donnée disponible</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Endpoints les plus utilisés -->
+        <div class="col-xl-6 col-lg-6">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Endpoints les plus utilisés</h6>
+                </div>
+                <div class="card-body">
+                    {% if admin_stats.top_endpoints %}
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Endpoint</th>
+                                    <th>Méthode</th>
+                                    <th>Requêtes</th>
+                                    <th>Temps moyen</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for endpoint in admin_stats.top_endpoints %}
+                                <tr>
+                                    <td>
+                                        <code>{{ endpoint.endpoint }}</code>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-{{ 'primary' if endpoint.method == 'GET' else 'success' if endpoint.method == 'POST' else 'warning' }}">
+                                            {{ endpoint.method }}
+                                        </span>
+                                    </td>
+                                    <td>{{ endpoint.request_count }}</td>
+                                    <td>
+                                        {% if endpoint.avg_response_time %}
+                                            {{ "%.0f"|format(endpoint.avg_response_time) }}ms
+                                        {% else %}
+                                            <span class="text-muted">N/A</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <p class="text-muted text-center">Aucune donnée disponible</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistiques par période -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Statistiques par période</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3 text-center">
+                            <h5 class="text-primary">Aujourd'hui</h5>
+                            <p class="h4">{{ admin_stats.today_requests }}</p>
+                            <small class="text-muted">requêtes</small>
+                        </div>
+                        <div class="col-md-3 text-center">
+                            <h5 class="text-success">Cette semaine</h5>
+                            <p class="h4">{{ admin_stats.week_requests }}</p>
+                            <small class="text-muted">requêtes</small>
+                        </div>
+                        <div class="col-md-3 text-center">
+                            <h5 class="text-info">Ce mois</h5>
+                            <p class="h4">{{ admin_stats.month_requests }}</p>
+                            <small class="text-muted">requêtes</small>
+                        </div>
+                        <div class="col-md-3 text-center">
+                            <h5 class="text-warning">Total</h5>
+                            <p class="h4">{{ admin_stats.total_requests }}</p>
+                            <small class="text-muted">requêtes</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Données pour les graphiques
+const chartData = {{ chart_data|tojson }};
+
+// Configuration du graphique des requêtes
+const ctxRequests = document.getElementById('requestsChart').getContext('2d');
+const requestsChart = new Chart(ctxRequests, {
+    type: 'line',
+    data: {
+        labels: chartData.dates,
+        datasets: [{
+            label: 'Requêtes',
+            data: chartData.requests,
+            borderColor: 'rgb(78, 115, 223)',
+            backgroundColor: 'rgba(78, 115, 223, 0.1)',
+            tension: 0.3
+        }, {
+            label: 'Utilisateurs uniques',
+            data: chartData.unique_users,
+            borderColor: 'rgb(28, 200, 138)',
+            backgroundColor: 'rgba(28, 200, 138, 0.1)',
+            tension: 0.3
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                position: 'top',
+            },
+            title: {
+                display: false
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+
+// Configuration du graphique des statuts
+const ctxStatus = document.getElementById('statusChart').getContext('2d');
+const statusChart = new Chart(ctxStatus, {
+    type: 'doughnut',
+    data: {
+        labels: ['200 OK', '400 Bad Request', '401 Unauthorized', '500 Error', 'Autres'],
+        datasets: [{
+            data: [85, 8, 4, 2, 1],
+            backgroundColor: [
+                '#1cc88a',
+                '#f6c23e',
+                '#e74a3b',
+                '#6f42c1',
+                '#6c757d'
+            ]
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                position: 'bottom',
+            }
+        }
+    }
+});
+
+// Fonction d'export
+function exportData() {
+    window.location.href = '{{ url_for("analytics.export_data") }}';
+}
+
+// Actualisation automatique toutes les 30 secondes
+setInterval(function() {
+    if (document.visibilityState === 'visible') {
+        location.reload();
+    }
+}, 30000);
+</script>
+{% endblock %} 

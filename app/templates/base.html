@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="fr" data-bs-theme="auto">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% if title %}
+        <title>{{ title }} - API IA Locale</title>
+    {% else %}
+        <title>API IA Locale</title>
+    {% endif %}
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js pour les graphiques -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        :root {
+            --primary-color: #007bff;
+            --secondary-color: #6c757d;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+            --warning-color: #ffc107;
+            --info-color: #17a2b8;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+        }
+        
+        /* Dark Mode Variables */
+        [data-theme="dark"] {
+            --bs-body-bg: #1a1a1a;
+            --bs-body-color: #ffffff;
+            --bs-card-bg: #2d2d2d;
+            --bs-navbar-bg: #2d2d2d;
+            --bs-border-color: #404040;
+        }
+        
+        [data-theme="dark"] .navbar {
+            background-color: var(--bs-navbar-bg) !important;
+        }
+        
+        [data-theme="dark"] .card {
+            background-color: var(--bs-card-bg);
+            border-color: var(--bs-border-color);
+        }
+        
+        [data-theme="dark"] .footer {
+            background-color: var(--bs-card-bg) !important;
+        }
+        
+        .navbar-brand {
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Theme Detection Script -->
+    <script>
+        // Détection automatique du thème
+        function getStoredTheme() { return localStorage.getItem('theme') }
+        function setStoredTheme(theme) { localStorage.setItem('theme', theme) }
+        
+        function getPreferredTheme() {
+            const storedTheme = getStoredTheme()
+            if (storedTheme) {
+                return storedTheme
+            }
+            return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+        }
+        
+        function setTheme(theme) {
+            if (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.documentElement.setAttribute('data-bs-theme', 'dark')
+            } else {
+                document.documentElement.setAttribute('data-bs-theme', theme)
+            }
+        }
+        
+        setTheme(getPreferredTheme())
+        
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+            const storedTheme = getStoredTheme()
+            if (storedTheme !== 'light' && storedTheme !== 'dark') {
+                setTheme(getPreferredTheme())
+            }
+        })
+    </script>
+    
+    <style>
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .feature-icon-sm {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .bg-gradient-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .notification-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #dc3545;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        .search-dropdown {
+            min-width: 350px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1055;
+        }
+        .sidebar {
+            min-height: calc(100vh - 76px);
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .main-content {
+            min-height: calc(100vh - 76px);
+        }
+        .activity-indicator {
+            width: 8px;
+            height: 8px;
+            background: #28a745;
+            border-radius: 50%;
+            display: inline-block;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        
+        /* Mode sombre personnalisé */
+        [data-bs-theme="dark"] .card {
+            background-color: var(--bs-dark);
+            border-color: var(--bs-gray-800);
+        }
+        [data-bs-theme="dark"] .bg-light {
+            background-color: var(--bs-gray-800) !important;
+        }
+        [data-bs-theme="dark"] .border-light {
+            border-color: var(--bs-gray-700) !important;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{{ url_for('main.index') }}">
+                <i class="fas fa-robot"></i> API IA Locale
+                <span class="activity-indicator"></span>
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <!-- Menu principal -->
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.index') }}">
+                            <i class="fas fa-home"></i> Accueil
+                        </a>
+                    </li>
+                    {% if current_user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('dashboard.index') }}">
+                                <i class="fas fa-tachometer-alt"></i> Dashboard
+                            </a>
+                        </li>
+                        {% if current_user.is_admin() %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('admin.index') }}">
+                                    <i class="fas fa-cog"></i> Administration
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('analytics.index') }}">
+                                    <i class="fas fa-chart-line"></i> Analytics
+                                </a>
+                            </li>
+                        {% endif %}
+                    {% endif %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.about') }}">
+                            <i class="fas fa-info-circle"></i> À propos
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.tutorials') }}">
+                            <i class="fas fa-graduation-cap"></i> Tutoriels
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.terms') }}">
+                            <i class="fas fa-file-contract"></i> Conditions
+                        </a>
+                    </li>
+                    
+                    {% if current_user.is_authenticated %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-tools"></i> Outils
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="{{ url_for('dashboard.index') }}">
+                                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                                </a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('analytics.index') }}">
+                                    <i class="fas fa-chart-line"></i> Analytics
+                                </a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('support.index') }}">
+                                    <i class="fas fa-life-ring"></i> Support
+                                </a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="{{ url_for('support.knowledge_base') }}">
+                                    <i class="fas fa-question-circle"></i> Base de connaissances
+                                </a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('support.faq') }}">
+                                    <i class="fas fa-question"></i> FAQ
+                                </a></li>
+                            </ul>
+                        </li>
+                        
+                        {% if current_user.is_admin() %}
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                    <i class="fas fa-cog"></i> Admin
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="{{ url_for('admin.index') }}">
+                                        <i class="fas fa-tachometer-alt"></i> Dashboard
+                                    </a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('admin.users') }}">
+                                        <i class="fas fa-users"></i> Utilisateurs
+                                    </a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('admin.api_keys') }}">
+                                        <i class="fas fa-key"></i> Clés API
+                                    </a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('support.admin_index') }}">
+                                        <i class="fas fa-ticket-alt"></i> Support
+                                    </a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('analytics.admin_analytics') }}">
+                                        <i class="fas fa-chart-bar"></i> Analytics
+                                    </a></li>
+                                </ul>
+                            </li>
+                        {% endif %}
+                    {% endif %}
+                </ul>
+                
+                <!-- Recherche globale -->
+                {% if current_user.is_authenticated %}
+                <div class="navbar-nav me-3">
+                    <div class="nav-item dropdown">
+                        <input type="text" class="form-control" placeholder="Rechercher..." 
+                               data-bs-toggle="dropdown" id="globalSearch" style="width: 250px;">
+                        <div class="dropdown-menu search-dropdown" id="searchResults">
+                            <div class="dropdown-item-text text-muted">
+                                <i class="fas fa-search"></i> Tapez pour rechercher...
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                
+                <!-- Notifications et profil -->
+                <ul class="navbar-nav">
+                    <!-- Sélecteur de thème -->
+                    <li class="nav-item dropdown">
+                        <button class="btn nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" id="bd-theme" type="button">
+                            <i class="fas fa-circle-half-stroke"></i>
+                            <span class="d-none d-lg-inline-block ms-1">Thème</span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li>
+                                <button type="button" class="dropdown-item" data-bs-theme-value="light">
+                                    <i class="fas fa-sun me-2"></i> Clair
+                                </button>
+                            </li>
+                            <li>
+                                <button type="button" class="dropdown-item" data-bs-theme-value="dark">
+                                    <i class="fas fa-moon me-2"></i> Sombre
+                                </button>
+                            </li>
+                            <li>
+                                <button type="button" class="dropdown-item" data-bs-theme-value="auto">
+                                    <i class="fas fa-circle-half-stroke me-2"></i> Auto
+                                </button>
+                            </li>
+                        </ul>
+                    </li>
+                    
+                    {% if current_user.is_authenticated %}
+                        <!-- Notifications -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link position-relative" href="#" role="button" data-bs-toggle="dropdown" id="notificationsDropdown">
+                                <i class="fas fa-bell"></i>
+                                <span class="notification-badge d-none" id="notificationBadge">0</span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-end" style="width: 350px; max-height: 400px; overflow-y: auto;" id="notificationsContainer">
+                                <div class="dropdown-header d-flex justify-content-between align-items-center">
+                                    <span>Notifications</span>
+                                    <button class="btn btn-sm btn-outline-primary" onclick="markAllNotificationsRead()">
+                                        Tout marquer lu
+                                    </button>
+                                </div>
+                                <div class="dropdown-divider"></div>
+                                <div id="notificationsList">
+                                    <div class="dropdown-item-text text-muted text-center py-3">
+                                        <i class="fas fa-spinner fa-spin"></i> Chargement...
+                                    </div>
+                                </div>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item text-center" href="{{ url_for('notifications.index') }}">
+                                    <i class="fas fa-eye"></i> Voir toutes les notifications
+                                </a>
+                            </div>
+                        </li>
+                        
+                        <!-- Menu utilisateur -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-user-circle"></i>
+                                <span class="d-none d-lg-inline-block ms-1">{{ current_user.name }}</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li class="dropdown-header">{{ current_user.email }}</li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="{{ url_for('dashboard.index') }}">
+                                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                                </a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('dashboard.profile') }}">
+                                    <i class="fas fa-user"></i> Mon profil
+                                </a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('dashboard.settings') }}">
+                                    <i class="fas fa-cog"></i> Paramètres
+                                </a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">
+                                    <i class="fas fa-sign-out-alt"></i> Se déconnecter
+                                </a></li>
+                            </ul>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('auth.login') }}">
+                                <i class="fas fa-sign-in-alt"></i> Se connecter
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('auth.register') }}">
+                                <i class="fas fa-user-plus"></i> S'inscrire
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="container mt-3">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <!-- Contenu principal -->
+    {% block content %}{% endblock %}
+
+    <!-- Toast Container -->
+    <div class="toast-container"></div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Scripts globaux -->
+    <script>
+        // Gestion des thèmes
+        document.querySelectorAll('[data-bs-theme-value]').forEach(toggle => {
+            toggle.addEventListener('click', () => {
+                const theme = toggle.getAttribute('data-bs-theme-value')
+                setStoredTheme(theme)
+                setTheme(theme)
+                
+                // Mise à jour de l'indicateur de thème actif
+                document.querySelectorAll('[data-bs-theme-value]').forEach(t => t.classList.remove('active'))
+                toggle.classList.add('active')
+            })
+        })
+        
+        // Marquer le thème actuel comme actif
+        const currentTheme = getStoredTheme() || 'auto'
+        document.querySelector(`[data-bs-theme-value="${currentTheme}"]`)?.classList.add('active')
+        
+        // Fonction pour afficher des toasts
+        function showToast(message, type = 'info') {
+            const toastContainer = document.querySelector('.toast-container')
+            const toastId = 'toast-' + Date.now()
+            
+            const toast = document.createElement('div')
+            toast.className = `toast align-items-center text-bg-${type} border-0`
+            toast.id = toastId
+            toast.setAttribute('role', 'alert')
+            toast.innerHTML = `
+                <div class="d-flex">
+                    <div class="toast-body">${message}</div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                </div>
+            `
+            
+            toastContainer.appendChild(toast)
+            const bsToast = new bootstrap.Toast(toast)
+            bsToast.show()
+            
+            // Supprimer le toast après qu'il soit caché
+            toast.addEventListener('hidden.bs.toast', () => {
+                toast.remove()
+            })
+        }
+        
+        {% if current_user.is_authenticated %}
+            // Chargement des notifications
+            function loadNotifications() {
+                fetch('/notifications/api/notifications?limit=5&unread_only=true')
+                    .then(response => response.json())
+                    .then(data => {
+                        const badge = document.getElementById('notificationBadge')
+                        const list = document.getElementById('notificationsList')
+                        
+                        if (data.unread_count > 0) {
+                            badge.textContent = data.unread_count
+                            badge.classList.remove('d-none')
+                        } else {
+                            badge.classList.add('d-none')
+                        }
+                        
+                        list.innerHTML = ''
+                        
+                        if (data.notifications.length === 0) {
+                            list.innerHTML = '<div class="dropdown-item-text text-muted text-center py-3">Aucune notification</div>'
+                        } else {
+                            data.notifications.forEach(notif => {
+                                const item = document.createElement('div')
+                                item.className = 'dropdown-item py-2'
+                                item.innerHTML = `
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <div class="flex-grow-1">
+                                            <div class="fw-bold">${notif.title}</div>
+                                            <div class="small text-muted">${notif.message}</div>
+                                            <div class="small text-muted">${new Date(notif.created_at).toLocaleString()}</div>
+                                        </div>
+                                        <span class="badge bg-${notif.type} ms-2">${notif.type}</span>
+                                    </div>
+                                `
+                                item.addEventListener('click', () => {
+                                    markNotificationRead(notif.id)
+                                    if (notif.action_url) {
+                                        window.location.href = notif.action_url
+                                    }
+                                })
+                                list.appendChild(item)
+                            })
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erreur lors du chargement des notifications:', error)
+                    })
+            }
+            
+            function markNotificationRead(id) {
+                fetch(`/notifications/mark-as-read/${id}`, { method: 'POST' })
+                    .then(() => loadNotifications())
+            }
+            
+            function markAllNotificationsRead() {
+                fetch('/notifications/mark-all-as-read', { method: 'POST' })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            showToast(data.message, 'success')
+                            loadNotifications()
+                        }
+                    })
+            }
+            
+            // Recherche globale
+            document.getElementById('globalSearch').addEventListener('input', function(e) {
+                const query = e.target.value.trim()
+                const results = document.getElementById('searchResults')
+                
+                if (query.length < 2) {
+                    results.innerHTML = '<div class="dropdown-item-text text-muted"><i class="fas fa-search"></i> Tapez pour rechercher...</div>'
+                    return
+                }
+                
+                // Simulation de recherche (à remplacer par une vraie API)
+                results.innerHTML = '<div class="dropdown-item-text text-muted"><i class="fas fa-spinner fa-spin"></i> Recherche en cours...</div>'
+                
+                setTimeout(() => {
+                    results.innerHTML = `
+                        <a class="dropdown-item" href="/dashboard">
+                            <i class="fas fa-tachometer-alt"></i> Dashboard
+                        </a>
+                        <a class="dropdown-item" href="/analytics">
+                            <i class="fas fa-chart-line"></i> Analytics
+                        </a>
+                        <a class="dropdown-item" href="/support">
+                            <i class="fas fa-life-ring"></i> Support
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <div class="dropdown-item-text text-muted small">
+                            Recherche pour: "${query}"
+                        </div>
+                    `
+                }, 500)
+            })
+            
+            // Charger les notifications au démarrage
+            loadNotifications()
+            
+            // Recharger les notifications toutes les 30 secondes
+            setInterval(loadNotifications, 30000)
+        {% endif %}
+        
+        // Raccourcis clavier
+        document.addEventListener('keydown', function(e) {
+            // Ctrl+K pour focus sur la recherche
+            if (e.ctrlKey && e.key === 'k') {
+                e.preventDefault()
+                document.getElementById('globalSearch')?.focus()
+            }
+        })
+    </script>
+    
+    {% block scripts %}{% endblock %}
+</body>
+</html> 

@@ -1,0 +1,628 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1 class="h3 mb-0">
+                        <i class="fas fa-tachometer-alt text-primary"></i> Tableau de bord
+                    </h1>
+                    <p class="text-muted mb-0">Bienvenue {{ current_user.name }} !</p>
+                </div>
+                <div class="d-flex gap-2">
+                    <span class="badge bg-success fs-6">
+                        <i class="fas fa-check-circle"></i> Compte approuvé
+                    </span>
+                    {% if current_user.is_admin() %}
+                    <a href="{{ url_for('analytics.index') }}" class="btn btn-outline-primary btn-sm">
+                        <i class="fas fa-chart-line"></i> Analytics
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notifications récentes (s'il y en a) -->
+    {% if recent_notifications %}
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-info">
+                <div class="card-header bg-info text-white">
+                    <h6 class="mb-0">
+                        <i class="fas fa-bell"></i> Notifications récentes
+                    </h6>
+                </div>
+                <div class="card-body p-0">
+                    {% for notification in recent_notifications %}
+                    <div class="notification-item {{ notification.type }} p-3 border-bottom">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div class="flex-grow-1">
+                                <h6 class="mb-1">{{ notification.title }}</h6>
+                                <p class="mb-1 text-muted">{{ notification.message }}</p>
+                                <small class="text-muted">{{ notification.created_at.strftime('%d/%m/%Y à %H:%M') }}</small>
+                            </div>
+                            {% if notification.action_url %}
+                            <a href="{{ notification.action_url }}" class="btn btn-sm btn-outline-primary">
+                                {{ notification.action_text or 'Voir' }}
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Statistiques principales -->
+    <div class="row mb-4">
+        <div class="col-lg-3 col-md-6">
+            <div class="card text-white bg-primary mb-3 card-stats">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="card-title mb-0">{{ current_user.status.replace('_', ' ').title() }}</h4>
+                            <p class="card-text">Statut du compte</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-user-check fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-3 col-md-6">
+            <div class="card text-white bg-success mb-3 card-stats">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="card-title mb-0" id="userRequests">-</h4>
+                            <p class="card-text">Requêtes totales</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-chart-line fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-3 col-md-6">
+            <div class="card text-white bg-info mb-3 card-stats">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="card-title mb-0">100/heure</h4>
+                            <p class="card-text">Limite API</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-clock fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-3 col-md-6">
+            <div class="card text-white bg-warning mb-3 card-stats">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="card-title mb-0" id="lastUsed">-</h4>
+                            <p class="card-text">Dernière utilisation</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-history fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistiques admin (si applicable) -->
+    {% if current_user.is_admin() and stats %}
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-crown"></i> Vue d'ensemble administrateur
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3 text-center">
+                            <h3 class="text-primary">{{ stats.total_users }}</h3>
+                            <p class="text-muted mb-0">Utilisateurs totaux</p>
+                        </div>
+                        <div class="col-md-3 text-center">
+                            <h3 class="text-success">{{ stats.active_users }}</h3>
+                            <p class="text-muted mb-0">Utilisateurs actifs</p>
+                        </div>
+                        <div class="col-md-3 text-center">
+                            <h3 class="text-info">{{ stats.today_requests }}</h3>
+                            <p class="text-muted mb-0">Requêtes aujourd'hui</p>
+                        </div>
+                        <div class="col-md-3 text-center">
+                            <h3 class="text-warning">{{ stats.avg_response_time }}ms</h3>
+                            <p class="text-muted mb-0">Temps de réponse moyen</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Gestion de la clé API -->
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="fas fa-key"></i> Gestion de la clé API
+                    </h5>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-outline-primary btn-sm" onclick="refreshApiKeyInfo()">
+                            <i class="fas fa-sync-alt"></i> Actualiser
+                        </button>
+                        <a href="{{ url_for('dashboard.usage') }}" class="btn btn-outline-info btn-sm">
+                            <i class="fas fa-chart-bar"></i> Statistiques
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    {% if api_key %}
+                        <div class="alert alert-success" role="alert">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="alert-heading mb-1">
+                                        <i class="fas fa-check-circle"></i> Clé API active
+                                    </h6>
+                                    <p class="mb-0">Votre clé API est configurée et prête à être utilisée.</p>
+                                </div>
+                                <div class="btn-group">
+                                    <button class="btn btn-success btn-sm" onclick="revealApiKey()">
+                                        <i class="fas fa-eye"></i> Afficher
+                                    </button>
+                                    <button class="btn btn-info btn-sm" onclick="copyCurrentApiKey()" id="copyCurrentKeyBtn">
+                                        <i class="fas fa-copy"></i> Copier
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Zone d'affichage de la clé révélée -->
+                        <div id="revealedKeyContainer" style="display: none;" class="alert alert-warning mt-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="flex-grow-1">
+                                    <h6><i class="fas fa-key"></i> Clé API complète :</h6>
+                                    <div class="api-key-display" id="fullApiKeyDisplay">
+                                        <span id="revealedApiKey">-</span>
+                                    </div>
+                                    <small class="text-muted">
+                                        <i class="fas fa-shield-alt"></i> Gardez cette clé secrète et ne la partagez jamais
+                                    </small>
+                                </div>
+                                <div class="btn-group-vertical">
+                                    <button class="btn btn-outline-primary btn-sm" onclick="copyRevealedKey()">
+                                        <i class="fas fa-copy"></i> Copier
+                                    </button>
+                                    <button class="btn btn-outline-secondary btn-sm mt-1" onclick="hideApiKey()">
+                                        <i class="fas fa-eye-slash"></i> Masquer
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <strong>Préfixe de la clé :</strong>
+                                <div class="api-key-display mt-2">{{ api_key.key_prefix }}...</div>
+                            </div>
+                            <div class="col-md-6">
+                                <strong>Créée le :</strong>
+                                <div class="mt-2">{{ api_key.created_at.strftime('%d/%m/%Y à %H:%M') }}</div>
+                            </div>
+                        </div>
+                        
+                        {% if api_key.last_used_at %}
+                        <div class="row mt-3">
+                            <div class="col-md-6">
+                                <strong>Dernière utilisation :</strong>
+                                <div class="mt-2">{{ api_key.last_used_at.strftime('%d/%m/%Y à %H:%M') }}</div>
+                            </div>
+                            <div class="col-md-6">
+                                <strong>Nombre d'utilisations :</strong>
+                                <div class="mt-2">{{ api_key.usage_count or 0 }}</div>
+                            </div>
+                        </div>
+                        {% endif %}
+                        
+                        <div class="mt-4">
+                            <button class="btn btn-primary" onclick="generateApiKey()">
+                                <i class="fas fa-sync-alt"></i> Régénérer la clé
+                            </button>
+                            <button class="btn btn-outline-danger ms-2" onclick="revokeApiKey()">
+                                <i class="fas fa-trash"></i> Révoquer la clé
+                            </button>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-warning" role="alert">
+                            <h6 class="alert-heading">
+                                <i class="fas fa-exclamation-triangle"></i> Aucune clé API active
+                            </h6>
+                            <p class="mb-3">Vous n'avez pas encore de clé API active. Générez-en une pour commencer à utiliser nos services.</p>
+                            <button class="btn btn-primary" onclick="generateApiKey()">
+                                <i class="fas fa-plus"></i> Générer ma première clé API
+                            </button>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <!-- Actions rapides -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-bolt"></i> Actions rapides
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="/api-docs/" class="btn btn-outline-primary" target="_blank">
+                            <i class="fas fa-book"></i> Documentation API
+                        </a>
+                        <a href="{{ url_for('dashboard.profile') }}" class="btn btn-outline-secondary">
+                            <i class="fas fa-user-edit"></i> Modifier le profil
+                        </a>
+                        <a href="{{ url_for('dashboard.usage') }}" class="btn btn-outline-info">
+                            <i class="fas fa-chart-bar"></i> Voir l'utilisation
+                        </a>
+                        <a href="{{ url_for('dashboard.security') }}" class="btn btn-outline-warning">
+                            <i class="fas fa-shield-alt"></i> Sécurité
+                        </a>
+                        <button class="btn btn-outline-success" onclick="testNotification()">
+                            <i class="fas fa-bell"></i> Test notification
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Guide d'utilisation -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-question-circle"></i> Guide d'utilisation
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-marker bg-success"></div>
+                            <div class="timeline-content">
+                                <h6 class="timeline-title">1. Générer votre clé API</h6>
+                                <p class="timeline-text text-muted">Créez votre première clé API pour commencer.</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-marker bg-info"></div>
+                            <div class="timeline-content">
+                                <h6 class="timeline-title">2. Consulter la documentation</h6>
+                                <p class="timeline-text text-muted">Apprenez à utiliser notre API.</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-marker bg-warning"></div>
+                            <div class="timeline-content">
+                                <h6 class="timeline-title">3. Faire vos premiers appels</h6>
+                                <p class="timeline-text text-muted">Testez l'API avec votre clé.</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-marker bg-primary"></div>
+                            <div class="timeline-content">
+                                <h6 class="timeline-title">4. Surveiller l'utilisation</h6>
+                                <p class="timeline-text text-muted">Suivez vos statistiques d'utilisation.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal pour afficher la clé API -->
+<div class="modal fade" id="apiKeyModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-key"></i> Votre clé API
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <strong>Important :</strong> Cette clé ne sera affichée qu'une seule fois. Copiez-la et conservez-la en lieu sûr.
+                </div>
+                <div class="api-key-display">
+                    <span id="fullApiKey">-</span>
+                </div>
+                <button class="btn btn-outline-primary btn-sm mt-2" onclick="copyApiKey()">
+                    <i class="fas fa-copy"></i> Copier
+                </button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    loadUserStats();
+});
+
+function loadUserStats() {
+    fetch('/dashboard/api/user-stats')
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('userRequests').textContent = data.total_requests || 0;
+            document.getElementById('lastUsed').textContent = data.last_used ? 
+                formatDate(data.last_used) : 'Jamais';
+        })
+        .catch(error => {
+            console.error('Erreur lors du chargement des stats utilisateur:', error);
+        });
+}
+
+function generateApiKey() {
+    if (confirm('Êtes-vous sûr de vouloir générer une nouvelle clé API ? Cela révoquera votre clé actuelle.')) {
+        showLoading();
+        
+        fetch('/dashboard/generate-api-key', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            hideLoading();
+            if (data.success) {
+                document.getElementById('fullApiKey').textContent = data.full_key;
+                const modal = new bootstrap.Modal(document.getElementById('apiKeyModal'));
+                modal.show();
+                
+                // Recharger la page après fermeture du modal
+                modal._element.addEventListener('hidden.bs.modal', function() {
+                    location.reload();
+                });
+            } else {
+                showToast('Erreur', data.error, 'error');
+            }
+        })
+        .catch(error => {
+            hideLoading();
+            showToast('Erreur', 'Erreur lors de la génération de la clé', 'error');
+        });
+    }
+}
+
+function revokeApiKey() {
+    if (confirm('Êtes-vous sûr de vouloir révoquer votre clé API ? Cette action est irréversible.')) {
+        showLoading();
+        
+        fetch('/dashboard/revoke-api-key', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            hideLoading();
+            if (data.success) {
+                showToast('Succès', 'Clé API révoquée avec succès', 'success');
+                setTimeout(() => location.reload(), 1500);
+            } else {
+                showToast('Erreur', data.error, 'error');
+            }
+        })
+        .catch(error => {
+            hideLoading();
+            showToast('Erreur', 'Erreur lors de la révocation de la clé', 'error');
+        });
+    }
+}
+
+// Variables globales pour la clé API
+let currentRevealedKey = null;
+
+function revealApiKey() {
+    showLoading();
+    
+    fetch('/dashboard/api/reveal-api-key', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        hideLoading();
+        if (data.success) {
+            currentRevealedKey = data.full_key;
+            document.getElementById('revealedApiKey').textContent = data.full_key;
+            document.getElementById('revealedKeyContainer').style.display = 'block';
+            showToast('Succès', 'Clé API révélée avec succès', 'success');
+            
+            // Activer le bouton de copie
+            document.getElementById('copyCurrentKeyBtn').disabled = false;
+        } else {
+            showToast('Erreur', data.error || 'Impossible de révéler la clé', 'error');
+        }
+    })
+    .catch(error => {
+        hideLoading();
+        showToast('Erreur', 'Erreur de connexion', 'error');
+        console.error('Erreur:', error);
+    });
+}
+
+function hideApiKey() {
+    document.getElementById('revealedKeyContainer').style.display = 'none';
+    currentRevealedKey = null;
+    document.getElementById('copyCurrentKeyBtn').disabled = true;
+    showToast('Info', 'Clé API masquée', 'info');
+}
+
+function copyRevealedKey() {
+    const apiKey = document.getElementById('revealedApiKey').textContent;
+    copyToClipboard(apiKey, 'Clé API complète copiée dans le presse-papiers');
+}
+
+function copyCurrentApiKey() {
+    if (currentRevealedKey) {
+        copyToClipboard(currentRevealedKey, 'Clé API copiée dans le presse-papiers');
+    } else {
+        // Si la clé n'est pas révélée, la révéler d'abord
+        revealApiKey();
+    }
+}
+
+function copyToClipboard(text, successMessage) {
+    if (navigator.clipboard && window.isSecureContext) {
+        // API moderne du presse-papiers
+        navigator.clipboard.writeText(text).then(function() {
+            showToast('Succès', successMessage, 'success');
+        }).catch(function(err) {
+            fallbackCopyToClipboard(text, successMessage);
+        });
+    } else {
+        // Fallback pour les navigateurs plus anciens
+        fallbackCopyToClipboard(text, successMessage);
+    }
+}
+
+function fallbackCopyToClipboard(text, successMessage) {
+    const tempInput = document.createElement('input');
+    tempInput.value = text;
+    document.body.appendChild(tempInput);
+    tempInput.select();
+    tempInput.setSelectionRange(0, 99999); // Pour mobile
+    
+    try {
+        document.execCommand('copy');
+        showToast('Succès', successMessage, 'success');
+    } catch (err) {
+        showToast('Erreur', 'Impossible de copier automatiquement', 'error');
+    }
+    
+    document.body.removeChild(tempInput);
+}
+
+function showApiKey() {
+    // Fonction de compatibilité - redirige vers la nouvelle fonction
+    revealApiKey();
+}
+
+function copyApiKey() {
+    // Fonction de compatibilité - redirige vers la nouvelle fonction
+    copyCurrentApiKey();
+}
+
+function refreshApiKeyInfo() {
+    loadUserStats();
+    showToast('Info', 'Informations actualisées', 'info');
+}
+
+function testNotification() {
+    {% if current_user.is_admin() %}
+    fetch('/notifications/test-notification', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showToast('Test', 'Notification de test envoyée', 'success');
+        }
+    });
+    {% else %}
+    showToast('Info', 'Fonction réservée aux administrateurs', 'info');
+    {% endif %}
+}
+
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffMs = now - date;
+    const diffDays = Math.floor(diffMs / 86400000);
+    
+    if (diffDays === 0) return 'Aujourd\'hui';
+    if (diffDays === 1) return 'Hier';
+    if (diffDays < 7) return `${diffDays} jours`;
+    
+    return date.toLocaleDateString('fr-FR');
+}
+</script>
+
+<style>
+.timeline {
+    position: relative;
+    padding-left: 30px;
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.timeline-marker {
+    position: absolute;
+    left: -35px;
+    top: 5px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+.timeline-item:not(:last-child):before {
+    content: '';
+    position: absolute;
+    left: -29px;
+    top: 17px;
+    width: 2px;
+    height: calc(100% + 8px);
+    background-color: #dee2e6;
+}
+
+.timeline-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.timeline-text {
+    font-size: 0.8rem;
+    margin-bottom: 0;
+}
+</style>
+{% endblock %} 

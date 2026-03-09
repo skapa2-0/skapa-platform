@@ -1,0 +1,242 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1><i class="fas fa-users"></i> Gestion des utilisateurs</h1>
+                <a href="{{ url_for('admin.index') }}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Retour
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filtres -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <form method="GET" class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label">Statut</label>
+                            <select name="status" class="form-select">
+                                <option value="all" {{ 'selected' if status_filter == 'all' else '' }}>Tous</option>
+                                <option value="pending_admin_approval" {{ 'selected' if status_filter == 'pending_admin_approval' else '' }}>En attente</option>
+                                <option value="approved" {{ 'selected' if status_filter == 'approved' else '' }}>Approuvés</option>
+                                <option value="rejected" {{ 'selected' if status_filter == 'rejected' else '' }}>Rejetés</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Recherche</label>
+                            <input type="text" name="search" class="form-control" placeholder="Nom ou email..." value="{{ search }}">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">&nbsp;</label>
+                            <button type="submit" class="btn btn-primary d-block">
+                                <i class="fas fa-search"></i> Filtrer
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Liste des utilisateurs -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    {% if users.items %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Nom</th>
+                                    <th>Email</th>
+                                    <th>Statut</th>
+                                    <th>Inscrit le</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for user in users.items %}
+                                <tr>
+                                    <td>
+                                        <a href="{{ url_for('admin.user_detail', user_id=user.id) }}">
+                                            {{ user.name }}
+                                        </a>
+                                        {% if user.role == 'admin' %}
+                                        <span class="badge bg-warning ms-1">Admin</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ user.email }}</td>
+                                    <td>
+                                        {% if user.status == 'pending_admin_approval' %}
+                                            <span class="badge bg-warning">En attente</span>
+                                        {% elif user.status == 'approved' %}
+                                            <span class="badge bg-success">Approuvé</span>
+                                        {% elif user.status == 'rejected' %}
+                                            <span class="badge bg-danger">Rejeté</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ user.created_at.strftime('%d/%m/%Y') }}</td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            {% if user.status == 'pending_admin_approval' %}
+                                            <button class="btn btn-sm btn-success" onclick="approveUser({{ user.id }})" title="Approuver">
+                                                <i class="fas fa-check"></i> Approuver
+                                            </button>
+                                            <button class="btn btn-sm btn-danger" onclick="rejectUser({{ user.id }})" title="Rejeter">
+                                                <i class="fas fa-times"></i> Rejeter
+                                            </button>
+                                            {% elif user.status == 'pending_email_verification' %}
+                                            <button class="btn btn-sm btn-warning" onclick="approveUser({{ user.id }})" title="Approuver et vérifier email">
+                                                <i class="fas fa-check"></i> Approuver
+                                            </button>
+                                            {% elif user.status == 'approved' %}
+                                            <span class="badge bg-success">Approuvé</span>
+                                            {% elif user.status == 'rejected' %}
+                                            <button class="btn btn-sm btn-success" onclick="approveUser({{ user.id }})" title="Réapprouver">
+                                                <i class="fas fa-check"></i> Réapprouver
+                                            </button>
+                                            {% endif %}
+                                            
+                                            <a href="{{ url_for('admin.user_detail', user_id=user.id) }}" class="btn btn-sm btn-outline-primary" title="Voir détails">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            
+                                            {% if user.id != current_user.id and user.role != 'admin' %}
+                                            <button class="btn btn-sm btn-outline-danger" onclick="deleteUser({{ user.id }}, '{{ user.name }}')" title="Supprimer">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pagination -->
+                    {% if users.pages > 1 %}
+                    <nav aria-label="Pagination">
+                        <ul class="pagination justify-content-center">
+                            {% if users.has_prev %}
+                            <li class="page-item">
+                                <a class="page-link" href="{{ url_for('admin.users', page=users.prev_num, status=status_filter, search=search) }}">Précédent</a>
+                            </li>
+                            {% endif %}
+                            
+                            {% for page_num in users.iter_pages() %}
+                                {% if page_num %}
+                                    {% if page_num != users.page %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="{{ url_for('admin.users', page=page_num, status=status_filter, search=search) }}">{{ page_num }}</a>
+                                    </li>
+                                    {% else %}
+                                    <li class="page-item active">
+                                        <span class="page-link">{{ page_num }}</span>
+                                    </li>
+                                    {% endif %}
+                                {% else %}
+                                <li class="page-item disabled">
+                                    <span class="page-link">…</span>
+                                </li>
+                                {% endif %}
+                            {% endfor %}
+                            
+                            {% if users.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="{{ url_for('admin.users', page=users.next_num, status=status_filter, search=search) }}">Suivant</a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                    {% endif %}
+                    {% else %}
+                    <div class="text-center py-4">
+                        <i class="fas fa-users fa-3x text-muted mb-3"></i>
+                        <p class="text-muted">Aucun utilisateur trouvé.</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function approveUser(userId) {
+    if (confirm('Êtes-vous sûr de vouloir approuver cet utilisateur ?')) {
+        fetch(`/admin/approve-user/${userId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert('Erreur : ' + data.error);
+            }
+        });
+    }
+}
+
+function rejectUser(userId) {
+    if (confirm('Êtes-vous sûr de vouloir rejeter cet utilisateur ?')) {
+        fetch(`/admin/reject-user/${userId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert('Erreur : ' + data.error);
+            }
+        });
+    }
+}
+
+function deleteUser(userId, userName) {
+    if (confirm(`⚠️ ATTENTION ⚠️\n\nÊtes-vous absolument sûr de vouloir supprimer définitivement l'utilisateur "${userName}" ?\n\nCette action est IRRÉVERSIBLE et supprimera :\n- Le compte utilisateur\n- Toutes ses clés API\n- Tout son historique\n\nTapez "SUPPRIMER" pour confirmer :`)) {
+        const confirmation = prompt('Tapez "SUPPRIMER" pour confirmer la suppression :');
+        
+        if (confirmation === 'SUPPRIMER') {
+            fetch(`/admin/delete-user/${userId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert(data.message);
+                    location.reload();
+                } else {
+                    alert('Erreur : ' + data.error);
+                }
+            })
+            .catch(error => {
+                alert('Erreur lors de la suppression');
+            });
+        } else {
+            alert('Suppression annulée - confirmation incorrecte');
+        }
+    }
+}
+</script>
+{% endblock %} 

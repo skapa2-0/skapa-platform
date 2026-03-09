@@ -1,0 +1,246 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="text-center mb-5">
+                <h1 class="display-4 mb-4">À propos</h1>
+                <p class="lead text-muted">
+                    Découvrez l'histoire derrière cette plateforme d'IA locale et son créateur
+                </p>
+            </div>
+
+            <!-- Profil du créateur -->
+            <div class="card border-0 shadow-lg mb-5">
+                <div class="card-body p-5">
+                    <div class="row align-items-center">
+                        <div class="col-md-4 text-center mb-4 mb-md-0">
+                            <div class="profile-avatar mx-auto mb-3">
+                                <img src="https://media.licdn.com/dms/image/v2/D4E03AQFnq1PTeEMwmA/profile-displayphoto-shrink_200_200/B4EZSjc1JsHMAc-/0/1737909031911?e=1756339200&v=beta&t=Mga_I2QzdV66dXLQJCB15tgQphc4hIjPmF2EyPSCRPc" alt="Kevin Hamon" class="rounded-circle mb-3" style="width: 150px; height: 150px; object-fit: cover;">
+                            </div>
+                            <h4>Kevin Hamon</h4>
+                            <p class="text-muted">Ingénieur IA & Fondateur</p>
+                            
+                            <!-- Contact -->
+                            <div class="contact-links mt-4">
+                                <a href="mailto:kevin.hamon@intra-tech.fr" class="btn btn-outline-primary btn-sm me-2 mb-2">
+                                    <i class="fas fa-envelope"></i> Email
+                                </a>
+                                <a href="https://www.linkedin.com/in/kevin-hamon31/" target="_blank" class="btn btn-outline-primary btn-sm mb-2">
+                                    <i class="fab fa-linkedin"></i> LinkedIn
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-8">
+                            <h5 class="mb-3">🚀 Passion pour l'IA et la scalabilité</h5>
+                            <p class="text-muted mb-4">
+                                Je suis un jeune ingénieur passionné par l'intelligence artificielle et la scalabilité. 
+                                Mon expertise se concentre sur le déploiement d'architectures IA à grande échelle, 
+                                un domaine qui me fascine par sa complexité technique et son potentiel d'innovation.
+                            </p>
+                            
+                            <h6 class="mb-3">💡 Pourquoi cette plateforme ?</h6>
+                            <p class="text-muted mb-4">
+                                J'ai créé cette plateforme pour démontrer mon savoir-faire et ma capacité à maîtriser 
+                                l'ensemble de la chaîne d'utilisation de l'intelligence artificielle : depuis l'entraînement 
+                                des modèles jusqu'au déploiement en production, en passant par l'optimisation des performances 
+                                et la gestion de l'infrastructure.
+                            </p>
+                            
+                            <h6 class="mb-3">🎯 Vision technique</h6>
+                            <p class="text-muted mb-3">
+                                Cette API représente une démonstration concrète de mes compétences en architecture IA, 
+                                montrant comment déployer efficacement des modèles de langage en production tout en 
+                                maintenant compatibilité, performance et sécurité.
+                            </p>
+                            
+                            <h6 class="mb-3">🛠️ Stack technique maîtrisé</h6>
+                            <div class="row">
+                                <div class="col-6">
+                                    <ul class="list-unstyled text-muted small">
+                                        <li><i class="fab fa-python text-primary me-2"></i>Python & Flask</li>
+                                        <li><i class="fas fa-database text-success me-2"></i>PostgreSQL & SQLAlchemy</li>
+                                        <li><i class="fas fa-cloud text-info me-2"></i>Docker & Kubernetes</li>
+                                        <li><i class="fas fa-server text-warning me-2"></i>Redis & WebSockets</li>
+                                    </ul>
+                                </div>
+                                <div class="col-6">
+                                    <ul class="list-unstyled text-muted small">
+                                        <li><i class="fab fa-js text-warning me-2"></i>JavaScript & React</li>
+                                        <li><i class="fas fa-brain text-danger me-2"></i>LLMs & Transformers</li>
+                                        <li><i class="fas fa-chart-line text-success me-2"></i>MLOps & Monitoring</li>
+                                        <li><i class="fas fa-shield-alt text-primary me-2"></i>Sécurité & DevOps</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <h6 class="mb-3 mt-3">🌟 Réalisations récentes</h6>
+                            <ul class="text-muted small">
+                                <li>🚀 Déploiement d'architectures IA scalables pour des milliers d'utilisateurs</li>
+                                <li>⚡ Optimisation de modèles LLM avec réduction de 40% du temps de réponse</li>
+                                <li>🔒 Implémentation de systèmes d'audit et de sécurité avancés</li>
+                                <li>📊 Développement de dashboards analytics en temps réel</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- La plateforme -->
+            <div class="row mb-5">
+                <div class="col-12">
+                    <h2 class="mb-4">🤖 Notre plateforme d'IA</h2>
+                </div>
+                
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="feature-icon-sm bg-primary text-white rounded me-3">
+                                    <i class="fas fa-brain"></i>
+                                </div>
+                                <h5 class="mb-0">Modèle personnalisé</h5>
+                            </div>
+                            <p class="text-muted">
+                                Notre API est propulsée par <strong>KR-7B-Instruct-v1.17.Q5_0</strong>, 
+                                un modèle LLM que j'ai personnellement réentraîné pour optimiser les performances 
+                                et la qualité des réponses.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="feature-icon-sm bg-success text-white rounded me-3">
+                                    <i class="fas fa-server"></i>
+                                </div>
+                                <h5 class="mb-0">Infrastructure locale</h5>
+                            </div>
+                            <p class="text-muted">
+                                Toute l'intelligence artificielle fonctionne sur nos serveurs locaux, 
+                                garantissant la confidentialité des données et un contrôle total 
+                                sur l'infrastructure.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="feature-icon-sm bg-info text-white rounded me-3">
+                                    <i class="fas fa-plug"></i>
+                                </div>
+                                <h5 class="mb-0">Compatibilité OpenAI</h5>
+                            </div>
+                            <p class="text-muted">
+                                API 100% compatible avec OpenAI, permettant une intégration 
+                                transparente dans vos applications existantes sans modification 
+                                de code.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="feature-icon-sm bg-warning text-white rounded me-3">
+                                    <i class="fas fa-comments"></i>
+                                </div>
+                                <h5 class="mb-0">Chatbot interactif</h5>
+                            </div>
+                            <p class="text-muted">
+                                Testez notre IA en action sur 
+                                <a href="https://chat.intra-tech.fr/" target="_blank" class="text-decoration-none">
+                                    chat.intra-tech.fr
+                                </a> - même technologie que notre API !
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stack technique -->
+            <div class="card border-0 shadow-sm mb-5">
+                <div class="card-body p-4">
+                    <h3 class="mb-4">⚙️ Stack technique</h3>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6 class="text-primary">Backend & IA</h6>
+                            <ul class="list-unstyled text-muted">
+                                <li><i class="fas fa-check text-success me-2"></i>Python & Flask</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Modèle LLM personnalisé</li>
+                                <li><i class="fas fa-check text-success me-2"></i>API REST compatible OpenAI</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Base de données PostgreSQL</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="text-primary">Infrastructure & Sécurité</h6>
+                            <ul class="list-unstyled text-muted">
+                                <li><i class="fas fa-check text-success me-2"></i>Serveurs dédiés</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Authentification par clés API</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Interface d'administration</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Monitoring et logs</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mission -->
+            <div class="text-center">
+                <h3 class="mb-4">🎯 Notre mission</h3>
+                <p class="lead text-muted mb-4">
+                    Démocratiser l'accès à l'intelligence artificielle en proposant une alternative 
+                    locale, sécurisée et performante aux solutions cloud traditionnelles.
+                </p>
+                <p class="text-muted">
+                    Cette plateforme illustre comment il est possible de déployer et maintenir 
+                    des services d'IA de qualité professionnelle tout en gardant le contrôle 
+                    total sur les données et l'infrastructure.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.profile-avatar {
+    width: 120px;
+    height: 120px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.feature-icon-sm {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.contact-links .btn {
+    min-width: 100px;
+}
+
+.card {
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+}
+</style>
+{% endblock %} 

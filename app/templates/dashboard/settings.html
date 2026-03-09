@@ -1,0 +1,509 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1 class="h2 mb-1">
+                        <i class="fas fa-cog text-primary"></i> 
+                        Paramètres
+                    </h1>
+                    <p class="text-muted mb-0">Personnalisez votre expérience utilisateur</p>
+                </div>
+                <a href="{{ url_for('dashboard.index') }}" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left"></i> Retour au dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Menu de navigation des paramètres -->
+        <div class="col-lg-3">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <h6 class="mb-0">
+                        <i class="fas fa-list"></i> Catégories
+                    </h6>
+                </div>
+                <div class="list-group list-group-flush">
+                    <a href="#appearance" class="list-group-item list-group-item-action" data-bs-toggle="pill">
+                        <i class="fas fa-palette me-2"></i> Apparence
+                    </a>
+                    <a href="#notifications" class="list-group-item list-group-item-action" data-bs-toggle="pill">
+                        <i class="fas fa-bell me-2"></i> Notifications
+                    </a>
+                    <a href="#dashboard" class="list-group-item list-group-item-action" data-bs-toggle="pill">
+                        <i class="fas fa-tachometer-alt me-2"></i> Dashboard
+                    </a>
+                    <a href="#account" class="list-group-item list-group-item-action" data-bs-toggle="pill">
+                        <i class="fas fa-user me-2"></i> Compte
+                    </a>
+                    <a href="#privacy" class="list-group-item list-group-item-action" data-bs-toggle="pill">
+                        <i class="fas fa-shield-alt me-2"></i> Confidentialité
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contenu des paramètres -->
+        <div class="col-lg-9">
+            <form method="POST" action="{{ url_for('dashboard.update_preferences') }}">
+                <div class="tab-content">
+                    <!-- Apparence -->
+                    <div class="tab-pane fade show active" id="appearance">
+                        <div class="card shadow-sm">
+                            <div class="card-header">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-palette text-primary"></i> Apparence
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Thème</label>
+                                            <select name="theme" class="form-select" id="themeSelect">
+                                                <option value="auto" {{ 'selected' if preferences.theme == 'auto' else '' }}>
+                                                    <i class="fas fa-circle-half-stroke"></i> Automatique
+                                                </option>
+                                                <option value="light" {{ 'selected' if preferences.theme == 'light' else '' }}>
+                                                    <i class="fas fa-sun"></i> Clair
+                                                </option>
+                                                <option value="dark" {{ 'selected' if preferences.theme == 'dark' else '' }}>
+                                                    <i class="fas fa-moon"></i> Sombre
+                                                </option>
+                                            </select>
+                                            <div class="form-text">Le thème automatique s'adapte aux préférences de votre système</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Langue</label>
+                                            <select name="language" class="form-select">
+                                                <option value="fr" {{ 'selected' if preferences.language == 'fr' else '' }}>
+                                                    🇫🇷 Français
+                                                </option>
+                                                <option value="en" {{ 'selected' if preferences.language == 'en' else '' }}>
+                                                    🇺🇸 English
+                                                </option>
+                                            </select>
+                                            <div class="form-text">Interface disponible en français et anglais</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Aperçu du thème -->
+                                <div class="card border-0 bg-light">
+                                    <div class="card-header bg-primary text-white">
+                                        <h6 class="mb-0">
+                                            <i class="fas fa-eye"></i> Aperçu du thème
+                                        </h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="card mb-2">
+                                                    <div class="card-body p-2">
+                                                        <h6 class="card-title mb-1">Carte exemple</h6>
+                                                        <p class="card-text small mb-1">Voici à quoi ressemblera votre interface.</p>
+                                                        <button class="btn btn-primary btn-sm">Bouton</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-8">
+                                                <div class="alert alert-info mb-0">
+                                                    <i class="fas fa-info-circle"></i>
+                                                    <strong>Conseil :</strong> Le thème automatique change en fonction de l'heure et des préférences de votre système.
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Notifications -->
+                    <div class="tab-pane fade" id="notifications">
+                        <div class="card shadow-sm">
+                            <div class="card-header">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-bell text-primary"></i> Notifications
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h6 class="fw-bold">Préférences de notification</h6>
+                                        
+                                        <div class="form-check form-switch mb-3">
+                                            <input class="form-check-input" type="checkbox" name="notifications_email" 
+                                                   id="notifEmail" {{ 'checked' if preferences.notifications_email else '' }}>
+                                            <label class="form-check-label" for="notifEmail">
+                                                <i class="fas fa-envelope me-2"></i>
+                                                <strong>Notifications par email</strong>
+                                            </label>
+                                            <div class="form-text">Recevoir les notifications importantes par email</div>
+                                        </div>
+
+                                        <div class="form-check form-switch mb-3">
+                                            <input class="form-check-input" type="checkbox" name="notifications_browser" 
+                                                   id="notifBrowser" {{ 'checked' if preferences.notifications_browser else '' }}>
+                                            <label class="form-check-label" for="notifBrowser">
+                                                <i class="fas fa-desktop me-2"></i>
+                                                <strong>Notifications navigateur</strong>
+                                            </label>
+                                            <div class="form-text">Afficher les notifications dans le navigateur</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h6 class="fw-bold">Types de notifications</h6>
+                                        <div class="list-group">
+                                            <div class="list-group-item d-flex justify-content-between align-items-center">
+                                                <div>
+                                                    <i class="fas fa-key text-warning me-2"></i>
+                                                    <strong>Gestion des clés API</strong>
+                                                    <div class="small text-muted">Génération, révocation de clés</div>
+                                                </div>
+                                                <div class="form-check form-switch">
+                                                    <input class="form-check-input" type="checkbox" checked>
+                                                </div>
+                                            </div>
+                                            <div class="list-group-item d-flex justify-content-between align-items-center">
+                                                <div>
+                                                    <i class="fas fa-ticket-alt text-info me-2"></i>
+                                                    <strong>Support tickets</strong>
+                                                    <div class="small text-muted">Mises à jour de vos tickets</div>
+                                                </div>
+                                                <div class="form-check form-switch">
+                                                    <input class="form-check-input" type="checkbox" checked>
+                                                </div>
+                                            </div>
+                                            <div class="list-group-item d-flex justify-content-between align-items-center">
+                                                <div>
+                                                    <i class="fas fa-chart-line text-success me-2"></i>
+                                                    <strong>Statistiques API</strong>
+                                                    <div class="small text-muted">Rapports d'utilisation</div>
+                                                </div>
+                                                <div class="form-check form-switch">
+                                                    <input class="form-check-input" type="checkbox" checked>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Dashboard -->
+                    <div class="tab-pane fade" id="dashboard">
+                        <div class="card shadow-sm">
+                            <div class="card-header">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-tachometer-alt text-primary"></i> Dashboard
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Fréquence de mise à jour</label>
+                                            <select name="dashboard_refresh_rate" class="form-select">
+                                                <option value="10" {{ 'selected' if preferences.dashboard_refresh_rate == 10 else '' }}>
+                                                    Toutes les 10 secondes (Temps réel)
+                                                </option>
+                                                <option value="30" {{ 'selected' if preferences.dashboard_refresh_rate == 30 else '' }}>
+                                                    Toutes les 30 secondes (Recommandé)
+                                                </option>
+                                                <option value="60" {{ 'selected' if preferences.dashboard_refresh_rate == 60 else '' }}>
+                                                    Toutes les minutes
+                                                </option>
+                                                <option value="120" {{ 'selected' if preferences.dashboard_refresh_rate == 120 else '' }}>
+                                                    Toutes les 2 minutes (Économie d'énergie)
+                                                </option>
+                                            </select>
+                                            <div class="form-text">
+                                                Fréquence de mise à jour automatique des statistiques du dashboard
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Widgets favoris</label>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="widgetApi" checked>
+                                                <label class="form-check-label" for="widgetApi">
+                                                    <i class="fas fa-chart-area me-2"></i> Graphique d'utilisation API
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="widgetNotif" checked>
+                                                <label class="form-check-label" for="widgetNotif">
+                                                    <i class="fas fa-bell me-2"></i> Notifications récentes
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="widgetActivity" checked>
+                                                <label class="form-check-label" for="widgetActivity">
+                                                    <i class="fas fa-history me-2"></i> Activité récente
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="alert alert-info">
+                                    <i class="fas fa-lightbulb"></i>
+                                    <strong>Astuce :</strong> Utilisez Ctrl+K pour accéder rapidement à la recherche globale depuis n'importe où dans l'application.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Compte -->
+                    <div class="tab-pane fade" id="account">
+                        <div class="card shadow-sm">
+                            <div class="card-header">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-user text-primary"></i> Informations du compte
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <p><strong>Nom :</strong> {{ current_user.name }}</p>
+                                                <p><strong>Email :</strong> {{ current_user.email }}</p>
+                                                <p><strong>Rôle :</strong> 
+                                                    <span class="badge bg-{{ 'danger' if current_user.is_admin() else 'primary' }}">
+                                                        {{ 'Administrateur' if current_user.is_admin() else 'Utilisateur' }}
+                                                    </span>
+                                                </p>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p><strong>Statut :</strong> 
+                                                    <span class="badge bg-{{ 'success' if current_user.is_approved() else 'warning' }}">
+                                                        {{ current_user.status.replace('_', ' ').title() }}
+                                                    </span>
+                                                </p>
+                                                <p><strong>Membre depuis :</strong> {{ current_user.created_at.strftime('%d/%m/%Y') }}</p>
+                                                {% if current_user.approved_at %}
+                                                <p><strong>Approuvé le :</strong> {{ current_user.approved_at.strftime('%d/%m/%Y') }}</p>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        
+                                        <hr>
+                                        
+                                        <h6 class="fw-bold">Actions du compte</h6>
+                                        <div class="d-flex gap-2 flex-wrap">
+                                            <a href="{{ url_for('dashboard.profile') }}" class="btn btn-outline-primary btn-sm">
+                                                <i class="fas fa-edit"></i> Modifier le profil
+                                            </a>
+                                            <a href="{{ url_for('analytics.export_data') }}" class="btn btn-outline-info btn-sm">
+                                                <i class="fas fa-download"></i> Exporter mes données
+                                            </a>
+                                            <button type="button" class="btn btn-outline-warning btn-sm" onclick="requestAccountDeletion()">
+                                                <i class="fas fa-user-times"></i> Supprimer le compte
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="card border-0 bg-light">
+                                            <div class="card-body text-center">
+                                                <i class="fas fa-user-circle fa-5x text-muted mb-3"></i>
+                                                <h6>{{ current_user.name }}</h6>
+                                                <p class="small text-muted mb-0">{{ current_user.email }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Confidentialité -->
+                    <div class="tab-pane fade" id="privacy">
+                        <div class="card shadow-sm">
+                            <div class="card-header">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-shield-alt text-primary"></i> Confidentialité et sécurité
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h6 class="fw-bold">Données personnelles</h6>
+                                        <div class="list-group mb-3">
+                                            <div class="list-group-item">
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <div>
+                                                        <i class="fas fa-database text-info me-2"></i>
+                                                        <strong>Mes données API</strong>
+                                                        <div class="small text-muted">Historique d'utilisation et logs</div>
+                                                    </div>
+                                                    <a href="{{ url_for('analytics.export_data') }}" class="btn btn-sm btn-outline-info">
+                                                        <i class="fas fa-download"></i> Télécharger
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div class="list-group-item">
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <div>
+                                                        <i class="fas fa-ticket-alt text-warning me-2"></i>
+                                                        <strong>Tickets de support</strong>
+                                                        <div class="small text-muted">Historique de support</div>
+                                                    </div>
+                                                    <a href="{{ url_for('support.index') }}" class="btn btn-sm btn-outline-warning">
+                                                        <i class="fas fa-eye"></i> Voir
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <h6 class="fw-bold">Politique de confidentialité</h6>
+                                        <div class="alert alert-info">
+                                            <i class="fas fa-info-circle"></i>
+                                            <strong>Vos données sont protégées.</strong><br>
+                                            Nous ne partageons jamais vos données avec des tiers. 
+                                            Toutes les communications avec l'API sont chiffrées et vos données restent sur nos serveurs sécurisés.
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h6 class="fw-bold">Sécurité</h6>
+                                        <div class="list-group">
+                                            <div class="list-group-item d-flex justify-content-between align-items-center">
+                                                <div>
+                                                    <i class="fas fa-key text-success me-2"></i>
+                                                    <strong>Clé API active</strong>
+                                                    <div class="small text-muted">Accès sécurisé à l'API</div>
+                                                </div>
+                                                <span class="badge bg-success">
+                                                    <i class="fas fa-check"></i> Sécurisé
+                                                </span>
+                                            </div>
+                                            <div class="list-group-item d-flex justify-content-between align-items-center">
+                                                <div>
+                                                    <i class="fas fa-lock text-primary me-2"></i>
+                                                    <strong>Chiffrement HTTPS</strong>
+                                                    <div class="small text-muted">Toutes les communications</div>
+                                                </div>
+                                                <span class="badge bg-success">
+                                                    <i class="fas fa-check"></i> Actif
+                                                </span>
+                                            </div>
+                                            <div class="list-group-item d-flex justify-content-between align-items-center">
+                                                <div>
+                                                    <i class="fas fa-server text-info me-2"></i>
+                                                    <strong>Données locales</strong>
+                                                    <div class="small text-muted">Hébergement en France</div>
+                                                </div>
+                                                <span class="badge bg-success">
+                                                    <i class="fas fa-check"></i> RGPD
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Boutons de sauvegarde -->
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <div class="card shadow-sm">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-1">Sauvegarder les modifications</h6>
+                                        <small class="text-muted">Vos préférences seront appliquées immédiatement</small>
+                                    </div>
+                                    <div class="btn-group">
+                                        <a href="{{ url_for('dashboard.index') }}" class="btn btn-outline-secondary">
+                                            <i class="fas fa-times"></i> Annuler
+                                        </a>
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fas fa-save"></i> Sauvegarder
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Activation du premier onglet par défaut
+document.addEventListener('DOMContentLoaded', function() {
+    const firstTab = document.querySelector('.list-group-item-action');
+    if (firstTab) {
+        firstTab.classList.add('active');
+    }
+});
+
+// Gestion des onglets
+document.querySelectorAll('.list-group-item-action').forEach(tab => {
+    tab.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        // Retirer la classe active de tous les onglets
+        document.querySelectorAll('.list-group-item-action').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('show', 'active'));
+        
+        // Activer l'onglet cliqué
+        this.classList.add('active');
+        const targetId = this.getAttribute('href').substring(1);
+        const targetPane = document.getElementById(targetId);
+        if (targetPane) {
+            targetPane.classList.add('show', 'active');
+        }
+    });
+});
+
+// Aperçu du thème en temps réel
+document.getElementById('themeSelect').addEventListener('change', function() {
+    const theme = this.value;
+    setTheme(theme);
+    setStoredTheme(theme);
+    showToast('Thème appliqué : ' + theme, 'success');
+});
+
+// Confirmation de suppression de compte
+function requestAccountDeletion() {
+    if (confirm('⚠️ ATTENTION : Cette action supprimera définitivement votre compte et toutes vos données.\n\nÊtes-vous absolument sûr de vouloir continuer ?')) {
+        if (confirm('Dernière confirmation : voulez-vous vraiment supprimer votre compte de façon permanente ?')) {
+            // Redirection vers le support pour traitement manuel
+            window.location.href = '{{ url_for("support.new_ticket") }}?subject=Demande de suppression de compte&category=account';
+        }
+    }
+}
+
+// Animation de sauvegarde
+document.querySelector('form').addEventListener('submit', function() {
+    const submitBtn = document.querySelector('button[type="submit"]');
+    const originalText = submitBtn.innerHTML;
+    
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sauvegarde...';
+    submitBtn.disabled = true;
+    
+    // Réactiver le bouton après un délai (au cas où il y aurait une erreur)
+    setTimeout(() => {
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+    }, 5000);
+});
+</script>
+{% endblock %} 

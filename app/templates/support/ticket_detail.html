@@ -1,0 +1,224 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1>
+                        <i class="fas fa-ticket-alt text-primary"></i> 
+                        Ticket #{{ ticket.id }}
+                    </h1>
+                    <p class="text-muted mb-0">{{ ticket.subject }}</p>
+                </div>
+                <div>
+                    <a href="{{ url_for('support.index') }}" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left"></i> Retour
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-8">
+            <!-- Description du ticket -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Description</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        {{ ticket.message|nl2br }}
+                    </div>
+                    <small class="text-muted">
+                        Créé le {{ ticket.created_at.strftime('%d/%m/%Y à %H:%M') }}
+                    </small>
+                </div>
+            </div>
+            
+            <!-- Messages/Réponses -->
+            {% if messages %}
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-comments"></i> Conversation ({{ messages|length }} messages)
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% for message in messages %}
+                    <div class="border-start border-3 ps-3 mb-3 {% if message.is_staff %}border-primary{% else %}border-secondary{% endif %}">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <strong>
+                                {% if message.is_staff %}
+                                    <i class="fas fa-user-tie text-primary"></i> Support - {{ message.user.name }}
+                                {% else %}
+                                    <i class="fas fa-user text-secondary"></i> {{ message.user.name }}
+                                {% endif %}
+                            </strong>
+                            <small class="text-muted">
+                                {{ message.created_at.strftime('%d/%m/%Y à %H:%M') }}
+                            </small>
+                        </div>
+                        <div>{{ message.content|nl2br }}</div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+            
+            <!-- Actions du ticket -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h6 class="mb-0">Actions</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        {% if ticket.status == 'closed' %}
+                        <div class="col-md-6">
+                            <form method="POST" style="display: inline;">
+                                <input type="hidden" name="action" value="reopen">
+                                <button type="submit" class="btn btn-warning">
+                                    <i class="fas fa-redo"></i> Rouvrir le ticket
+                                </button>
+                            </form>
+                        </div>
+                        {% else %}
+                        <div class="col-md-6">
+                            <form method="POST" style="display: inline;">
+                                <input type="hidden" name="action" value="close">
+                                <button type="submit" class="btn btn-secondary" onclick="return confirm('Êtes-vous sûr de vouloir fermer ce ticket ?')">
+                                    <i class="fas fa-times"></i> Fermer le ticket
+                                </button>
+                            </form>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Formulaire de réponse -->
+            {% if ticket.status in ['open', 'in_progress'] %}
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="mb-0">
+                        <i class="fas fa-reply"></i> Ajouter une réponse
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        <input type="hidden" name="action" value="reply">
+                        <div class="mb-3">
+                            <textarea class="form-control" name="message" rows="4" 
+                                      placeholder="Tapez votre message ici..." required></textarea>
+                            <div class="form-text">
+                                Votre réponse sera visible par l'équipe de support.
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-paper-plane"></i> Envoyer la réponse
+                        </button>
+                    </form>
+                </div>
+            </div>
+            {% elif ticket.status == 'closed' %}
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="mb-0">
+                        <i class="fas fa-info-circle"></i> Ticket fermé
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info mb-3">
+                        <i class="fas fa-check-circle"></i> Ce ticket est fermé. 
+                        Vous pouvez le rouvrir si vous avez besoin d'aide supplémentaire.
+                    </div>
+                    <form method="POST">
+                        <input type="hidden" name="action" value="reply">
+                        <div class="mb-3">
+                            <textarea class="form-control" name="message" rows="4" 
+                                      placeholder="Votre message (ceci rouvrira automatiquement le ticket)..." required></textarea>
+                            <div class="form-text">
+                                <strong>Note :</strong> Envoyer un message rouvrira automatiquement ce ticket.
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-paper-plane"></i> Envoyer et rouvrir
+                        </button>
+                    </form>
+                </div>
+            </div>
+            {% else %}
+            <div class="card">
+                <div class="card-body">
+                    <div class="alert alert-warning">
+                        <i class="fas fa-hourglass-half"></i> Ce ticket est en cours de traitement par notre équipe. 
+                        Vous recevrez une réponse prochainement.
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        
+        <!-- Sidebar avec infos du ticket -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="mb-0">Informations du ticket</h6>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Statut</label>
+                        <div>
+                            <span class="badge {{ ticket.get_status_badge_class() }} fs-6">
+                                {{ ticket.status.replace('_', ' ').title() }}
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Priorité</label>
+                        <div>
+                            <span class="badge {{ ticket.get_priority_badge_class() }} fs-6">
+                                {{ ticket.priority.replace('_', ' ').title() }}
+                            </span>
+                        </div>
+                    </div>
+                    
+                    {% if ticket.category %}
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Catégorie</label>
+                        <div>{{ ticket.category.replace('_', ' ').title() }}</div>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Créé le</label>
+                        <div>{{ ticket.created_at.strftime('%d/%m/%Y à %H:%M') }}</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Dernière mise à jour</label>
+                        <div>{{ ticket.updated_at.strftime('%d/%m/%Y à %H:%M') }}</div>
+                    </div>
+                    
+                    {% if ticket.assigned_to %}
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Assigné à</label>
+                        <div>{{ ticket.assignee.name }}</div>
+                    </div>
+                    {% endif %}
+                    
+                    {% if ticket.resolved_at %}
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Résolu le</label>
+                        <div>{{ ticket.resolved_at.strftime('%d/%m/%Y à %H:%M') }}</div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

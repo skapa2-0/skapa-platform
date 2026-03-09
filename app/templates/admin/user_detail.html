@@ -1,0 +1,357 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1><i class="fas fa-user"></i> {{ user.name }}</h1>
+                <a href="{{ url_for('admin.users') }}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Retour à la liste
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Informations utilisateur -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-info-circle"></i> Informations personnelles</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Nom complet :</strong></p>
+                            <p class="text-muted">{{ user.name }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Adresse email :</strong></p>
+                            <p class="text-muted">{{ user.email }}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Statut :</strong></p>
+                            {% if user.status == 'pending_admin_approval' %}
+                                <span class="badge bg-warning">En attente d'approbation</span>
+                            {% elif user.status == 'pending_email_verification' %}
+                                <span class="badge bg-info">En attente de vérification email</span>
+                            {% elif user.status == 'approved' %}
+                                <span class="badge bg-success">Approuvé</span>
+                            {% elif user.status == 'rejected' %}
+                                <span class="badge bg-danger">Rejeté</span>
+                            {% elif user.status == 'suspended' %}
+                                <span class="badge bg-secondary">Suspendu</span>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Rôle :</strong></p>
+                            <span class="badge bg-primary">{{ user.role.title() }}</span>
+                        </div>
+                    </div>
+                    
+                    <hr>
+                    
+                    <div class="row">
+                        <div class="col-12">
+                            <p><strong>Justification d'accès :</strong></p>
+                            <div class="bg-light p-3 rounded">
+                                {{ user.justification }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Historique -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-history"></i> Historique</h5>
+                </div>
+                <div class="card-body">
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-marker bg-primary"></div>
+                            <div class="timeline-content">
+                                <h6>Inscription</h6>
+                                <p class="text-muted mb-0">{{ user.created_at.strftime('%d/%m/%Y à %H:%M') }}</p>
+                            </div>
+                        </div>
+                        
+                        {% if user.email_verified_at %}
+                        <div class="timeline-item">
+                            <div class="timeline-marker bg-info"></div>
+                            <div class="timeline-content">
+                                <h6>Email vérifié</h6>
+                                <p class="text-muted mb-0">{{ user.email_verified_at.strftime('%d/%m/%Y à %H:%M') }}</p>
+                            </div>
+                        </div>
+                        {% endif %}
+                        
+                        {% if user.approved_at %}
+                        <div class="timeline-item">
+                            <div class="timeline-marker bg-success"></div>
+                            <div class="timeline-content">
+                                <h6>Compte approuvé</h6>
+                                <p class="text-muted mb-0">{{ user.approved_at.strftime('%d/%m/%Y à %H:%M') }}</p>
+                                {% if user.approved_by %}
+                                <small class="text-muted">Par : {{ user.approved_by }}</small>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endif %}
+                        
+                        {% if user.suspended_at %}
+                        <!-- <div class="timeline-item">
+                            <div class="timeline-marker bg-secondary"></div>
+                            <div class="timeline-content">
+                                <h6>Compte suspendu</h6>
+                                <p class="text-muted mb-0">{{ user.suspended_at.strftime('%d/%m/%Y à %H:%M') }}</p>
+                                {% if user.suspended_by %}
+                                <small class="text-muted">Par : {{ user.suspended_by }}</small>
+                                {% endif %}
+                            </div>
+                        </div> -->
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <!-- Actions -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-cogs"></i> Actions</h5>
+                </div>
+                <div class="card-body">
+                    {% if user.status != 'approved' and user.status != 'suspended' %}
+                    <button class="btn btn-success btn-sm w-100 mb-2" onclick="approveUser({{ user.id }})">
+                        <i class="fas fa-check"></i> Approuver l'utilisateur
+                    </button>
+                    <button class="btn btn-danger btn-sm w-100 mb-2" onclick="rejectUser({{ user.id }})">
+                        <i class="fas fa-times"></i> Rejeter la demande
+                    </button>
+                    {% elif user.status == 'approved' %}
+                    <button class="btn btn-warning btn-sm w-100 mb-2" onclick="suspendUser({{ user.id }})">
+                        <i class="fas fa-pause"></i> Suspendre le compte
+                    </button>
+                    {% elif user.status == 'suspended' %}
+                    <button class="btn btn-success btn-sm w-100 mb-2" onclick="unsuspendUser({{ user.id }})">
+                        <i class="fas fa-play"></i> Réactiver le compte
+                    </button>
+                    {% endif %}
+                    
+                    <hr>
+                    
+                    <button class="btn btn-outline-primary btn-sm w-100 mb-2" onclick="sendEmail({{ user.id }})">
+                        <i class="fas fa-envelope"></i> Envoyer un email
+                    </button>
+                    
+                    {% if user.id != current_user.id and user.role != 'admin' %}
+                    <hr>
+                    <button class="btn btn-danger btn-sm w-100" onclick="deleteUser({{ user.id }}, '{{ user.name }}')">
+                        <i class="fas fa-trash"></i> Supprimer l'utilisateur
+                    </button>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Clés API -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-key"></i> Clés API</h5>
+                </div>
+                <div class="card-body">
+                    {% if user.api_keys %}
+                        {% for api_key in user.api_keys %}
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div>
+                                <code>{{ api_key.key_prefix }}••••••••</code>
+                                <br>
+                                <small class="text-muted">
+                                    {% if api_key.is_active %}
+                                        <span class="badge bg-success">Active</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">Révoquée</span>
+                                    {% endif %}
+                                </small>
+                            </div>
+                            {% if api_key.is_active %}
+                            <button class="btn btn-sm btn-outline-danger" onclick="revokeApiKey({{ api_key.id }})">
+                                <i class="fas fa-times"></i>
+                            </button>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-muted">Aucune clé API</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.timeline {
+    position: relative;
+    padding-left: 30px;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 15px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #dee2e6;
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.timeline-marker {
+    position: absolute;
+    left: -22px;
+    top: 5px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+}
+
+.timeline-content h6 {
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function approveUser(userId) {
+    if (confirm('Êtes-vous sûr de vouloir approuver cet utilisateur ?')) {
+        fetch(`/admin/approve-user/${userId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert('Erreur : ' + data.error);
+            }
+        });
+    }
+}
+
+function rejectUser(userId) {
+    if (confirm('Êtes-vous sûr de vouloir rejeter cet utilisateur ?')) {
+        fetch(`/admin/reject-user/${userId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert('Erreur : ' + data.error);
+            }
+        });
+    }
+}
+
+function suspendUser(userId) {
+    if (confirm('Êtes-vous sûr de vouloir suspendre cet utilisateur ?\n\nL\'utilisateur ne pourra plus se connecter jusqu\'à ce que vous le réactiviez.')) {
+        fetch(`/admin/suspend-user/${userId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert('Erreur : ' + data.error);
+            }
+        });
+    }
+}
+
+function unsuspendUser(userId) {
+    if (confirm('Êtes-vous sûr de vouloir réactiver cet utilisateur ?\n\nL\'utilisateur pourra à nouveau se connecter.')) {
+        fetch(`/admin/unsuspend-user/${userId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert('Erreur : ' + data.error);
+            }
+        });
+    }
+}
+
+function sendEmail(userId) {
+    // À implémenter
+    alert('Fonctionnalité à implémenter');
+}
+
+function revokeApiKey(keyId) {
+    if (confirm('Êtes-vous sûr de vouloir révoquer cette clé API ?')) {
+        // À implémenter
+        alert('Fonctionnalité à implémenter');
+    }
+}
+
+function deleteUser(userId, userName) {
+    if (confirm(`⚠️ ATTENTION ⚠️\n\nÊtes-vous absolument sûr de vouloir supprimer définitivement l'utilisateur "${userName}" ?\n\nCette action est IRRÉVERSIBLE et supprimera :\n- Le compte utilisateur\n- Toutes ses clés API\n- Tout son historique\n\nTapez "SUPPRIMER" pour confirmer :`)) {
+        const confirmation = prompt('Tapez "SUPPRIMER" pour confirmer la suppression :');
+        
+        if (confirmation === 'SUPPRIMER') {
+            fetch(`/admin/delete-user/${userId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert(data.message);
+                    // Rediriger vers la liste des utilisateurs
+                    window.location.href = '/admin/users';
+                } else {
+                    alert('Erreur : ' + data.error);
+                }
+            })
+            .catch(error => {
+                alert('Erreur lors de la suppression');
+            });
+        } else {
+            alert('Suppression annulée - confirmation incorrecte');
+        }
+    }
+}
+</script>
+{% endblock %} 

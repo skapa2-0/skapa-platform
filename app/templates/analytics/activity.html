@@ -1,0 +1,288 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1><i class="fas fa-history text-primary"></i> Journal d'activité</h1>
+                <div>
+                    <a href="{{ url_for('analytics.index') }}" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left"></i> Vue d'ensemble
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filtres -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <form method="GET" class="row g-3">
+                        <div class="col-md-3">
+                            <label for="period" class="form-label">Période</label>
+                            <select class="form-select" id="period" name="period">
+                                <option value="today" {% if request.args.get('period') == 'today' %}selected{% endif %}>Aujourd'hui</option>
+                                <option value="week" {% if request.args.get('period') == 'week' or not request.args.get('period') %}selected{% endif %}>Cette semaine</option>
+                                <option value="month" {% if request.args.get('period') == 'month' %}selected{% endif %}>Ce mois</option>
+                                <option value="all" {% if request.args.get('period') == 'all' %}selected{% endif %}>Tout</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="action_type" class="form-label">Type d'action</label>
+                            <select class="form-select" id="action_type" name="action_type">
+                                <option value="">Toutes les actions</option>
+                                <option value="api_call" {% if request.args.get('action_type') == 'api_call' %}selected{% endif %}>Appels API</option>
+                                <option value="login" {% if request.args.get('action_type') == 'login' %}selected{% endif %}>Connexions</option>
+                                <option value="key_generated" {% if request.args.get('action_type') == 'key_generated' %}selected{% endif %}>Clés générées</option>
+                                <option value="error" {% if request.args.get('action_type') == 'error' %}selected{% endif %}>Erreurs</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="endpoint" class="form-label">Endpoint</label>
+                            <select class="form-select" id="endpoint" name="endpoint">
+                                <option value="">Tous les endpoints</option>
+                                {% for endpoint in available_endpoints %}
+                                <option value="{{ endpoint }}" {% if request.args.get('endpoint') == endpoint %}selected{% endif %}>
+                                    {{ endpoint }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">&nbsp;</label>
+                            <div>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-filter"></i> Filtrer
+                                </button>
+                                <a href="{{ url_for('analytics.activity') }}" class="btn btn-outline-secondary">
+                                    <i class="fas fa-times"></i> Reset
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Résumé d'activité -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Actions aujourd'hui
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                {{ activity_stats.today_actions }}
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-calendar-day fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Appels API réussis
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                {{ activity_stats.successful_calls }}
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-check-circle fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Erreurs
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                {{ activity_stats.error_count }}
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-exclamation-triangle fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                Sessions actives
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                {{ activity_stats.active_sessions }}
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-users fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Journal d'activité -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Journal d'activité récent</h6>
+                </div>
+                <div class="card-body">
+                    {% if activities %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Horodatage</th>
+                                    <th>Utilisateur</th>
+                                    <th>Action</th>
+                                    <th>Endpoint</th>
+                                    <th>Statut</th>
+                                    <th>Temps de réponse</th>
+                                    <th>IP</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for activity in activities %}
+                                <tr>
+                                    <td>
+                                        <small>{{ activity.created_at.strftime('%d/%m/%Y %H:%M:%S') }}</small>
+                                    </td>
+                                    <td>
+                                        {% if activity.user %}
+                                            <strong>{{ activity.user.name }}</strong><br>
+                                            <small class="text-muted">{{ activity.user.email }}</small>
+                                        {% else %}
+                                            <span class="text-muted">Système</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-{{ activity.get_action_badge_class() }}">
+                                            {{ activity.get_action_display() }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        {% if activity.endpoint %}
+                                            <code class="small">{{ activity.endpoint }}</code>
+                                            <br>
+                                            <small class="text-muted">{{ activity.method }}</small>
+                                        {% else %}
+                                            <span class="text-muted">N/A</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if activity.status_code %}
+                                            <span class="badge bg-{{ 'success' if activity.status_code < 400 else 'warning' if activity.status_code < 500 else 'danger' }}">
+                                                {{ activity.status_code }}
+                                            </span>
+                                        {% else %}
+                                            <span class="text-muted">N/A</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if activity.response_time %}
+                                            {{ activity.response_time }}ms
+                                        {% else %}
+                                            <span class="text-muted">N/A</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if activity.ip_address %}
+                                            <small class="text-muted">{{ activity.ip_address }}</small>
+                                        {% else %}
+                                            <span class="text-muted">N/A</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pagination -->
+                    {% if activities.pages > 1 %}
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination justify-content-center">
+                            {% if activities.has_prev %}
+                                <li class="page-item">
+                                    <a class="page-link" href="{{ url_for('analytics.activity', page=activities.prev_num, **request.args) }}">
+                                        Précédent
+                                    </a>
+                                </li>
+                            {% endif %}
+                            
+                            {% for page_num in activities.iter_pages() %}
+                                {% if page_num %}
+                                    {% if page_num != activities.page %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="{{ url_for('analytics.activity', page=page_num, **request.args) }}">
+                                                {{ page_num }}
+                                            </a>
+                                        </li>
+                                    {% else %}
+                                        <li class="page-item active">
+                                            <span class="page-link">{{ page_num }}</span>
+                                        </li>
+                                    {% endif %}
+                                {% else %}
+                                    <li class="page-item disabled">
+                                        <span class="page-link">…</span>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                            
+                            {% if activities.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="{{ url_for('analytics.activity', page=activities.next_num, **request.args) }}">
+                                        Suivant
+                                    </a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                    {% endif %}
+                    
+                    {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-history fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">Aucune activité trouvée</h5>
+                        <p class="text-muted">Aucune activité correspondant aux critères sélectionnés.</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

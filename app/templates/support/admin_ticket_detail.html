@@ -1,0 +1,172 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1>
+                        <i class="fas fa-user-shield text-primary"></i>
+                        Admin - Ticket #{{ ticket.id }}
+                    </h1>
+                    <p class="text-muted mb-0">{{ ticket.subject }}</p>
+                </div>
+                <a href="{{ url_for('support.admin_index') }}" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left"></i> Retour
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-8">
+            <!-- Description -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Description</h5>
+                </div>
+                <div class="card-body">
+                    <p>{{ ticket.message|nl2br }}</p>
+                    <small class="text-muted">
+                        Par {{ ticket.user.name }} ({{ ticket.user.email }}) 
+                        le {{ ticket.created_at.strftime('%d/%m/%Y à %H:%M') }}
+                    </small>
+                </div>
+            </div>
+            
+            <!-- Messages -->
+            {% if ticket.messages %}
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Conversation</h5>
+                </div>
+                <div class="card-body">
+                    {% for message in ticket.messages %}
+                    <div class="border-start border-3 ps-3 mb-3 {% if message.is_staff %}border-primary{% else %}border-secondary{% endif %}">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <strong>
+                                {% if message.is_staff %}
+                                    <i class="fas fa-user-tie text-primary"></i> {{ message.author.name }}
+                                {% else %}
+                                    <i class="fas fa-user text-secondary"></i> {{ ticket.user.name }}
+                                {% endif %}
+                            </strong>
+                            <small class="text-muted">
+                                {{ message.created_at.strftime('%d/%m/%Y à %H:%M') }}
+                            </small>
+                        </div>
+                        <div>{{ message.content|nl2br }}</div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+            
+            <!-- Réponse admin -->
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="mb-0">Répondre au ticket</h6>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        <div class="mb-3">
+                            <textarea class="form-control" name="response" rows="4" 
+                                      placeholder="Votre réponse..." required></textarea>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <button type="submit" name="action" value="respond" class="btn btn-primary">
+                                    <i class="fas fa-reply"></i> Répondre
+                                </button>
+                            </div>
+                            <div class="col-md-6 text-end">
+                                {% if ticket.status == 'open' %}
+                                <button type="submit" name="action" value="resolve" class="btn btn-success">
+                                    <i class="fas fa-check"></i> Marquer comme résolu
+                                </button>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Sidebar admin -->
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h6 class="mb-0">Gestion du ticket</h6>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Statut</label>
+                            <select class="form-select" name="status">
+                                <option value="open" {% if ticket.status == 'open' %}selected{% endif %}>Ouvert</option>
+                                <option value="in_progress" {% if ticket.status == 'in_progress' %}selected{% endif %}>En cours</option>
+                                <option value="resolved" {% if ticket.status == 'resolved' %}selected{% endif %}>Résolu</option>
+                                <option value="closed" {% if ticket.status == 'closed' %}selected{% endif %}>Fermé</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Priorité</label>
+                            <select class="form-select" name="priority">
+                                <option value="low" {% if ticket.priority == 'low' %}selected{% endif %}>Basse</option>
+                                <option value="medium" {% if ticket.priority == 'medium' %}selected{% endif %}>Moyenne</option>
+                                <option value="high" {% if ticket.priority == 'high' %}selected{% endif %}>Haute</option>
+                                <option value="critical" {% if ticket.priority == 'critical' %}selected{% endif %}>Critique</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Assigné à</label>
+                            <select class="form-select" name="assigned_to">
+                                <option value="">Non assigné</option>
+                                <!-- Populate with admin users -->
+                            </select>
+                        </div>
+                        
+                        <button type="submit" name="action" value="update" class="btn btn-warning">
+                            <i class="fas fa-save"></i> Mettre à jour
+                        </button>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Informations -->
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="mb-0">Informations</h6>
+                </div>
+                <div class="card-body">
+                    <div class="mb-2">
+                        <strong>Utilisateur:</strong><br>
+                        {{ ticket.user.name }}<br>
+                        <small class="text-muted">{{ ticket.user.email }}</small>
+                    </div>
+                    
+                    <div class="mb-2">
+                        <strong>Créé le:</strong><br>
+                        {{ ticket.created_at.strftime('%d/%m/%Y à %H:%M') }}
+                    </div>
+                    
+                    <div class="mb-2">
+                        <strong>Dernière mise à jour:</strong><br>
+                        {{ ticket.updated_at.strftime('%d/%m/%Y à %H:%M') }}
+                    </div>
+                    
+                    {% if ticket.category %}
+                    <div class="mb-2">
+                        <strong>Catégorie:</strong><br>
+                        {{ ticket.category.replace('_', ' ').title() }}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

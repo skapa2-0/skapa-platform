@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1><i class="fas fa-book text-info"></i> Base de connaissances</h1>
+                <a href="{{ url_for('support.index') }}" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left"></i> Retour au support
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-8">
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <i class="fas fa-rocket text-primary"></i> Premiers pas
+                            </h5>
+                            <p class="card-text">Guide de démarrage rapide pour utiliser notre API IA.</p>
+                            <ul class="list-unstyled">
+                                <li><a href="#" class="text-decoration-none">• Création de compte</a></li>
+                                <li><a href="#" class="text-decoration-none">• Obtenir une clé API</a></li>
+                                <li><a href="#" class="text-decoration-none">• Premier appel API</a></li>
+                                <li><a href="#" class="text-decoration-none">• Gestion des erreurs</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <i class="fas fa-code text-success"></i> Documentation technique
+                            </h5>
+                            <p class="card-text">Références techniques et exemples de code.</p>
+                            <ul class="list-unstyled">
+                                <li><a href="/api-docs/" class="text-decoration-none">• Documentation API</a></li>
+                                <li><a href="#" class="text-decoration-none">• Exemples Python</a></li>
+                                <li><a href="#" class="text-decoration-none">• Exemples JavaScript</a></li>
+                                <li><a href="#" class="text-decoration-none">• Exemples cURL</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <i class="fas fa-shield-alt text-warning"></i> Sécurité
+                            </h5>
+                            <p class="card-text">Bonnes pratiques de sécurité pour l'API.</p>
+                            <ul class="list-unstyled">
+                                <li><a href="#" class="text-decoration-none">• Gestion des clés API</a></li>
+                                <li><a href="#" class="text-decoration-none">• Authentification</a></li>
+                                <li><a href="#" class="text-decoration-none">• Limites de taux</a></li>
+                                <li><a href="#" class="text-decoration-none">• HTTPS obligatoire</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <i class="fas fa-cog text-danger"></i> Dépannage
+                            </h5>
+                            <p class="card-text">Solutions aux problèmes courants.</p>
+                            <ul class="list-unstyled">
+                                <li><a href="#" class="text-decoration-none">• Erreurs 401/403</a></li>
+                                <li><a href="#" class="text-decoration-none">• Timeouts</a></li>
+                                <li><a href="#" class="text-decoration-none">• Limites dépassées</a></li>
+                                <li><a href="#" class="text-decoration-none">• Formats de réponse</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Recherche</h5>
+                    <form>
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Rechercher...">
+                            <button class="btn btn-primary" type="submit">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Articles populaires</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#" class="text-decoration-none">Comment obtenir une clé API</a></li>
+                        <li class="mb-2"><a href="#" class="text-decoration-none">Premier appel API</a></li>
+                        <li class="mb-2"><a href="#" class="text-decoration-none">Gestion des erreurs</a></li>
+                        <li class="mb-2"><a href="#" class="text-decoration-none">Limites de taux</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

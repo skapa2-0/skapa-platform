@@ -1,0 +1,289 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="hero-section bg-gradient-primary text-white py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-4">API d'Intelligence Artificielle Locale</h1>
+                <p class="lead mb-4">
+                    Une API compatible OpenAI qui fonctionne entièrement sur nos serveurs locaux. 
+                    Intégrez facilement notre IA dans vos applications existantes sans changer une ligne de code !
+                </p>
+                <div class="d-flex gap-3">
+                    {% if current_user.is_authenticated %}
+                        <a href="{{ url_for('dashboard.index') }}" class="btn btn-light btn-lg">
+                            <i class="fas fa-tachometer-alt"></i> Mon tableau de bord
+                        </a>
+                    {% else %}
+                        <a href="{{ url_for('auth.register') }}" class="btn btn-light btn-lg">
+                            <i class="fas fa-rocket"></i> Commencer gratuitement
+                        </a>
+                        <a href="{{ url_for('auth.login') }}" class="btn btn-outline-light btn-lg">
+                            <i class="fas fa-sign-in-alt"></i> Se connecter
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="text-center">
+                    <i class="fas fa-robot fa-10x opacity-75"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Description détaillée -->
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-8 mx-auto text-center">
+            <h2 class="mb-4">🚀 La même API qu'OpenAI, mais en local !</h2>
+            <p class="lead text-muted mb-5">
+                Notre API est 100% compatible avec l'API d'OpenAI. Vous pouvez l'utiliser dans n'importe quelle 
+                application ou workflow qui utilise déjà OpenAI, simplement en changeant l'URL de base !
+            </p>
+        </div>
+    </div>
+
+    <!-- Avantages -->
+    <div class="row mb-5">
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="feature-icon bg-primary text-white rounded-circle mx-auto mb-3">
+                        <i class="fas fa-server fa-2x"></i>
+                    </div>
+                    <h5>100% Local</h5>
+                    <p class="text-muted">
+                        Intelligence artificielle qui tourne entièrement sur nos serveurs. 
+                        Vos données restent privées et sécurisées.
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="feature-icon bg-success text-white rounded-circle mx-auto mb-3">
+                        <i class="fas fa-plug fa-2x"></i>
+                    </div>
+                    <h5>Compatible OpenAI</h5>
+                    <p class="text-muted">
+                        API identique à OpenAI. Remplacez simplement l'URL dans vos applications existantes 
+                        et c'est parti !
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="feature-icon bg-info text-white rounded-circle mx-auto mb-3">
+                        <i class="fas fa-brain fa-2x"></i>
+                    </div>
+                    <h5>Modèle Personnalisé</h5>
+                    <p class="text-muted">
+                        Propulsé par <strong>KR-7B-Instruct-v1.17.Q5_0</strong>, notre modèle LLM 
+                        spécialement réentraîné pour des performances optimales.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Démonstration -->
+    <div class="row mb-5">
+        <div class="col-lg-10 mx-auto">
+            <div class="card border-0 shadow">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-terminal"></i> Exemple d'utilisation
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <p class="mb-3">
+                        <strong>Avant</strong> (avec OpenAI) :
+                    </p>
+                    <pre class="bg-light p-3 rounded"><code>curl https://api.openai.com/v1/chat/completions \
+  -H "Authorization: Bearer YOUR_OPENAI_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "gpt-3.5-turbo",
+    "messages": [{"role": "user", "content": "Bonjour !"}]
+  }'</code></pre>
+                    
+                    <p class="mb-3 mt-4">
+                        <strong>Maintenant</strong> (avec notre API) :
+                    </p>
+                    <pre class="bg-light p-3 rounded"><code>curl https://api.intra-tech.fr/api/v1/chat/completions \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "kr-7b-instruct",
+    "messages": [{"role": "user", "content": "Bonjour !"}]
+  }'</code></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chatbot en action -->
+    <div class="row mb-5">
+        <div class="col-lg-8 mx-auto text-center">
+            <div class="card border-0 shadow-lg">
+                <div class="card-body p-5">
+                    <h3 class="mb-4">🤖 Testez notre IA en action</h3>
+                    <p class="text-muted mb-4">
+                        Découvrez la puissance de notre modèle KR-7B-Instruct-v1.17.Q5_0 
+                        sur notre plateforme de chat interactive.
+                    </p>
+                    <a href="https://chat.intra-tech.fr/" target="_blank" class="btn btn-primary btn-lg">
+                        <i class="fas fa-comments"></i> Essayer le chatbot
+                        <i class="fas fa-external-link-alt ms-2"></i>
+                    </a>
+                    <p class="small text-muted mt-3">
+                        Même technologie, même modèle IA que notre API !
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cas d'usage -->
+    <div class="row">
+        <div class="col-12">
+            <h3 class="text-center mb-5">🎯 Cas d'usage parfaits</h3>
+        </div>
+        
+        <div class="col-md-6 mb-4">
+            <div class="d-flex">
+                <div class="flex-shrink-0">
+                    <div class="feature-icon-sm bg-primary text-white rounded">
+                        <i class="fas fa-code"></i>
+                    </div>
+                </div>
+                <div class="flex-grow-1 ms-3">
+                    <h6>Applications existantes</h6>
+                    <p class="text-muted mb-0">
+                        Remplacez OpenAI dans vos apps Python, Node.js, PHP, etc. 
+                        sans modification de code.
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6 mb-4">
+            <div class="d-flex">
+                <div class="flex-shrink-0">
+                    <div class="feature-icon-sm bg-success text-white rounded">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                </div>
+                <div class="flex-grow-1 ms-3">
+                    <h6>Workflows automatisés</h6>
+                    <p class="text-muted mb-0">
+                        Intégrez dans Zapier, Make.com, ou vos scripts d'automatisation 
+                        existants.
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6 mb-4">
+            <div class="d-flex">
+                <div class="flex-shrink-0">
+                    <div class="feature-icon-sm bg-info text-white rounded">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                </div>
+                <div class="flex-grow-1 ms-3">
+                    <h6>Données sensibles</h6>
+                    <p class="text-muted mb-0">
+                        Parfait pour les entreprises qui veulent garder leurs données 
+                        en interne.
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6 mb-4">
+            <div class="d-flex">
+                <div class="flex-shrink-0">
+                    <div class="feature-icon-sm bg-warning text-white rounded">
+                        <i class="fas fa-euro-sign"></i>
+                    </div>
+                </div>
+                <div class="flex-grow-1 ms-3">
+                    <h6>Contrôle des coûts</h6>
+                    <p class="text-muted mb-0">
+                        Tarification transparente et prévisible, sans surprises 
+                        sur votre facture.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CTA Section -->
+{% if not current_user.is_authenticated %}
+<div class="bg-light py-5">
+    <div class="container text-center">
+        <h3 class="mb-4">Prêt à commencer ?</h3>
+        <p class="lead text-muted mb-4">
+            Obtenez votre clé API en quelques minutes et commencez à utiliser 
+            notre IA locale dès aujourd'hui.
+        </p>
+        <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-lg">
+            <i class="fas fa-rocket"></i> Créer mon compte gratuitement
+        </a>
+    </div>
+</div>
+{% endif %}
+
+<style>
+.hero-section {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+}
+
+.feature-icon {
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.feature-icon-sm {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card {
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+pre {
+    font-size: 0.9rem;
+    overflow-x: auto;
+}
+
+.bg-gradient-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+</style>
+{% endblock %} 

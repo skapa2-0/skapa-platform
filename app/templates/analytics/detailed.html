@@ -1,0 +1,325 @@
+{% extends "base.html" %}
+
+{% block head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1><i class="fas fa-chart-line text-primary"></i> Analytics détaillées</h1>
+                <div>
+                    <a href="{{ url_for('analytics.index') }}" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left"></i> Vue d'ensemble
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filtres -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <form method="GET" class="row g-3">
+                        <div class="col-md-3">
+                            <label for="period" class="form-label">Période</label>
+                            <select class="form-select" id="period" name="period">
+                                <option value="7" {% if request.args.get('period') == '7' %}selected{% endif %}>7 derniers jours</option>
+                                <option value="30" {% if request.args.get('period') == '30' or not request.args.get('period') %}selected{% endif %}>30 derniers jours</option>
+                                <option value="90" {% if request.args.get('period') == '90' %}selected{% endif %}>90 derniers jours</option>
+                                <option value="365" {% if request.args.get('period') == '365' %}selected{% endif %}>1 an</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="endpoint" class="form-label">Endpoint</label>
+                            <select class="form-select" id="endpoint" name="endpoint">
+                                <option value="">Tous les endpoints</option>
+                                {% for endpoint in available_endpoints %}
+                                <option value="{{ endpoint }}" {% if request.args.get('endpoint') == endpoint %}selected{% endif %}>
+                                    {{ endpoint }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="status" class="form-label">Code de statut</label>
+                            <select class="form-select" id="status" name="status">
+                                <option value="">Tous les statuts</option>
+                                <option value="200" {% if request.args.get('status') == '200' %}selected{% endif %}>200 - Success</option>
+                                <option value="400" {% if request.args.get('status') == '400' %}selected{% endif %}>400 - Bad Request</option>
+                                <option value="401" {% if request.args.get('status') == '401' %}selected{% endif %}>401 - Unauthorized</option>
+                                <option value="500" {% if request.args.get('status') == '500' %}selected{% endif %}>500 - Server Error</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">&nbsp;</label>
+                            <div>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-filter"></i> Filtrer
+                                </button>
+                                <a href="{{ url_for('analytics.detailed') }}" class="btn btn-outline-secondary">
+                                    <i class="fas fa-times"></i> Reset
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistiques détaillées -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card text-white bg-primary">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <div class="h4 mb-0">{{ detailed_stats.total_requests }}</div>
+                            <div>Requêtes totales</div>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-exchange-alt fa-2x opacity-75"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-success">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <div class="h4 mb-0">{{ detailed_stats.success_rate }}%</div>
+                            <div>Taux de succès</div>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-check-circle fa-2x opacity-75"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-info">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <div class="h4 mb-0">{{ detailed_stats.avg_response_time }}ms</div>
+                            <div>Temps moyen</div>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-clock fa-2x opacity-75"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-warning">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <div class="h4 mb-0">{{ detailed_stats.total_tokens }}</div>
+                            <div>Tokens utilisés</div>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-coins fa-2x opacity-75"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Graphiques détaillés -->
+    <div class="row">
+        <!-- Temps de réponse par jour -->
+        <div class="col-xl-8">
+            <div class="card shadow mb-4">
+                <div class="card-header">
+                    <h6 class="m-0 font-weight-bold text-primary">Temps de réponse par jour</h6>
+                </div>
+                <div class="card-body">
+                    <canvas id="responseTimeChart" width="400" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Distribution des temps de réponse -->
+        <div class="col-xl-4">
+            <div class="card shadow mb-4">
+                <div class="card-header">
+                    <h6 class="m-0 font-weight-bold text-primary">Distribution temps de réponse</h6>
+                </div>
+                <div class="card-body">
+                    <canvas id="responseDistributionChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tableaux de données -->
+    <div class="row">
+        <!-- Détails par endpoint -->
+        <div class="col-xl-8">
+            <div class="card shadow mb-4">
+                <div class="card-header">
+                    <h6 class="m-0 font-weight-bold text-primary">Détails par endpoint</h6>
+                </div>
+                <div class="card-body">
+                    {% if endpoint_stats %}
+                    <div class="table-responsive">
+                        <table class="table table-sm table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Endpoint</th>
+                                    <th>Méthode</th>
+                                    <th>Requêtes</th>
+                                    <th>Succès</th>
+                                    <th>Temps moyen</th>
+                                    <th>Tokens</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for stat in endpoint_stats %}
+                                <tr>
+                                    <td><code class="small">{{ stat.endpoint }}</code></td>
+                                    <td>
+                                        <span class="badge bg-{{ 'primary' if stat.method == 'GET' else 'success' if stat.method == 'POST' else 'warning' }}">
+                                            {{ stat.method }}
+                                        </span>
+                                    </td>
+                                    <td>{{ stat.request_count }}</td>
+                                    <td>
+                                        <div class="progress" style="height: 20px;">
+                                            <div class="progress-bar bg-success" role="progressbar" 
+                                                 style="width: {{ stat.success_rate }}%">
+                                                {{ stat.success_rate }}%
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>{{ stat.avg_response_time }}ms</td>
+                                    <td>{{ stat.total_tokens }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <p class="text-muted text-center">Aucune donnée disponible pour la période sélectionnée</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Erreurs récentes -->
+        <div class="col-xl-4">
+            <div class="card shadow mb-4">
+                <div class="card-header">
+                    <h6 class="m-0 font-weight-bold text-primary">Erreurs récentes</h6>
+                </div>
+                <div class="card-body">
+                    {% if recent_errors %}
+                    <div class="list-group list-group-flush">
+                        {% for error in recent_errors %}
+                        <div class="list-group-item">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">{{ error.endpoint }}</h6>
+                                <small>{{ error.created_at.strftime('%d/%m %H:%M') }}</small>
+                            </div>
+                            <p class="mb-1">
+                                <span class="badge bg-danger">{{ error.status_code }}</span>
+                                <span class="text-muted">{{ error.method }}</span>
+                            </p>
+                            <small>{{ error.response_time }}ms</small>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <p class="text-muted text-center">Aucune erreur récente</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Données pour les graphiques
+const detailedData = {{ chart_data|tojson }};
+
+// Graphique des temps de réponse
+const ctxResponseTime = document.getElementById('responseTimeChart').getContext('2d');
+const responseTimeChart = new Chart(ctxResponseTime, {
+    type: 'line',
+    data: {
+        labels: detailedData.dates || [],
+        datasets: [{
+            label: 'Temps de réponse moyen (ms)',
+            data: detailedData.response_times || [],
+            borderColor: 'rgb(54, 162, 235)',
+            backgroundColor: 'rgba(54, 162, 235, 0.1)',
+            tension: 0.3
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                position: 'top',
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                title: {
+                    display: true,
+                    text: 'Temps (ms)'
+                }
+            }
+        }
+    }
+});
+
+// Graphique de distribution
+const ctxDistribution = document.getElementById('responseDistributionChart').getContext('2d');
+const distributionChart = new Chart(ctxDistribution, {
+    type: 'bar',
+    data: {
+        labels: ['< 100ms', '100-500ms', '500ms-1s', '1-3s', '> 3s'],
+        datasets: [{
+            data: [45, 35, 15, 4, 1],
+            backgroundColor: [
+                '#1cc88a',
+                '#36b9cc',
+                '#f6c23e',
+                '#fd7e14',
+                '#e74a3b'
+            ]
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                display: false
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                title: {
+                    display: true,
+                    text: 'Pourcentage'
+                }
+            }
+        }
+    }
+});
+</script>
+{% endblock %} 
