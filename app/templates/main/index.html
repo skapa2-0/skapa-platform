@@ -2,288 +2,297 @@
 
 {% block content %}
 <!-- Hero Section -->
-<div class="hero-section bg-gradient-primary text-white py-5">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-6">
-                <h1 class="display-4 fw-bold mb-4">API d'Intelligence Artificielle Locale</h1>
-                <p class="lead mb-4">
-                    Une API compatible OpenAI qui fonctionne entièrement sur nos serveurs locaux. 
-                    Intégrez facilement notre IA dans vos applications existantes sans changer une ligne de code !
-                </p>
-                <div class="d-flex gap-3">
-                    {% if current_user.is_authenticated %}
-                        <a href="{{ url_for('dashboard.index') }}" class="btn btn-light btn-lg">
-                            <i class="fas fa-tachometer-alt"></i> Mon tableau de bord
-                        </a>
-                    {% else %}
-                        <a href="{{ url_for('auth.register') }}" class="btn btn-light btn-lg">
-                            <i class="fas fa-rocket"></i> Commencer gratuitement
-                        </a>
-                        <a href="{{ url_for('auth.login') }}" class="btn btn-outline-light btn-lg">
-                            <i class="fas fa-sign-in-alt"></i> Se connecter
-                        </a>
-                    {% endif %}
-                </div>
-            </div>
-            <div class="col-lg-6">
-                <div class="text-center">
-                    <i class="fas fa-robot fa-10x opacity-75"></i>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Description détaillée -->
-<div class="container py-5">
-    <div class="row">
-        <div class="col-lg-8 mx-auto text-center">
-            <h2 class="mb-4">🚀 La même API qu'OpenAI, mais en local !</h2>
-            <p class="lead text-muted mb-5">
-                Notre API est 100% compatible avec l'API d'OpenAI. Vous pouvez l'utiliser dans n'importe quelle 
-                application ou workflow qui utilise déjà OpenAI, simplement en changeant l'URL de base !
+<div style="padding: 100px 0 60px; position: relative; overflow: hidden;">
+    <div style="position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 0%, rgba(124, 58, 237, 0.15) 0%, transparent 60%); pointer-events: none;"></div>
+    <div class="container" style="position: relative;">
+        <div class="text-center" style="max-width: 800px; margin: 0 auto;">
+            <h1 style="font-size: 3.5rem; font-weight: 800; line-height: 1.1; margin-bottom: 20px; letter-spacing: -0.02em;">
+                La Passerelle IA<br>
+                <span style="background: linear-gradient(135deg, #7c3aed, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Unifiée</span>
+            </h1>
+            <p style="font-size: 1.25rem; color: var(--sk-text-secondary); margin-bottom: 40px;">
+                Meilleurs <a href="{{ url_for('main.pricing') }}" style="color: var(--sk-text-primary); text-decoration: underline;">prix</a>, 
+                meilleure disponibilité, sans abonnement.
             </p>
+            <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+                {% if current_user.is_authenticated %}
+                <a href="{{ url_for('dashboard.index') }}" style="display: inline-flex; align-items: center; gap: 8px; padding: 12px 28px; background: var(--sk-accent-gradient); color: white; border-radius: 10px; font-weight: 600; text-decoration: none; font-size: 0.95rem; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
+                    Mon Dashboard
+                </a>
+                {% else %}
+                <a href="{{ url_for('auth.register') }}" style="display: inline-flex; align-items: center; gap: 8px; padding: 12px 28px; background: var(--sk-accent-gradient); color: white; border-radius: 10px; font-weight: 600; text-decoration: none; font-size: 0.95rem; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
+                    Obtenir une clé API
+                </a>
+                <a href="{{ url_for('main.pricing') }}" style="display: inline-flex; align-items: center; gap: 8px; padding: 12px 28px; background: var(--sk-bg-card); border: 1px solid var(--sk-border); color: var(--sk-text-primary); border-radius: 10px; font-weight: 600; text-decoration: none; font-size: 0.95rem; transition: all 0.2s;" onmouseover="this.style.borderColor='rgba(255,255,255,0.2)'" onmouseout="this.style.borderColor='var(--sk-border)'">
+                    Explorer les modèles
+                    <span style="display: inline-flex; gap: 4px; margin-left: 4px;">
+                        <img src="https://cdn.simpleicons.org/anthropic/white" width="16" height="16" alt="Anthropic" style="border-radius: 4px;">
+                        <img src="https://cdn.simpleicons.org/openai/white" width="16" height="16" alt="OpenAI" style="border-radius: 4px;">
+                    </span>
+                </a>
+                {% endif %}
+            </div>
         </div>
-    </div>
 
-    <!-- Avantages -->
-    <div class="row mb-5">
-        <div class="col-md-4 mb-4">
-            <div class="card h-100 border-0 shadow-sm">
-                <div class="card-body text-center">
-                    <div class="feature-icon bg-primary text-white rounded-circle mx-auto mb-3">
-                        <i class="fas fa-server fa-2x"></i>
-                    </div>
-                    <h5>100% Local</h5>
-                    <p class="text-muted">
-                        Intelligence artificielle qui tourne entièrement sur nos serveurs. 
-                        Vos données restent privées et sécurisées.
-                    </p>
-                </div>
+        <!-- Stats -->
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--sk-border); border-radius: 16px; overflow: hidden; margin-top: 60px; max-width: 700px; margin-left: auto; margin-right: auto;">
+            <div style="background: var(--sk-bg-secondary); padding: 24px 16px; text-align: center;">
+                <div style="font-size: 1.5rem; font-weight: 800; background: linear-gradient(135deg, #7c3aed, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">100%</div>
+                <div style="font-size: 0.75rem; color: var(--sk-text-muted); margin-top: 4px;">Compatible OpenAI</div>
             </div>
-        </div>
-        
-        <div class="col-md-4 mb-4">
-            <div class="card h-100 border-0 shadow-sm">
-                <div class="card-body text-center">
-                    <div class="feature-icon bg-success text-white rounded-circle mx-auto mb-3">
-                        <i class="fas fa-plug fa-2x"></i>
-                    </div>
-                    <h5>Compatible OpenAI</h5>
-                    <p class="text-muted">
-                        API identique à OpenAI. Remplacez simplement l'URL dans vos applications existantes 
-                        et c'est parti !
-                    </p>
-                </div>
+            <div style="background: var(--sk-bg-secondary); padding: 24px 16px; text-align: center;">
+                <div style="font-size: 1.5rem; font-weight: 800;">15+</div>
+                <div style="font-size: 0.75rem; color: var(--sk-text-muted); margin-top: 4px;">Modèles IA</div>
             </div>
-        </div>
-        
-        <div class="col-md-4 mb-4">
-            <div class="card h-100 border-0 shadow-sm">
-                <div class="card-body text-center">
-                    <div class="feature-icon bg-info text-white rounded-circle mx-auto mb-3">
-                        <i class="fas fa-brain fa-2x"></i>
-                    </div>
-                    <h5>Modèle Personnalisé</h5>
-                    <p class="text-muted">
-                        Propulsé par <strong>KR-7B-Instruct-v1.17.Q5_0</strong>, notre modèle LLM 
-                        spécialement réentraîné pour des performances optimales.
-                    </p>
-                </div>
+            <div style="background: var(--sk-bg-secondary); padding: 24px 16px; text-align: center;">
+                <div style="font-size: 1.5rem; font-weight: 800;">5+</div>
+                <div style="font-size: 0.75rem; color: var(--sk-text-muted); margin-top: 4px;">Fournisseurs</div>
+            </div>
+            <div style="background: var(--sk-bg-secondary); padding: 24px 16px; text-align: center;">
+                <div style="font-size: 1.5rem; font-weight: 800;">🇫🇷</div>
+                <div style="font-size: 0.75rem; color: var(--sk-text-muted); margin-top: 4px;">Made in France</div>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- Démonstration -->
-    <div class="row mb-5">
-        <div class="col-lg-10 mx-auto">
-            <div class="card border-0 shadow">
-                <div class="card-header bg-dark text-white">
-                    <h5 class="mb-0">
-                        <i class="fas fa-terminal"></i> Exemple d'utilisation
-                    </h5>
+<!-- Provider Logos + Feature Cards -->
+<div class="container" style="padding: 40px 0;">
+    <!-- Bento Grid -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+        
+        <!-- Card 1: One API for Any Model -->
+        <div style="background: var(--sk-bg-card); border: 1px solid var(--sk-border); border-radius: 16px; padding: 32px; transition: border-color 0.2s;" onmouseover="this.style.borderColor='var(--sk-border-hover)'" onmouseout="this.style.borderColor='var(--sk-border)'">
+            <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px;">
+                <div style="width: 36px; height: 36px; border-radius: 10px; background: var(--sk-bg-hover); display: flex; align-items: center; justify-content: center; font-size: 18px;" title="Anthropic">🅰️</div>
+                <div style="width: 36px; height: 36px; border-radius: 10px; background: var(--sk-bg-hover); display: flex; align-items: center; justify-content: center; font-size: 18px;" title="OpenAI">◐</div>
+                <div style="width: 36px; height: 36px; border-radius: 10px; background: var(--sk-bg-hover); display: flex; align-items: center; justify-content: center; font-size: 18px;" title="Google">G</div>
+                <div style="width: 36px; height: 36px; border-radius: 10px; background: var(--sk-bg-hover); display: flex; align-items: center; justify-content: center; font-size: 18px;" title="Mistral AI">M</div>
+                <div style="width: 36px; height: 36px; border-radius: 10px; background: var(--sk-bg-hover); display: flex; align-items: center; justify-content: center; font-size: 18px;" title="Meta">Ⓜ</div>
+                <div style="width: 36px; height: 36px; border-radius: 10px; background: var(--sk-bg-hover); display: flex; align-items: center; justify-content: center; font-size: 18px;" title="DeepSeek">D</div>
+                <div style="width: 36px; height: 36px; border-radius: 10px; background: var(--sk-bg-hover); display: flex; align-items: center; justify-content: center; font-size: 18px;" title="Qwen">Q</div>
+                <div style="width: 36px; height: 36px; border-radius: 10px; background: var(--sk-bg-hover); display: flex; align-items: center; justify-content: center; font-size: 14px; color: var(--sk-text-muted);" title="Et plus...">+</div>
+            </div>
+            <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 8px;">Une API, tous les modèles</h3>
+            <p style="color: var(--sk-text-secondary); font-size: 0.9rem; margin-bottom: 16px;">Accédez aux meilleurs modèles d'IA via une interface unifiée. Le SDK OpenAI fonctionne nativement.</p>
+            <a href="{{ url_for('main.pricing') }}" style="color: var(--sk-text-primary); font-size: 0.85rem; font-weight: 500; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">Voir les modèles <i class="fas fa-arrow-right" style="font-size: 0.75rem;"></i></a>
+        </div>
+
+        <!-- Card 2: Higher Availability -->
+        <div style="background: var(--sk-bg-card); border: 1px solid var(--sk-border); border-radius: 16px; padding: 32px; transition: border-color 0.2s;" onmouseover="this.style.borderColor='var(--sk-border-hover)'" onmouseout="this.style.borderColor='var(--sk-border)'">
+            <div style="margin-bottom: 20px; padding: 16px; background: var(--sk-bg-secondary); border-radius: 12px;">
+                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+                    <span style="font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--sk-text-secondary);">anthropic/claude-sonnet</span>
                 </div>
-                <div class="card-body">
-                    <p class="mb-3">
-                        <strong>Avant</strong> (avec OpenAI) :
-                    </p>
-                    <pre class="bg-light p-3 rounded"><code>curl https://api.openai.com/v1/chat/completions \
-  -H "Authorization: Bearer YOUR_OPENAI_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "model": "gpt-3.5-turbo",
-    "messages": [{"role": "user", "content": "Bonjour !"}]
-  }'</code></pre>
-                    
-                    <p class="mb-3 mt-4">
-                        <strong>Maintenant</strong> (avec notre API) :
-                    </p>
-                    <pre class="bg-light p-3 rounded"><code>curl https://api.skapa.design/api/v1/chat/completions \
-  -H "Authorization: Bearer YOUR_API_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "model": "kr-7b-instruct",
-    "messages": [{"role": "user", "content": "Bonjour !"}]
-  }'</code></pre>
+                <div style="display: flex; gap: 6px;">
+                    <span style="padding: 4px 10px; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 6px; font-size: 0.7rem; color: #10b981;">Anthropic ✓</span>
+                    <span style="padding: 4px 10px; background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2); border-radius: 6px; font-size: 0.7rem; color: #3b82f6;">AWS Bedrock ✓</span>
+                    <span style="padding: 4px 10px; background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.2); border-radius: 6px; font-size: 0.7rem; color: #f59e0b;">Google Vertex ✓</span>
                 </div>
             </div>
+            <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 8px;">Haute Disponibilité</h3>
+            <p style="color: var(--sk-text-secondary); font-size: 0.9rem; margin-bottom: 16px;">Routage intelligent vers les fournisseurs disponibles. Fallback automatique en cas de panne.</p>
+            <a href="{{ url_for('main.about') }}" style="color: var(--sk-text-primary); font-size: 0.85rem; font-weight: 500; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">En savoir plus <i class="fas fa-arrow-right" style="font-size: 0.75rem;"></i></a>
         </div>
     </div>
 
-    <!-- Chatbot en action -->
-    <div class="row mb-5">
-        <div class="col-lg-8 mx-auto text-center">
-            <div class="card border-0 shadow-lg">
-                <div class="card-body p-5">
-                    <h3 class="mb-4">🤖 Testez notre IA en action</h3>
-                    <p class="text-muted mb-4">
-                        Découvrez la puissance de notre modèle KR-7B-Instruct-v1.17.Q5_0 
-                        sur notre plateforme de chat interactive.
-                    </p>
-                    <a href="https://api.skapa.design/" target="_blank" class="btn btn-primary btn-lg">
-                        <i class="fas fa-comments"></i> Essayer le chatbot
-                        <i class="fas fa-external-link-alt ms-2"></i>
-                    </a>
-                    <p class="small text-muted mt-3">
-                        Même technologie, même modèle IA que notre API !
-                    </p>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+        <!-- Card 3: Prix et Performance -->
+        <div style="background: var(--sk-bg-card); border: 1px solid var(--sk-border); border-radius: 16px; padding: 32px; transition: border-color 0.2s;" onmouseover="this.style.borderColor='var(--sk-border-hover)'" onmouseout="this.style.borderColor='var(--sk-border)'">
+            <div style="margin-bottom: 20px; padding: 16px; background: var(--sk-bg-secondary); border-radius: 12px;">
+                <div style="display: flex; justify-content: space-between; align-items: flex-end; height: 60px; gap: 3px;">
+                    <div style="flex: 1; background: linear-gradient(to top, #7c3aed, #3b82f6); border-radius: 3px 3px 0 0; height: 30%;"></div>
+                    <div style="flex: 1; background: linear-gradient(to top, #7c3aed, #3b82f6); border-radius: 3px 3px 0 0; height: 45%;"></div>
+                    <div style="flex: 1; background: linear-gradient(to top, #7c3aed, #3b82f6); border-radius: 3px 3px 0 0; height: 35%;"></div>
+                    <div style="flex: 1; background: linear-gradient(to top, #7c3aed, #3b82f6); border-radius: 3px 3px 0 0; height: 65%;"></div>
+                    <div style="flex: 1; background: linear-gradient(to top, #7c3aed, #3b82f6); border-radius: 3px 3px 0 0; height: 55%;"></div>
+                    <div style="flex: 1; background: linear-gradient(to top, #7c3aed, #3b82f6); border-radius: 3px 3px 0 0; height: 80%;"></div>
+                    <div style="flex: 1; background: linear-gradient(to top, #7c3aed, #3b82f6); border-radius: 3px 3px 0 0; height: 70%;"></div>
+                    <div style="flex: 1; background: linear-gradient(to top, #10b981, #10b981); border-radius: 3px 3px 0 0; height: 100%; opacity: 0.8;"></div>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-top: 8px;">
+                    <span style="font-size: 0.65rem; color: var(--sk-text-muted);">OpenAI</span>
+                    <span style="font-size: 0.65rem; color: #10b981; font-weight: 600;">Skapa ↓40%</span>
                 </div>
             </div>
+            <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 8px;">Prix & Performance</h3>
+            <p style="color: var(--sk-text-secondary); font-size: 0.9rem; margin-bottom: 16px;">Gardez vos coûts sous contrôle sans sacrifier la vitesse. Tarification transparente et prévisible.</p>
+            <a href="{{ url_for('main.pricing') }}" style="color: var(--sk-text-primary); font-size: 0.85rem; font-weight: 500; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">Voir les tarifs <i class="fas fa-arrow-right" style="font-size: 0.75rem;"></i></a>
+        </div>
+
+        <!-- Card 4: RGPD & Souveraineté -->
+        <div style="background: var(--sk-bg-card); border: 1px solid var(--sk-border); border-radius: 16px; padding: 32px; transition: border-color 0.2s;" onmouseover="this.style.borderColor='var(--sk-border-hover)'" onmouseout="this.style.borderColor='var(--sk-border)'">
+            <div style="margin-bottom: 20px; padding: 16px; background: var(--sk-bg-secondary); border-radius: 12px;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <div style="width: 40px; height: 40px; border-radius: 10px; background: rgba(124, 58, 237, 0.1); border: 1px solid rgba(124, 58, 237, 0.2); display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-shield-halved" style="color: #7c3aed;"></i>
+                    </div>
+                    <div>
+                        <div style="font-size: 0.8rem; font-weight: 600;">Politique de données</div>
+                        <div style="font-size: 0.7rem; color: var(--sk-text-muted);">Conforme RGPD • Hébergé en France</div>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 6px; margin-top: 12px;">
+                    <span style="padding: 4px 10px; background: rgba(124, 58, 237, 0.1); border: 1px solid rgba(124, 58, 237, 0.2); border-radius: 6px; font-size: 0.7rem; color: #a78bfa;">🔒 Chiffré</span>
+                    <span style="padding: 4px 10px; background: rgba(124, 58, 237, 0.1); border: 1px solid rgba(124, 58, 237, 0.2); border-radius: 6px; font-size: 0.7rem; color: #a78bfa;">🇪🇺 RGPD</span>
+                    <span style="padding: 4px 10px; background: rgba(124, 58, 237, 0.1); border: 1px solid rgba(124, 58, 237, 0.2); border-radius: 6px; font-size: 0.7rem; color: #a78bfa;">📋 Logs opt-in</span>
+                </div>
+            </div>
+            <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 8px;">Souveraineté & RGPD</h3>
+            <p style="color: var(--sk-text-secondary); font-size: 0.9rem; margin-bottom: 16px;">Protégez vos données avec des politiques granulaires. Vos prompts ne vont que vers les modèles que vous autorisez.</p>
+            <a href="{{ url_for('main.terms') }}" style="color: var(--sk-text-primary); font-size: 0.85rem; font-weight: 500; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">Voir la politique <i class="fas fa-arrow-right" style="font-size: 0.75rem;"></i></a>
         </div>
     </div>
+</div>
 
-    <!-- Cas d'usage -->
-    <div class="row">
-        <div class="col-12">
-            <h3 class="text-center mb-5">🎯 Cas d'usage parfaits</h3>
-        </div>
-        
-        <div class="col-md-6 mb-4">
-            <div class="d-flex">
-                <div class="flex-shrink-0">
-                    <div class="feature-icon-sm bg-primary text-white rounded">
-                        <i class="fas fa-code"></i>
-                    </div>
+<!-- How it works - 3 steps -->
+<div class="container" style="padding: 80px 0;">
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px;">
+        <!-- Step 1 -->
+        <div>
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+                <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--sk-accent-gradient); display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: 700; color: white;">1</div>
+                <h3 style="font-size: 1.1rem; font-weight: 700; margin: 0;">Créez un compte</h3>
+            </div>
+            <p style="color: var(--sk-text-secondary); font-size: 0.9rem; margin-bottom: 16px;">Inscrivez-vous en quelques secondes. Gratuit pour commencer.</p>
+            <div style="background: var(--sk-bg-card); border: 1px solid var(--sk-border); border-radius: 12px; padding: 20px;">
+                <div style="display: flex; gap: 8px;">
+                    <div style="flex: 1; padding: 8px 12px; background: var(--sk-bg-secondary); border: 1px solid var(--sk-border); border-radius: 8px; font-size: 0.8rem; color: var(--sk-text-muted);"><i class="fas fa-envelope" style="margin-right: 6px;"></i> Email</div>
                 </div>
-                <div class="flex-grow-1 ms-3">
-                    <h6>Applications existantes</h6>
-                    <p class="text-muted mb-0">
-                        Remplacez OpenAI dans vos apps Python, Node.js, PHP, etc. 
-                        sans modification de code.
-                    </p>
+                <div style="margin-top: 8px; padding: 8px 12px; background: var(--sk-accent-gradient); border-radius: 8px; font-size: 0.8rem; color: white; text-align: center; font-weight: 600;">S'inscrire</div>
+            </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div>
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+                <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--sk-accent-gradient); display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: 700; color: white;">2</div>
+                <h3 style="font-size: 1.1rem; font-weight: 700; margin: 0;">Ajoutez des crédits</h3>
+            </div>
+            <p style="color: var(--sk-text-secondary); font-size: 0.9rem; margin-bottom: 16px;">Les crédits fonctionnent avec tous les modèles et fournisseurs.</p>
+            <div style="background: var(--sk-bg-card); border: 1px solid var(--sk-border); border-radius: 12px; padding: 20px;">
+                <div style="display: flex; justify-content: space-between; padding: 8px 12px; background: var(--sk-bg-secondary); border: 1px solid var(--sk-border); border-radius: 8px; font-size: 0.8rem; margin-bottom: 6px;">
+                    <span style="color: var(--sk-text-muted);">9 mars</span>
+                    <span style="color: #10b981; font-weight: 600;">10€</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; padding: 8px 12px; background: var(--sk-bg-secondary); border: 1px solid var(--sk-border); border-radius: 8px; font-size: 0.8rem;">
+                    <span style="color: var(--sk-text-muted);">1 avril</span>
+                    <span style="color: #10b981; font-weight: 600;">50€</span>
                 </div>
             </div>
         </div>
-        
-        <div class="col-md-6 mb-4">
-            <div class="d-flex">
-                <div class="flex-shrink-0">
-                    <div class="feature-icon-sm bg-success text-white rounded">
-                        <i class="fas fa-cogs"></i>
-                    </div>
-                </div>
-                <div class="flex-grow-1 ms-3">
-                    <h6>Workflows automatisés</h6>
-                    <p class="text-muted mb-0">
-                        Intégrez dans Zapier, Make.com, ou vos scripts d'automatisation 
-                        existants.
-                    </p>
-                </div>
+
+        <!-- Step 3 -->
+        <div>
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+                <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--sk-accent-gradient); display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: 700; color: white;">3</div>
+                <h3 style="font-size: 1.1rem; font-weight: 700; margin: 0;">Utilisez votre clé API</h3>
             </div>
-        </div>
-        
-        <div class="col-md-6 mb-4">
-            <div class="d-flex">
-                <div class="flex-shrink-0">
-                    <div class="feature-icon-sm bg-info text-white rounded">
-                        <i class="fas fa-shield-alt"></i>
-                    </div>
+            <p style="color: var(--sk-text-secondary); font-size: 0.9rem; margin-bottom: 16px;">Créez une clé et commencez. 100% compatible OpenAI.</p>
+            <div style="background: var(--sk-bg-card); border: 1px solid var(--sk-border); border-radius: 12px; padding: 20px;">
+                <div style="display: flex; align-items: center; gap: 8px; padding: 8px 12px; background: var(--sk-bg-secondary); border: 1px solid var(--sk-border); border-radius: 8px;">
+                    <span style="font-size: 0.7rem; color: var(--sk-text-muted); font-family: 'JetBrains Mono', monospace;">SKAPA_API_KEY</span>
                 </div>
-                <div class="flex-grow-1 ms-3">
-                    <h6>Données sensibles</h6>
-                    <p class="text-muted mb-0">
-                        Parfait pour les entreprises qui veulent garder leurs données 
-                        en interne.
-                    </p>
-                </div>
-            </div>
-        </div>
-        
-        <div class="col-md-6 mb-4">
-            <div class="d-flex">
-                <div class="flex-shrink-0">
-                    <div class="feature-icon-sm bg-warning text-white rounded">
-                        <i class="fas fa-euro-sign"></i>
-                    </div>
-                </div>
-                <div class="flex-grow-1 ms-3">
-                    <h6>Contrôle des coûts</h6>
-                    <p class="text-muted mb-0">
-                        Tarification transparente et prévisible, sans surprises 
-                        sur votre facture.
-                    </p>
+                <div style="margin-top: 6px; padding: 8px 12px; background: var(--sk-bg-secondary); border: 1px solid var(--sk-border); border-radius: 8px; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--sk-text-muted); letter-spacing: 2px;">
+                    ••••••••••••••••
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- CTA Section -->
-{% if not current_user.is_authenticated %}
-<div class="bg-light py-5">
-    <div class="container text-center">
-        <h3 class="mb-4">Prêt à commencer ?</h3>
-        <p class="lead text-muted mb-4">
-            Obtenez votre clé API en quelques minutes et commencez à utiliser 
-            notre IA locale dès aujourd'hui.
-        </p>
-        <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-lg">
-            <i class="fas fa-rocket"></i> Créer mon compte gratuitement
+<!-- Code Example -->
+<div class="container" style="padding: 0 0 80px;">
+    <div style="background: var(--sk-bg-card); border: 1px solid var(--sk-border); border-radius: 16px; overflow: hidden;">
+        <div style="padding: 16px 24px; border-bottom: 1px solid var(--sk-border); display: flex; align-items: center; gap: 8px;">
+            <div style="width: 12px; height: 12px; border-radius: 50%; background: #ef4444;"></div>
+            <div style="width: 12px; height: 12px; border-radius: 50%; background: #f59e0b;"></div>
+            <div style="width: 12px; height: 12px; border-radius: 50%; background: #10b981;"></div>
+            <span style="margin-left: 12px; font-size: 0.8rem; color: var(--sk-text-muted);">Intégration en 30 secondes</span>
+        </div>
+        <div style="padding: 24px; overflow-x: auto;">
+            <pre style="margin: 0; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; line-height: 1.7;"><span style="color: #7c3aed;">from</span> <span style="color: #3b82f6;">openai</span> <span style="color: #7c3aed;">import</span> OpenAI
+
+client = OpenAI(
+    <span style="color: #10b981;">base_url</span>=<span style="color: #f59e0b;">"https://api.skapa.design/api/v1"</span>,
+    <span style="color: #10b981;">api_key</span>=<span style="color: #f59e0b;">"VOTRE_CLE_SKAPA"</span>,
+)
+
+response = client.chat.completions.create(
+    <span style="color: #10b981;">model</span>=<span style="color: #f59e0b;">"anthropic/claude-sonnet"</span>,  <span style="color: var(--sk-text-muted);"># Ou openai/gpt-4o, mistral/large, etc.</span>
+    <span style="color: #10b981;">messages</span>=[
+        {<span style="color: #f59e0b;">"role"</span>: <span style="color: #f59e0b;">"user"</span>, <span style="color: #f59e0b;">"content"</span>: <span style="color: #f59e0b;">"Bonjour ! Explique-moi l'IA en 3 phrases."</span>}
+    ],
+)
+
+<span style="color: #7c3aed;">print</span>(response.choices[0].message.content)</pre>
+        </div>
+    </div>
+</div>
+
+<!-- Models showcase -->
+<div class="container" style="padding: 0 0 80px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+        <div>
+            <h2 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 4px;">Modèles disponibles</h2>
+            <p style="color: var(--sk-text-secondary); font-size: 0.9rem;">15+ modèles de tous les grands laboratoires</p>
+        </div>
+        <a href="{{ url_for('main.pricing') }}" style="color: var(--sk-text-primary); font-size: 0.85rem; font-weight: 500; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; background: var(--sk-bg-card); border: 1px solid var(--sk-border); border-radius: 8px;">Voir tous <i class="fas fa-arrow-right" style="font-size: 0.7rem;"></i></a>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;">
+        <a href="{{ url_for('main.pricing') }}" style="text-decoration: none; color: inherit; background: var(--sk-bg-card); border: 1px solid var(--sk-border); border-radius: 12px; padding: 20px; transition: border-color 0.2s;" onmouseover="this.style.borderColor='var(--sk-border-hover)'" onmouseout="this.style.borderColor='var(--sk-border)'">
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                <div style="width: 36px; height: 36px; border-radius: 10px; background: #1a1a2e; display: flex; align-items: center; justify-content: center; font-size: 18px;">🅰️</div>
+                <div>
+                    <div style="font-size: 0.95rem; font-weight: 600;">Claude Sonnet 3.5</div>
+                    <div style="font-size: 0.75rem; color: var(--sk-text-muted);">par Anthropic</div>
+                </div>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 0.75rem;">
+                <span style="color: var(--sk-text-muted);">Input</span>
+                <span style="color: #10b981;">3€ / 1M tokens</span>
+            </div>
+        </a>
+        <a href="{{ url_for('main.pricing') }}" style="text-decoration: none; color: inherit; background: var(--sk-bg-card); border: 1px solid var(--sk-border); border-radius: 12px; padding: 20px; transition: border-color 0.2s;" onmouseover="this.style.borderColor='var(--sk-border-hover)'" onmouseout="this.style.borderColor='var(--sk-border)'">
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                <div style="width: 36px; height: 36px; border-radius: 10px; background: #1a1a2e; display: flex; align-items: center; justify-content: center; font-size: 18px;">◐</div>
+                <div>
+                    <div style="font-size: 0.95rem; font-weight: 600;">GPT-4o</div>
+                    <div style="font-size: 0.75rem; color: var(--sk-text-muted);">par OpenAI</div>
+                </div>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 0.75rem;">
+                <span style="color: var(--sk-text-muted);">Input</span>
+                <span style="color: #10b981;">2.50€ / 1M tokens</span>
+            </div>
+        </a>
+        <a href="{{ url_for('main.pricing') }}" style="text-decoration: none; color: inherit; background: var(--sk-bg-card); border: 1px solid var(--sk-border); border-radius: 12px; padding: 20px; transition: border-color 0.2s;" onmouseover="this.style.borderColor='var(--sk-border-hover)'" onmouseout="this.style.borderColor='var(--sk-border)'">
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                <div style="width: 36px; height: 36px; border-radius: 10px; background: #1a1a2e; display: flex; align-items: center; justify-content: center; font-size: 18px;">M</div>
+                <div>
+                    <div style="font-size: 0.95rem; font-weight: 600;">Mistral Large</div>
+                    <div style="font-size: 0.75rem; color: var(--sk-text-muted);">par Mistral AI</div>
+                </div>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 0.75rem;">
+                <span style="color: var(--sk-text-muted);">Input</span>
+                <span style="color: #10b981;">2€ / 1M tokens</span>
+            </div>
         </a>
     </div>
 </div>
-{% endif %}
 
-<style>
-.hero-section {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    min-height: 60vh;
-    display: flex;
-    align-items: center;
-}
-
-.feature-icon {
-    width: 80px;
-    height: 80px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.feature-icon-sm {
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.card {
-    transition: transform 0.2s;
-}
-
-.card:hover {
-    transform: translateY(-5px);
-}
-
-pre {
-    font-size: 0.9rem;
-    overflow-x: auto;
-}
-
-.bg-gradient-primary {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-}
-</style>
-{% endblock %} 
+<!-- Bottom CTA -->
+<div class="container" style="padding: 0 0 100px;">
+    <div style="text-align: center; padding: 60px 40px; background: var(--sk-bg-card); border: 1px solid var(--sk-border); border-radius: 16px; position: relative; overflow: hidden;">
+        <div style="position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 100%, rgba(124, 58, 237, 0.1) 0%, transparent 60%); pointer-events: none;"></div>
+        <div style="position: relative;">
+            <h2 style="font-size: 2rem; font-weight: 800; margin-bottom: 12px;">Prêt à commencer ?</h2>
+            <p style="color: var(--sk-text-secondary); font-size: 1rem; margin-bottom: 28px; max-width: 500px; margin-left: auto; margin-right: auto;">Obtenez votre clé API en quelques minutes et accédez aux meilleurs modèles d'IA du marché.</p>
+            <a href="{{ url_for('auth.register') }}" style="display: inline-flex; align-items: center; gap: 8px; padding: 14px 32px; background: var(--sk-accent-gradient); color: white; border-radius: 10px; font-weight: 600; text-decoration: none; font-size: 1rem;">
+                Créer mon compte gratuitement <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
