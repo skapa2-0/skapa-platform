@@ -1,0 +1,196 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+.page-pricing { background: #0a0a0f; color: rgba(255,255,255,0.7); font-family: 'Inter', sans-serif; }
+.page-pricing .sk-card { background: #1a1a2e; border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; }
+.page-pricing h1, .page-pricing h2, .page-pricing h3, .page-pricing h4 { color: #fff; }
+.page-pricing .text-body { color: rgba(255,255,255,0.7); }
+.page-pricing .text-muted { color: rgba(255,255,255,0.45); }
+.page-pricing a { color: #a78bfa; text-decoration: none; }
+.page-pricing a:hover { color: #c4b5fd; }
+.page-pricing .sk-accent { background: linear-gradient(135deg, #7c3aed, #3b82f6); }
+.page-pricing .model-name { font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; color: #a78bfa; }
+.page-pricing .sk-card:hover { border-color: rgba(255,255,255,0.12); }
+.page-pricing .price-tag { font-size: 1.1rem; font-weight: 600; color: #fff; }
+.page-pricing .price-muted { font-size: 0.8rem; color: rgba(255,255,255,0.45); }
+.page-pricing .faq-card { background: #1a1a2e; border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 1.25rem 1.5rem; }
+.page-pricing .faq-card:hover { border-color: rgba(255,255,255,0.1); }
+.page-pricing .sk-btn-cta { background: linear-gradient(135deg, #7c3aed, #3b82f6); color: #fff; border: none; padding: 0.75rem 1.75rem; border-radius: 10px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s; box-shadow: 0 4px 20px rgba(124,58,237,0.3); }
+.page-pricing .sk-btn-cta:hover { opacity: 0.95; transform: translateY(-2px); color: #fff; box-shadow: 0 6px 28px rgba(124,58,237,0.4); }
+</style>
+
+<div class="container py-5 page-pricing">
+    <div class="row">
+        <div class="col-12">
+            <div class="text-center mb-5">
+                <h1 class="display-5 fw-bold mb-3">Simple, transparent pricing</h1>
+                <p class="lead" style="color: rgba(255,255,255,0.7); max-width: 560px; margin: 0 auto;">
+                    Pay only for what you use. No subscriptions, no commitments.
+                </p>
+            </div>
+
+            <!-- Pricing model -->
+            <div class="sk-card p-4 mb-5 text-center">
+                <p class="mb-0 text-body">
+                    <i class="fas fa-coins me-2" style="color: #a78bfa;"></i>
+                    <strong style="color: #fff;">Per-token billing</strong> — You are charged only for the tokens you consume (input and output). 
+                    No monthly fees, no minimum spend.
+                </p>
+            </div>
+
+            <!-- Model pricing cards -->
+            <div class="row g-4 mb-5">
+                <div class="col-lg-4 col-md-6">
+                    <div class="sk-card p-4 h-100">
+                        <span class="model-name">deepseek-v3.2</span>
+                        <p class="text-muted small mb-3 mt-1">DeepSeek</p>
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="price-muted">Input (1M tokens)</span>
+                            <span class="price-tag">$0.14</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="price-muted">Output (1M tokens)</span>
+                            <span class="price-tag">$0.28</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="sk-card p-4 h-100">
+                        <span class="model-name">qwen3-coder-next</span>
+                        <p class="text-muted small mb-3 mt-1">Alibaba</p>
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="price-muted">Input (1M tokens)</span>
+                            <span class="price-tag">$0.15</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="price-muted">Output (1M tokens)</span>
+                            <span class="price-tag">$0.60</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="sk-card p-4 h-100">
+                        <span class="model-name">devstral-2:123b</span>
+                        <p class="text-muted small mb-3 mt-1">Mistral AI</p>
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="price-muted">Input (1M tokens)</span>
+                            <span class="price-tag">$0.30</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="price-muted">Output (1M tokens)</span>
+                            <span class="price-tag">$0.90</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="sk-card p-4 h-100">
+                        <span class="model-name">gemma3:27b</span>
+                        <p class="text-muted small mb-3 mt-1">Google</p>
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="price-muted">Input (1M tokens)</span>
+                            <span class="price-tag">$0.10</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="price-muted">Output (1M tokens)</span>
+                            <span class="price-tag">$0.20</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="sk-card p-4 h-100">
+                        <span class="model-name">glm-5</span>
+                        <p class="text-muted small mb-3 mt-1">Zhipu AI</p>
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="price-muted">Input (1M tokens)</span>
+                            <span class="price-tag">$0.25</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="price-muted">Output (1M tokens)</span>
+                            <span class="price-tag">$0.75</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="sk-card p-4 h-100">
+                        <span class="model-name">minimax-m2.5</span>
+                        <p class="text-muted small mb-3 mt-1">MiniMax</p>
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="price-muted">Input (1M tokens)</span>
+                            <span class="price-tag">$0.15</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="price-muted">Output (1M tokens)</span>
+                            <span class="price-tag">$0.60</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="sk-card p-4 h-100">
+                        <span class="model-name">devstral-small-2:24b</span>
+                        <p class="text-muted small mb-3 mt-1">Mistral AI</p>
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="price-muted">Input (1M tokens)</span>
+                            <span class="price-tag">$0.07</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="price-muted">Output (1M tokens)</span>
+                            <span class="price-tag">$0.14</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CTA -->
+            <div class="text-center mb-5">
+                <a href="{{ url_for('auth.register') }}" class="sk-btn-cta">
+                    Get started <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+
+            <!-- FAQ -->
+            <div class="row">
+                <div class="col-12 mb-4">
+                    <h2 class="mb-0"><i class="fas fa-question-circle me-2" style="color: #a78bfa;"></i>Frequently asked questions</h2>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="faq-card h-100">
+                        <h6 class="text-white mb-2">How does billing work?</h6>
+                        <p class="text-body small mb-0">
+                            You pay per token: input tokens (your prompt) and output tokens (the model's response) are billed separately. 
+                            Each model has its own input/output rates. Usage is tracked in real time in your dashboard.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="faq-card h-100">
+                        <h6 class="text-white mb-2">Are there minimum charges?</h6>
+                        <p class="text-body small mb-0">
+                            No. There are no minimum spend requirements. Add credits to your account and pay only for what you use. 
+                            Unused credits remain in your balance until you use them.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="faq-card h-100">
+                        <h6 class="text-white mb-2">How do I add credits?</h6>
+                        <p class="text-body small mb-0">
+                            After signing up, go to your Dashboard → Billing. You can add credits via credit card or other supported payment methods. 
+                            Credits are applied instantly to your account.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="faq-card h-100">
+                        <h6 class="text-white mb-2">Can I set usage limits?</h6>
+                        <p class="text-body small mb-0">
+                            Yes. You can set daily or monthly spending limits in your account settings. 
+                            We'll notify you when you approach your limit so you stay in control of your usage.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

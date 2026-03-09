@@ -1,342 +1,436 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container py-5">
-    <div class="row">
-        <div class="col-lg-10 mx-auto">
-            <div class="text-center mb-5">
-                <h1 class="display-5 mb-3">📋 Conditions d'utilisation</h1>
-                <p class="lead text-muted">
-                    Conditions générales d'utilisation de l'API IA Locale
-                </p>
-                <div class="badge bg-secondary fs-6">
-                    Dernière mise à jour : 19 juillet 2024
-                </div>
+<style>
+.terms-page {
+    background: #0a0a0f;
+    color: rgba(255,255,255,0.7);
+    padding: 2rem 1.5rem 4rem;
+    min-height: 100vh;
+}
+.terms-page .terms-container {
+    max-width: 860px;
+    margin: 0 auto;
+}
+.terms-page h1, .terms-page h2, .terms-page h3, .terms-page h4, .terms-page h5, .terms-page h6 {
+    color: #fff;
+}
+.terms-page .text-body, .terms-page p {
+    color: rgba(255,255,255,0.7);
+}
+.terms-page .text-muted {
+    color: rgba(255,255,255,0.45);
+}
+.terms-page a {
+    color: #a78bfa;
+    text-decoration: none;
+}
+.terms-page a:hover {
+    color: #c4b5fd;
+}
+.terms-page .terms-card {
+    background: #1a1a2e;
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px;
+}
+.terms-page .terms-alert-info {
+    background: rgba(59,130,246,0.08);
+    border: 1px solid rgba(59,130,246,0.2);
+    border-radius: 10px;
+    color: rgba(255,255,255,0.8);
+    padding: 1rem 1.25rem;
+}
+.terms-page .terms-alert-warning {
+    background: rgba(245,158,11,0.08);
+    border: 1px solid rgba(245,158,11,0.2);
+    border-radius: 10px;
+    color: rgba(255,255,255,0.8);
+    padding: 1rem 1.25rem;
+}
+.terms-page .terms-alert-danger {
+    background: rgba(239,68,68,0.08);
+    border: 1px solid rgba(239,68,68,0.2);
+    border-radius: 10px;
+    color: rgba(255,255,255,0.8);
+    padding: 1rem 1.25rem;
+}
+.terms-page .terms-alert-success {
+    background: rgba(16,185,129,0.08);
+    border: 1px solid rgba(16,185,129,0.2);
+    border-radius: 10px;
+    color: rgba(255,255,255,0.8);
+    padding: 1rem 1.25rem;
+}
+.terms-page .terms-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #1a1a2e;
+}
+.terms-page .terms-table th,
+.terms-page .terms-table td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    text-align: left;
+}
+.terms-page .terms-table th {
+    background: rgba(0,0,0,0.2);
+    color: #fff;
+    font-weight: 600;
+}
+.terms-page .terms-table td {
+    color: rgba(255,255,255,0.7);
+}
+.terms-page section {
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    padding-bottom: 2rem;
+    margin-bottom: 2rem;
+    scroll-margin-top: 100px;
+}
+.terms-page section:last-of-type {
+    border-bottom: none;
+}
+.terms-page .terms-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    background: rgba(255,255,255,0.08);
+    border-radius: 8px;
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.45);
+}
+@media (max-width: 640px) {
+    .terms-page .terms-toc-grid,
+    .terms-page .terms-two-col {
+        grid-template-columns: 1fr !important;
+    }
+}
+</style>
+
+<div class="terms-page">
+    <div class="terms-container">
+        <div style="text-align: center; margin-bottom: 2.5rem;">
+            <h1 style="font-size: 1.75rem; font-weight: 700; margin-bottom: 0.75rem;">
+                <i class="fas fa-file-contract" style="margin-right: 0.5rem;"></i>Conditions d'utilisation
+            </h1>
+            <p style="font-size: 1.1rem; margin-bottom: 0.5rem;">
+                Conditions générales d'utilisation de Skapa
+            </p>
+            <span class="terms-badge">Dernière mise à jour : mars 2026</span>
+        </div>
+
+        <!-- Table des matières -->
+        <div class="terms-card" style="margin-bottom: 2.5rem;">
+            <div style="padding: 1rem 1.25rem; border-bottom: 1px solid rgba(255,255,255,0.08);">
+                <h5 style="margin: 0;"><i class="fas fa-list" style="margin-right: 0.5rem;"></i>Table des matières</h5>
             </div>
-
-            <!-- Table des matières -->
-            <div class="card border-0 shadow-sm mb-5">
-                <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0"><i class="fas fa-list"></i> Table des matières</h5>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <ul class="list-unstyled">
-                                <li><a href="#acceptance" class="text-decoration-none">1. Acceptation des conditions</a></li>
-                                <li><a href="#definitions" class="text-decoration-none">2. Définitions</a></li>
-                                <li><a href="#service" class="text-decoration-none">3. Description du service</a></li>
-                                <li><a href="#access" class="text-decoration-none">4. Accès et inscription</a></li>
-                                <li><a href="#usage" class="text-decoration-none">5. Utilisation autorisée</a></li>
-                                <li><a href="#restrictions" class="text-decoration-none">6. Restrictions d'usage</a></li>
-                            </ul>
-                        </div>
-                        <div class="col-md-6">
-                            <ul class="list-unstyled">
-                                <li><a href="#api-keys" class="text-decoration-none">7. Gestion des clés API</a></li>
-                                <li><a href="#privacy" class="text-decoration-none">8. Confidentialité</a></li>
-                                <li><a href="#security" class="text-decoration-none">9. Sécurité</a></li>
-                                <li><a href="#limits" class="text-decoration-none">10. Limites et quotas</a></li>
-                                <li><a href="#liability" class="text-decoration-none">11. Responsabilité</a></li>
-                                <li><a href="#updates" class="text-decoration-none">12. Modifications</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Section 1 -->
-            <section id="acceptance" class="mb-5">
-                <h2 class="border-bottom pb-2 mb-4">1. Acceptation des conditions</h2>
-                <div class="alert alert-info">
-                    <i class="fas fa-handshake"></i>
-                    <strong>Important :</strong> En accédant à cette plateforme et en utilisant notre API, vous acceptez d'être lié par ces conditions d'utilisation.
-                </div>
-                <p>
-                    L'utilisation de l'API IA Locale implique votre acceptation pleine et entière de ces conditions. 
-                    Si vous n'acceptez pas ces termes, veuillez ne pas utiliser nos services.
-                </p>
-            </section>
-
-            <!-- Section 2 -->
-            <section id="definitions" class="mb-5">
-                <h2 class="border-bottom pb-2 mb-4">2. Définitions</h2>
-                <dl class="row">
-                    <dt class="col-sm-3">API</dt>
-                    <dd class="col-sm-9">Interface de programmation d'application permettant l'accès à nos services d'intelligence artificielle</dd>
-                    
-                    <dt class="col-sm-3">Clé API</dt>
-                    <dd class="col-sm-9">Identifiant unique permettant l'authentification et l'accès aux services API</dd>
-                    
-                    <dt class="col-sm-3">Utilisateur</dt>
-                    <dd class="col-sm-9">Toute personne ou entité utilisant nos services API</dd>
-                    
-                    <dt class="col-sm-3">Plateforme</dt>
-                    <dd class="col-sm-9">L'ensemble des services, interfaces et infrastructures d'API IA Locale</dd>
-                </dl>
-            </section>
-
-            <!-- Section 3 -->
-            <section id="service" class="mb-5">
-                <h2 class="border-bottom pb-2 mb-4">3. Description du service</h2>
-                <p>
-                    API IA Locale fournit un service d'intelligence artificielle hébergé localement, 
-                    compatible avec les standards OpenAI. Notre service inclut :
-                </p>
-                <div class="row">
-                    <div class="col-md-6">
-                        <ul>
-                            <li>🤖 Modèles de langage avancés</li>
-                            <li>🔗 API REST compatible OpenAI</li>
-                            <li>📊 Dashboard de gestion</li>
-                            <li>📈 Analytics et statistiques</li>
-                        </ul>
-                    </div>
-                    <div class="col-md-6">
-                        <ul>
-                            <li>🔐 Authentification sécurisée</li>
-                            <li>⚡ Performance optimisée</li>
-                            <li>🛡️ Hébergement local</li>
-                            <li>📚 Documentation complète</li>
-                        </ul>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Section 4 -->
-            <section id="access" class="mb-5">
-                <h2 class="border-bottom pb-2 mb-4">4. Accès et inscription</h2>
-                <div class="alert alert-warning">
-                    <i class="fas fa-user-plus"></i>
-                    <strong>Version démo :</strong> Cette version est actuellement en démonstration. 
-                    L'accès peut être limité et nécessiter une approbation manuelle.
-                </div>
-                <p>Pour accéder à nos services, vous devez :</p>
-                <ol>
-                    <li>Créer un compte avec des informations exactes</li>
-                    <li>Attendre l'approbation de votre compte</li>
-                    <li>Générer et sécuriser votre clé API</li>
-                    <li>Respecter les limites d'utilisation</li>
-                </ol>
-            </section>
-
-            <!-- Section 5 -->
-            <section id="usage" class="mb-5">
-                <h2 class="border-bottom pb-2 mb-4">5. Utilisation autorisée</h2>
-                <div class="row">
-                    <div class="col-md-6">
-                        <h5 class="text-success">✅ Autorisé</h5>
-                        <ul>
-                            <li>Tests et évaluation technique</li>
-                            <li>Développement d'applications</li>
-                            <li>Recherche et innovation</li>
-                            <li>Prototypage</li>
-                            <li>Formation et apprentissage</li>
-                        </ul>
-                    </div>
-                    <div class="col-md-6">
-                        <h5 class="text-danger">❌ Interdit</h5>
-                        <ul>
-                            <li>Utilisation commerciale sans licence</li>
-                            <li>Revente ou redistribution</li>
-                            <li>Contournement des limites</li>
-                            <li>Partage de clés API</li>
-                            <li>Activités illégales ou malveillantes</li>
-                        </ul>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Section 6 -->
-            <section id="restrictions" class="mb-5">
-                <h2 class="border-bottom pb-2 mb-4">6. Restrictions d'usage</h2>
-                <p>Vous vous engagez à ne pas :</p>
-                <div class="alert alert-danger">
-                    <ul class="mb-0">
-                        <li>🚫 Utiliser le service pour des contenus illégaux, discriminatoires ou nuisibles</li>
-                        <li>🚫 Tenter de compromettre la sécurité de la plateforme</li>
-                        <li>🚫 Effectuer de la rétro-ingénierie des modèles</li>
-                        <li>🚫 Surcharger intentionnellement l'infrastructure</li>
-                        <li>🚫 Créer des comptes multiples pour contourner les limites</li>
+            <div style="padding: 1.5rem;">
+                <div class="terms-toc-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem 2rem;">
+                    <ul style="list-style: none; padding: 0; margin: 0;">
+                        <li style="margin-bottom: 0.5rem;"><a href="#acceptance">1. Acceptation des conditions</a></li>
+                        <li style="margin-bottom: 0.5rem;"><a href="#definitions">2. Définitions</a></li>
+                        <li style="margin-bottom: 0.5rem;"><a href="#service">3. Description du service</a></li>
+                        <li style="margin-bottom: 0.5rem;"><a href="#access">4. Accès et inscription</a></li>
+                        <li style="margin-bottom: 0.5rem;"><a href="#usage">5. Utilisation autorisée</a></li>
+                        <li style="margin-bottom: 0.5rem;"><a href="#restrictions">6. Restrictions d'usage</a></li>
+                    </ul>
+                    <ul style="list-style: none; padding: 0; margin: 0;">
+                        <li style="margin-bottom: 0.5rem;"><a href="#api-keys">7. Gestion des clés API</a></li>
+                        <li style="margin-bottom: 0.5rem;"><a href="#privacy">8. Confidentialité</a></li>
+                        <li style="margin-bottom: 0.5rem;"><a href="#security">9. Sécurité</a></li>
+                        <li style="margin-bottom: 0.5rem;"><a href="#limits">10. Limites et quotas</a></li>
+                        <li style="margin-bottom: 0.5rem;"><a href="#liability">11. Responsabilité</a></li>
+                        <li style="margin-bottom: 0.5rem;"><a href="#updates">12. Modifications</a></li>
                     </ul>
                 </div>
-            </section>
+            </div>
+        </div>
 
-            <!-- Section 7 -->
-            <section id="api-keys" class="mb-5">
-                <h2 class="border-bottom pb-2 mb-4">7. Gestion des clés API</h2>
-                <div class="alert alert-warning">
-                    <i class="fas fa-key"></i>
-                    <strong>Sécurité critique :</strong> Vous êtes entièrement responsable de la sécurité de vos clés API.
-                </div>
-                <h5>Obligations :</h5>
-                <ul>
-                    <li>🔐 Garder vos clés API confidentielles</li>
-                    <li>🔄 Renouveler vos clés régulièrement</li>
-                    <li>🚨 Signaler immédiatement toute compromission</li>
-                    <li>💾 Stocker les clés de manière sécurisée</li>
+        <!-- Section 1 -->
+        <section id="acceptance">
+            <h2 style="font-size: 1.25rem; font-weight: 600; padding-bottom: 0.5rem; margin-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.08);">
+                <i class="fas fa-handshake" style="margin-right: 0.5rem;"></i>1. Acceptation des conditions
+            </h2>
+            <div class="terms-alert-info" style="margin-bottom: 1rem;">
+                <i class="fas fa-info-circle" style="color: #3b82f6; margin-right: 0.5rem;"></i>
+                <strong>Important :</strong> En accédant à cette plateforme et en utilisant notre API, vous acceptez d'être lié par ces conditions d'utilisation.
+            </div>
+            <p>
+                L'utilisation de Skapa implique votre acceptation pleine et entière de ces conditions.
+                Si vous n'acceptez pas ces termes, veuillez ne pas utiliser nos services.
+            </p>
+        </section>
+
+        <!-- Section 2 -->
+        <section id="definitions">
+            <h2 style="font-size: 1.25rem; font-weight: 600; padding-bottom: 0.5rem; margin-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.08);">
+                <i class="fas fa-book" style="margin-right: 0.5rem;"></i>2. Définitions
+            </h2>
+            <dl style="display: grid; grid-template-columns: auto 1fr; gap: 0.5rem 1rem;">
+                <dt style="color: #fff;">API</dt>
+                <dd>Interface de programmation d'application permettant l'accès à nos services d'intelligence artificielle</dd>
+                <dt style="color: #fff;">Clé API</dt>
+                <dd>Identifiant unique permettant l'authentification et l'accès aux services API</dd>
+                <dt style="color: #fff;">Utilisateur</dt>
+                <dd>Toute personne ou entité utilisant nos services API</dd>
+                <dt style="color: #fff;">Plateforme</dt>
+                <dd>L'ensemble des services, interfaces et infrastructures de Skapa</dd>
+            </dl>
+        </section>
+
+        <!-- Section 3 -->
+        <section id="service">
+            <h2 style="font-size: 1.25rem; font-weight: 600; padding-bottom: 0.5rem; margin-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.08);">
+                <i class="fas fa-cogs" style="margin-right: 0.5rem;"></i>3. Description du service
+            </h2>
+            <p>
+                Skapa fournit une passerelle IA unifiée compatible avec les standards OpenAI. Notre service inclut :
+            </p>
+            <div class="terms-two-col" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;">
+                <ul style="margin: 0;">
+                    <li><i class="fas fa-brain" style="color: #a78bfa; margin-right: 0.5rem;"></i>Modèles de langage avancés</li>
+                    <li><i class="fas fa-plug" style="color: #a78bfa; margin-right: 0.5rem;"></i>API REST compatible OpenAI</li>
+                    <li><i class="fas fa-chart-line" style="color: #a78bfa; margin-right: 0.5rem;"></i>Dashboard de gestion</li>
+                    <li><i class="fas fa-chart-bar" style="color: #a78bfa; margin-right: 0.5rem;"></i>Analytics et statistiques</li>
                 </ul>
-            </section>
-
-            <!-- Section 8 -->
-            <section id="privacy" class="mb-5">
-                <h2 class="border-bottom pb-2 mb-4">8. Confidentialité</h2>
-                <div class="alert alert-info">
-                    <i class="fas fa-shield-alt"></i>
-                    <strong>Hébergement local :</strong> Toutes vos données restent sur nos serveurs locaux et ne sont jamais transmises à des tiers.
-                </div>
-                <p>Nous nous engageons à :</p>
-                <ul>
-                    <li>🏠 Garder vos données sur notre infrastructure locale</li>
-                    <li>🔒 Chiffrer toutes les communications sensibles</li>
-                    <li>📊 Collecter uniquement les données nécessaires au service</li>
-                    <li>🗑️ Supprimer vos données sur demande</li>
+                <ul style="margin: 0;">
+                    <li><i class="fas fa-lock" style="color: #a78bfa; margin-right: 0.5rem;"></i>Authentification sécurisée</li>
+                    <li><i class="fas fa-bolt" style="color: #a78bfa; margin-right: 0.5rem;"></i>Performance optimisée</li>
+                    <li><i class="fas fa-server" style="color: #a78bfa; margin-right: 0.5rem;"></i>Routage multi-modèles</li>
+                    <li><i class="fas fa-book" style="color: #a78bfa; margin-right: 0.5rem;"></i>Documentation complète</li>
                 </ul>
-            </section>
+            </div>
+        </section>
 
-            <!-- Section 9 -->
-            <section id="security" class="mb-5">
-                <h2 class="border-bottom pb-2 mb-4">9. Sécurité</h2>
-                <p>Nous mettons en place des mesures de sécurité avancées :</p>
-                <div class="row">
-                    <div class="col-md-6">
-                        <h6>🛡️ Protection technique</h6>
-                        <ul>
-                            <li>Chiffrement des données</li>
-                            <li>Authentification sécurisée</li>
-                            <li>Monitoring en temps réel</li>
-                            <li>Pare-feu et protections DDoS</li>
-                        </ul>
-                    </div>
-                    <div class="col-md-6">
-                        <h6>📋 Audit et conformité</h6>
-                        <ul>
-                            <li>Logs d'audit complets</li>
-                            <li>Traçabilité des accès</li>
-                            <li>Alertes de sécurité</li>
-                            <li>Respect des standards</li>
-                        </ul>
-                    </div>
-                </div>
-            </section>
+        <!-- Section 4 -->
+        <section id="access">
+            <h2 style="font-size: 1.25rem; font-weight: 600; padding-bottom: 0.5rem; margin-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.08);">
+                <i class="fas fa-user-plus" style="margin-right: 0.5rem;"></i>4. Accès et inscription
+            </h2>
+            <div class="terms-alert-warning" style="margin-bottom: 1rem;">
+                <i class="fas fa-exclamation-triangle" style="color: #f59e0b; margin-right: 0.5rem;"></i>
+                <strong>Version démo :</strong> Cette version est actuellement en démonstration.
+                L'accès peut être limité et nécessiter une approbation manuelle.
+            </div>
+            <p>Pour accéder à nos services, vous devez :</p>
+            <ol style="margin-top: 0.5rem;">
+                <li>Créer un compte avec des informations exactes</li>
+                <li>Attendre l'approbation de votre compte</li>
+                <li>Générer et sécuriser votre clé API</li>
+                <li>Respecter les limites d'utilisation</li>
+            </ol>
+        </section>
 
-            <!-- Section 10 -->
-            <section id="limits" class="mb-5">
-                <h2 class="border-bottom pb-2 mb-4">10. Limites et quotas</h2>
-                <div class="alert alert-info">
-                    <i class="fas fa-tachometer-alt"></i>
-                    <strong>Version démo :</strong> Les limites actuelles sont définies pour la période de démonstration.
+        <!-- Section 5 -->
+        <section id="usage">
+            <h2 style="font-size: 1.25rem; font-weight: 600; padding-bottom: 0.5rem; margin-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.08);">
+                <i class="fas fa-check-double" style="margin-right: 0.5rem;"></i>5. Utilisation autorisée
+            </h2>
+            <div class="terms-two-col" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="terms-card" style="padding: 1.5rem;">
+                    <h5 style="color: #10b981; margin-bottom: 1rem;"><i class="fas fa-check-circle" style="margin-right: 0.5rem;"></i>Autorisé</h5>
+                    <ul style="margin: 0;">
+                        <li>Tests et évaluation technique</li>
+                        <li>Développement d'applications</li>
+                        <li>Recherche et innovation</li>
+                        <li>Prototypage</li>
+                        <li>Formation et apprentissage</li>
+                    </ul>
                 </div>
-                <div class="table-responsive">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>Limite</th>
-                                <th>Version Démo</th>
-                                <th>Description</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Requêtes/heure</td>
-                                <td>100</td>
-                                <td>Nombre maximum de requêtes par heure</td>
-                            </tr>
-                            <tr>
-                                <td>Taille des requêtes</td>
-                                <td>4096 tokens</td>
-                                <td>Limite de tokens par requête</td>
-                            </tr>
-                            <tr>
-                                <td>Concurrent</td>
-                                <td>5</td>
-                                <td>Requêtes simultanées maximum</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="terms-card" style="padding: 1.5rem;">
+                    <h5 style="color: #ef4444; margin-bottom: 1rem;"><i class="fas fa-times-circle" style="margin-right: 0.5rem;"></i>Interdit</h5>
+                    <ul style="margin: 0;">
+                        <li>Utilisation commerciale sans licence</li>
+                        <li>Revente ou redistribution</li>
+                        <li>Contournement des limites</li>
+                        <li>Partage de clés API</li>
+                        <li>Activités illégales ou malveillantes</li>
+                    </ul>
                 </div>
-            </section>
+            </div>
+        </section>
 
-            <!-- Section 11 -->
-            <section id="liability" class="mb-5">
-                <h2 class="border-bottom pb-2 mb-4">11. Responsabilité</h2>
-                <div class="alert alert-warning">
-                    <i class="fas fa-exclamation-triangle"></i>
-                    <strong>Service en démonstration :</strong> Ce service est fourni "tel quel" sans garantie de disponibilité continue.
-                </div>
-                <p>Limitations de responsabilité :</p>
-                <ul>
-                    <li>⚠️ Aucune garantie de disponibilité 24/7</li>
-                    <li>⚠️ Possible interruption pour maintenance</li>
-                    <li>⚠️ Limitation de responsabilité aux dommages directs</li>
-                    <li>⚠️ Exclusion de responsabilité pour les dommages indirects</li>
+        <!-- Section 6 -->
+        <section id="restrictions">
+            <h2 style="font-size: 1.25rem; font-weight: 600; padding-bottom: 0.5rem; margin-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.08);">
+                <i class="fas fa-ban" style="margin-right: 0.5rem;"></i>6. Restrictions d'usage
+            </h2>
+            <p>Vous vous engagez à ne pas :</p>
+            <div class="terms-alert-danger" style="margin-top: 1rem;">
+                <ul style="margin: 0;">
+                    <li><i class="fas fa-ban" style="color: #ef4444; margin-right: 0.5rem;"></i>Utiliser le service pour des contenus illégaux, discriminatoires ou nuisibles</li>
+                    <li><i class="fas fa-ban" style="color: #ef4444; margin-right: 0.5rem;"></i>Tenter de compromettre la sécurité de la plateforme</li>
+                    <li><i class="fas fa-ban" style="color: #ef4444; margin-right: 0.5rem;"></i>Effectuer de la rétro-ingénierie des modèles</li>
+                    <li><i class="fas fa-ban" style="color: #ef4444; margin-right: 0.5rem;"></i>Surcharger intentionnellement l'infrastructure</li>
+                    <li><i class="fas fa-ban" style="color: #ef4444; margin-right: 0.5rem;"></i>Créer des comptes multiples pour contourner les limites</li>
                 </ul>
-            </section>
+            </div>
+        </section>
 
-            <!-- Section 12 -->
-            <section id="updates" class="mb-5">
-                <h2 class="border-bottom pb-2 mb-4">12. Modifications</h2>
-                <p>
-                    Nous nous réservons le droit de modifier ces conditions d'utilisation à tout moment. 
-                    Les modifications seront communiquées via :
+        <!-- Section 7 -->
+        <section id="api-keys">
+            <h2 style="font-size: 1.25rem; font-weight: 600; padding-bottom: 0.5rem; margin-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.08);">
+                <i class="fas fa-key" style="margin-right: 0.5rem;"></i>7. Gestion des clés API
+            </h2>
+            <div class="terms-alert-warning" style="margin-bottom: 1rem;">
+                <i class="fas fa-exclamation-triangle" style="color: #f59e0b; margin-right: 0.5rem;"></i>
+                <strong>Sécurité critique :</strong> Vous êtes entièrement responsable de la sécurité de vos clés API.
+            </div>
+            <h5 style="margin-bottom: 0.75rem;">Obligations :</h5>
+            <ul>
+                <li><i class="fas fa-lock" style="color: #a78bfa; margin-right: 0.5rem;"></i>Garder vos clés API confidentielles</li>
+                <li><i class="fas fa-sync" style="color: #a78bfa; margin-right: 0.5rem;"></i>Renouveler vos clés régulièrement</li>
+                <li><i class="fas fa-exclamation-triangle" style="color: #a78bfa; margin-right: 0.5rem;"></i>Signaler immédiatement toute compromission</li>
+                <li><i class="fas fa-database" style="color: #a78bfa; margin-right: 0.5rem;"></i>Stocker les clés de manière sécurisée</li>
+            </ul>
+        </section>
+
+        <!-- Section 8 -->
+        <section id="privacy">
+            <h2 style="font-size: 1.25rem; font-weight: 600; padding-bottom: 0.5rem; margin-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.08);">
+                <i class="fas fa-shield-alt" style="margin-right: 0.5rem;"></i>8. Confidentialité
+            </h2>
+            <div class="terms-alert-info" style="margin-bottom: 1rem;">
+                <i class="fas fa-shield-alt" style="color: #3b82f6; margin-right: 0.5rem;"></i>
+                <strong>Protection des données :</strong> Nous traitons vos données conformément à notre politique de confidentialité.
+            </div>
+            <p>Nous nous engageons à :</p>
+            <ul>
+                <li><i class="fas fa-server" style="color: #a78bfa; margin-right: 0.5rem;"></i>Protéger vos données sur notre infrastructure</li>
+                <li><i class="fas fa-lock" style="color: #a78bfa; margin-right: 0.5rem;"></i>Chiffrer toutes les communications sensibles</li>
+                <li><i class="fas fa-filter" style="color: #a78bfa; margin-right: 0.5rem;"></i>Collecter uniquement les données nécessaires au service</li>
+                <li><i class="fas fa-trash" style="color: #a78bfa; margin-right: 0.5rem;"></i>Supprimer vos données sur demande</li>
+            </ul>
+        </section>
+
+        <!-- Section 9 -->
+        <section id="security">
+            <h2 style="font-size: 1.25rem; font-weight: 600; padding-bottom: 0.5rem; margin-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.08);">
+                <i class="fas fa-shield-alt" style="margin-right: 0.5rem;"></i>9. Sécurité
+            </h2>
+            <p>Nous mettons en place des mesures de sécurité avancées :</p>
+            <div class="terms-two-col" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;">
+                <div class="terms-card" style="padding: 1.5rem;">
+                    <h6 style="margin-bottom: 0.75rem;"><i class="fas fa-shield-alt" style="color: #a78bfa; margin-right: 0.5rem;"></i>Protection technique</h6>
+                    <ul style="margin: 0; font-size: 0.9rem;">
+                        <li>Chiffrement des données</li>
+                        <li>Authentification sécurisée</li>
+                        <li>Monitoring en temps réel</li>
+                        <li>Pare-feu et protections DDoS</li>
+                    </ul>
+                </div>
+                <div class="terms-card" style="padding: 1.5rem;">
+                    <h6 style="margin-bottom: 0.75rem;"><i class="fas fa-clipboard-list" style="color: #a78bfa; margin-right: 0.5rem;"></i>Audit et conformité</h6>
+                    <ul style="margin: 0; font-size: 0.9rem;">
+                        <li>Logs d'audit complets</li>
+                        <li>Traçabilité des accès</li>
+                        <li>Alertes de sécurité</li>
+                        <li>Respect des standards</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 10 -->
+        <section id="limits">
+            <h2 style="font-size: 1.25rem; font-weight: 600; padding-bottom: 0.5rem; margin-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.08);">
+                <i class="fas fa-tachometer-alt" style="margin-right: 0.5rem;"></i>10. Limites et quotas
+            </h2>
+            <div class="terms-alert-info" style="margin-bottom: 1rem;">
+                <i class="fas fa-tachometer-alt" style="color: #3b82f6; margin-right: 0.5rem;"></i>
+                <strong>Version démo :</strong> Les limites actuelles sont définies pour la période de démonstration.
+            </div>
+            <div class="terms-card" style="overflow: hidden;">
+                <table class="terms-table">
+                    <thead>
+                        <tr>
+                            <th>Limite</th>
+                            <th>Version Démo</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Requêtes/heure</td>
+                            <td>100</td>
+                            <td>Nombre maximum de requêtes par heure</td>
+                        </tr>
+                        <tr>
+                            <td>Taille des requêtes</td>
+                            <td>4096 tokens</td>
+                            <td>Limite de tokens par requête</td>
+                        </tr>
+                        <tr>
+                            <td>Concurrent</td>
+                            <td>5</td>
+                            <td>Requêtes simultanées maximum</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Section 11 -->
+        <section id="liability">
+            <h2 style="font-size: 1.25rem; font-weight: 600; padding-bottom: 0.5rem; margin-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.08);">
+                <i class="fas fa-exclamation-triangle" style="margin-right: 0.5rem;"></i>11. Responsabilité
+            </h2>
+            <div class="terms-alert-warning" style="margin-bottom: 1rem;">
+                <i class="fas fa-exclamation-triangle" style="color: #f59e0b; margin-right: 0.5rem;"></i>
+                <strong>Service en démonstration :</strong> Ce service est fourni "tel quel" sans garantie de disponibilité continue.
+            </div>
+            <p>Limitations de responsabilité :</p>
+            <ul>
+                <li><i class="fas fa-exclamation-circle" style="color: #f59e0b; margin-right: 0.5rem;"></i>Aucune garantie de disponibilité 24/7</li>
+                <li><i class="fas fa-exclamation-circle" style="color: #f59e0b; margin-right: 0.5rem;"></i>Possible interruption pour maintenance</li>
+                <li><i class="fas fa-exclamation-circle" style="color: #f59e0b; margin-right: 0.5rem;"></i>Limitation de responsabilité aux dommages directs</li>
+                <li><i class="fas fa-exclamation-circle" style="color: #f59e0b; margin-right: 0.5rem;"></i>Exclusion de responsabilité pour les dommages indirects</li>
+            </ul>
+        </section>
+
+        <!-- Section 12 -->
+        <section id="updates">
+            <h2 style="font-size: 1.25rem; font-weight: 600; padding-bottom: 0.5rem; margin-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.08);">
+                <i class="fas fa-edit" style="margin-right: 0.5rem;"></i>12. Modifications
+            </h2>
+            <p>
+                Nous nous réservons le droit de modifier ces conditions d'utilisation à tout moment.
+                Les modifications seront communiquées via :
+            </p>
+            <ul>
+                <li><i class="fas fa-envelope" style="color: #a78bfa; margin-right: 0.5rem;"></i>Notification par email</li>
+                <li><i class="fas fa-bell" style="color: #a78bfa; margin-right: 0.5rem;"></i>Notification sur la plateforme</li>
+                <li><i class="fas fa-file-alt" style="color: #a78bfa; margin-right: 0.5rem;"></i>Mise à jour de cette page</li>
+            </ul>
+        </section>
+
+        <!-- Contact -->
+        <div class="terms-card">
+            <div style="padding: 1rem 1.25rem; border-bottom: 1px solid rgba(255,255,255,0.08);">
+                <h5 style="margin: 0;"><i class="fas fa-envelope" style="color: #a78bfa; margin-right: 0.5rem;"></i>Contact</h5>
+            </div>
+            <div style="padding: 1.5rem;">
+                <p style="margin-bottom: 1rem;">
+                    Pour toute question concernant ces conditions d'utilisation, contactez-nous :
                 </p>
-                <ul>
-                    <li>📧 Notification par email</li>
-                    <li>🔔 Notification sur la plateforme</li>
-                    <li>📋 Mise à jour de cette page</li>
-                </ul>
-            </section>
-
-            <!-- Contact -->
-            <div class="card border-0 shadow-sm">
-                <div class="card-header bg-success text-white">
-                    <h5 class="mb-0"><i class="fas fa-envelope"></i> Contact</h5>
-                </div>
-                <div class="card-body">
-                    <p class="mb-3">
-                        Pour toute question concernant ces conditions d'utilisation, contactez-nous :
-                    </p>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <p><strong>Email :</strong> <a href="mailto:legal@intra-tech.fr">legal@intra-tech.fr</a></p>
-                            <p><strong>Support :</strong> <a href="mailto:support@intra-tech.fr">support@intra-tech.fr</a></p>
-                        </div>
-                        <div class="col-md-6">
-                            <p><strong>Créateur :</strong> Kevin Hamon</p>
-                            <p><strong>LinkedIn :</strong> <a href="https://www.linkedin.com/in/kevin-hamon31/" target="_blank">kevin-hamon31</a></p>
-                        </div>
+                <div class="terms-two-col" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div>
+                        <p style="margin-bottom: 0.5rem;"><strong style="color: #fff;">Légal :</strong> <a href="mailto:legal@skapa.design">legal@skapa.design</a></p>
+                        <p style="margin-bottom: 0.5rem;"><strong style="color: #fff;">Support :</strong> <a href="mailto:support@skapa.design">support@skapa.design</a></p>
+                        <p style="margin: 0;"><strong style="color: #fff;">Contact :</strong> <a href="mailto:contact@skapa.design">contact@skapa.design</a></p>
+                    </div>
+                    <div>
+                        <p style="margin-bottom: 0.5rem;"><strong style="color: #fff;">Créateur :</strong> Kevin Hamon</p>
+                        <p style="margin: 0;"><strong style="color: #fff;">LinkedIn :</strong> <a href="https://www.linkedin.com/in/kevin-hamon31/" target="_blank">kevin-hamon31</a></p>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div class="text-center mt-5">
-                <p class="text-muted">
-                    <small>
-                        © 2024 API IA Locale - Tous droits réservés<br>
-                        Dernière mise à jour : 19 juillet 2024
-                    </small>
-                </p>
-            </div>
+        <div style="text-align: center; margin-top: 2.5rem;">
+            <p class="text-muted" style="font-size: 0.875rem;">
+                © 2026 Skapa<br>
+                Dernière mise à jour : mars 2026
+            </p>
         </div>
     </div>
 </div>
-
-<style>
-.table th {
-    background-color: #f8f9fa;
-}
-
-[data-theme="dark"] .table th {
-    background-color: #404040;
-    color: #ffffff;
-}
-
-section {
-    scroll-margin-top: 100px;
-}
-
-.alert ul {
-    margin-bottom: 0;
-}
-</style>
-{% endblock %} 
+{% endblock %}
